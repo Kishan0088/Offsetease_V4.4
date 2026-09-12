@@ -98,15 +98,17 @@ wr('sitemap.xml',
 wr('robots.txt',
   `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`);
 
+/* Paths are relative so the site also works when served from a sub-path,
+   as it is on a GitHub Pages project site. */
 wr('site.webmanifest', JSON.stringify({
   name: site.name, short_name: site.name,
   description: 'High-integrity carbon, at the source.',
-  start_url: '/', display: 'standalone',
+  start_url: './', scope: './', display: 'standalone',
   background_color: '#04171A', theme_color: '#0A3D44',
   icons: [
-    { src: '/assets/brand/favicon-192.png', sizes: '192x192', type: 'image/png' },
-    { src: '/assets/brand/favicon-512.png', sizes: '512x512', type: 'image/png' },
-    { src: '/assets/brand/favicon.svg', sizes: 'any', type: 'image/svg+xml' }
+    { src: 'assets/brand/favicon-192.png', sizes: '192x192', type: 'image/png' },
+    { src: 'assets/brand/favicon-512.png', sizes: '512x512', type: 'image/png' },
+    { src: 'assets/brand/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }
   ]
 }, null, 2) + '\n');
 

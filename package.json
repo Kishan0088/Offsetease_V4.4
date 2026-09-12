@@ -1,0 +1,17 @@
+{
+  "name": "offsetease-v4-4",
+  "version": "4.4.0",
+  "private": true,
+  "description": "Offsetease — high-integrity carbon, at the source. A static, dependency-free marketing site.",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node src/build.mjs",
+    "check": "node src/check.mjs",
+    "dev": "node src/build.mjs && npx --yes http-server . -p 4477 -c-1 -o",
+    "serve": "python3 -m http.server 4477",
+    "brand": "node src/build.mjs && node src/check.mjs"
+  },
+  "keywords": ["carbon", "esg", "static-site", "offsetease"],
+  "license": "UNLICENSED"
+}

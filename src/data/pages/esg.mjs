@@ -13,8 +13,8 @@ function svc({ file, url, title, description, keywords, h1, headline, crumbLabel
 
   if (work) {
     blocks.push(work.items
-      ? { type: 'points', tone: 'paper', n: num(), kicker: work.kicker || 'The work', title: work.title, lede: work.lede, items: work.items, aside: work.aside }
-      : { type: 'prose', tone: 'paper', n: num(), kicker: work.kicker || 'The work', title: work.title, lede: work.lede, paras: work.paras, aside: work.aside });
+      ? { type: 'points', tone: 'paper', n: num(), kicker: work.kicker || 'The work', title: work.title, lede: work.lede, items: work.items, aside: work.aside, after: work.after }
+      : { type: 'prose', tone: 'paper', n: num(), kicker: work.kicker || 'The work', title: work.title, lede: work.lede, paras: work.paras, aside: work.aside, after: work.after });
   }
   if (figure) {
     blocks.push({
@@ -26,8 +26,8 @@ function svc({ file, url, title, description, keywords, h1, headline, crumbLabel
   for (const b of extra) blocks.push({ ...b, n: b.n || num() });
   if (why) {
     blocks.push(why.statement
-      ? { type: 'statement', tone: why.tone || 'bone', n: num(), kicker: why.kicker || 'Why it matters', text: why.statement, sub: why.sub, wide: true }
-      : { type: 'prose', tone: why.tone || 'bone', n: num(), kicker: why.kicker || 'Why it matters', title: why.title, paras: why.paras, aside: why.aside });
+      ? { type: 'statement', tone: why.tone || 'bone', n: num(), kicker: why.kicker || 'Why it matters', text: why.statement, sub: why.sub, wide: true, after: why.after }
+      : { type: 'prose', tone: why.tone || 'bone', n: num(), kicker: why.kicker || 'Why it matters', title: why.title, paras: why.paras, aside: why.aside, after: why.after });
   }
   if (related && related.length) {
     blocks.push({

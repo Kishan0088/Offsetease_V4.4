@@ -591,10 +591,14 @@ p{margin:0}
 
 /* ------------------------------------------------------ figure: ladder */
 .ladder{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;
-  grid-auto-columns:1fr;gap:clamp(.5rem,1.4vw,1rem);align-items:end;min-height:16rem}
+  grid-auto-columns:1fr;gap:clamp(.5rem,1.4vw,1rem);align-items:end}
 .ladder__r{display:grid;gap:.5rem;align-content:end;text-align:left}
-.ladder__bar{display:block;height:var(--h,50%);min-height:2.5rem;background:var(--hair-dark);
-  border-radius:1px}
+/* A definite height: a percentage here would resolve against an auto-height
+   row and collapse every rung to the same size. */
+.ladder__bar{display:block;height:calc(3.25rem + var(--h,.5) * 8.5rem);
+  background:var(--ash-strong);border-radius:1px}
+/* quieter than the highlighted rung, still 3:1 against every dark ground */
+.on-dark .ladder__bar,.on-abyss .ladder__bar,.on-deep .ladder__bar{background:#6B8A90}
 .js .ladder__bar{transform:scaleY(0);transform-origin:bottom;
   transition:transform .9s var(--ease-out) var(--d,0s)}
 .js .is-in .ladder__bar{transform:scaleY(1)}
@@ -621,8 +625,12 @@ p{margin:0}
 .on-dark .tl__b,.on-abyss .tl__b,.on-deep .tl__b{color:var(--on-dark-dim)}
 
 /* -------------------------------------------------------- misc blocks */
-.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+/* Bleeds to the wrap edges so the fade reads as content flowing off-screen
+   rather than as a clipped first word. */
+.marquee{overflow:hidden;margin-inline:calc(var(--pad-x) * -1);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.marquee__t{padding-inline:var(--pad-x)}
 .marquee__t{display:flex;gap:3rem;width:max-content;animation:slide 42s linear infinite}
 .marquee__t span{font:500 var(--s-1)/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
   white-space:nowrap;color:var(--on-dark-faint)}

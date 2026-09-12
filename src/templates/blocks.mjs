@@ -51,7 +51,7 @@ const BLOCKS = {
         </div>
       </li>`).join('');
     return section(b, `<div class="grid g-aside"><div class="stack-lg">${head(b)}${b.aside || ''}</div>
-      <ol class="points">${items}</ol></div>`);
+      <div class="stack-lg"><ol class="points">${items}</ol>${b.after || ''}</div></div>`);
   },
 
   /* ------------------------------------------------------------- figure */

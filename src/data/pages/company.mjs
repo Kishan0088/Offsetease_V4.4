@@ -97,7 +97,7 @@ export const insights = {
     headline: 'Decision-grade|insight.',
     lede: 'A carbon-led knowledge hub for boards and sustainability leaders. Each entry answers a question a serious buyer is actually asking, with current data and a plain answer.',
     buttons: [{ href: U.contact, label: 'Request a briefing', variant: 'primary' }],
-    scrollHint: 'Ten questions'
+    scrollHint: 'Twelve questions'
   },
   blocks: [
     {

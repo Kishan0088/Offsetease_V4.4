@@ -37,8 +37,27 @@ const ctx = { lqip };
 /* ---------------------------------------------------------------- pages */
 let total = 0;
 const built = [];
+
+/* Guard: a block can carry ready-made markup in `fig`, `after` or `aside`.
+   If a renderer forgets to output one of those, the content vanishes with no
+   error. Assert every such fragment actually reaches the page. */
+function assertFragmentsRendered(page, html) {
+  for (const b of page.blocks || []) {
+    for (const key of ['fig', 'after', 'aside', 'html']) {
+      const frag = b[key];
+      if (typeof frag !== 'string' || frag.length < 24) continue;
+      const probe = frag.trim().slice(0, 60);
+      if (!html.includes(probe)) {
+        throw new Error(`${page.file}: block "${b.type}" (${b.n || '?'}) defines ` +
+          `\`${key}\` but it was not rendered — the block template is dropping it.`);
+      }
+    }
+  }
+}
+
 for (const page of pages) {
   const html = buildPage(page, ctx);
+  assertFragmentsRendered(page, html);
   const bytes = wr(page.file, html);
   built.push({ file: page.file, url: clean(page.file), bytes });
   total += bytes;

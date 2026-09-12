@@ -301,7 +301,7 @@ export function backbone({ source, targets, caption, title }) {
    ladder — ascending bands. EcoVadis medals, CDP's A-to-D scale. */
 export function ladder({ rungs, caption, note }) {
   const items = rungs.map((r, i) => `
-    <li class="ladder__r${r.on ? ' ladder__r--on' : ''}" style="--d:${(i * 0.1).toFixed(2)}s;--h:${n(34 + (i / (rungs.length - 1)) * 66)}%">
+    <li class="ladder__r${r.on ? ' ladder__r--on' : ''}" style="--d:${(i * 0.1).toFixed(2)}s;--h:${(rungs.length > 1 ? i / (rungs.length - 1) : 1).toFixed(3)}">
       <span class="ladder__bar"></span>
       <span class="ladder__l">${typo(r.label)}</span>
       ${r.sub ? `<span class="ladder__s">${typo(r.sub)}</span>` : ''}

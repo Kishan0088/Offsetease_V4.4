@@ -1,4 +1,4 @@
-import { site, nav, footerNav, primaryCta, megaMenus } from '../data/site.mjs';
+import { site, nav, footerNav, companyNav, primaryCta, megaMenus } from '../data/site.mjs';
 import { groups, servicesInGroup } from '../data/services.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
@@ -133,15 +133,8 @@ function megaPanel(kind) {
     )
     .join('');
 
-  const all =
-    kind === 'esg'
-      ? '<div class="mega__col mega__col--all"><p class="mega__t">All of it</p><ul>' +
-        `<li><a href="${url('/esg-sustainability.html')}">ESG &amp; sustainability overview</a></li>` +
-        `<li><a href="${url('/sources.html')}">Sources &amp; data</a></li></ul></div>`
-      : '';
-
   return `<div class="mega" id="mega-${esc(kind)}" data-mega hidden>` +
-    `<div class="mega__inner">${cols}${all}</div></div>`;
+    `<div class="mega__inner">${cols}</div></div>`;
 }
 
 function header(page) {
@@ -287,6 +280,13 @@ function footer() {
               <li><a href="${raw(site.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></li>
             </ul>
             <p class="fbrand__w">${site.locationLong}</p>
+            <nav class="fbrand__nav" aria-label="Company">
+              ${join(
+                companyNav.map(
+                  (l) => `<a href="${url(l.href)}">${esc(l.label)}</a>`
+                )
+              )}
+            </nav>
           </div>
           <nav class="fnav" aria-label="Footer">${raw(cols)}</nav>
         </div>

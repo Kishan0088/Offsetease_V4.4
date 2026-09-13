@@ -444,14 +444,40 @@ code {
   gap: clamp(20px, 2.4vw, 34px);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
 }
-/* Explicitly two, so a four-card grid lands 2x2 instead of leaving an orphan
-   on a third column. */
+/* Explicit counts, so a grid never leaves an orphan on a half-empty row. */
 .cols--2 {
   grid-template-columns: 1fr;
 }
 @media (min-width: 900px) {
   .cols--2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.cols--3 {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) and (max-width: 1023px) {
+  /* Two-up would strand the third card, so tablets stay single column and let
+     the media cards run wider instead. */
+  .cols--3 {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+  }
+}
+@media (min-width: 1024px) {
+  .cols--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Three narrow columns want a taller crop than two wide ones. */
+@media (min-width: 1024px) {
+  .cols--3.cols--media .mcard .ph {
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (min-width: 760px) and (max-width: 1023px) {
+  .cols--3.cols--media .mcard .ph {
+    aspect-ratio: 21 / 9;
   }
 }
 .cols--4 {
@@ -2523,11 +2549,23 @@ a.card:hover .card__go svg {
   color: var(--fg-mute);
 }
 
+/* Four explicit columns. auto-fit only fitted four at this width, which
+   pushed the fifth onto a second row and left it hanging under the first. */
 .fnav {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr));
+  grid-template-columns: 1fr;
   gap: clamp(22px, 2.6vw, 38px);
   align-content: start;
+}
+@media (min-width: 560px) {
+  .fnav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1020px) {
+  .fnav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 .fcol__t {
   margin: 0 0 14px;
@@ -3769,4 +3807,24 @@ a.card:hover .card__go svg {
     padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
     background: linear-gradient(180deg, rgb(247 245 240 / 0), var(--bone) 26%);
   }
+}
+
+/* ---- Company links, sitting with the brand block ------------------------ */
+
+.fbrand__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 2px;
+}
+.fbrand__nav a {
+  display: inline-block;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--fg-mute);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+.fbrand__nav a:hover {
+  color: var(--bone);
 }

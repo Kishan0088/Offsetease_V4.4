@@ -214,7 +214,7 @@ export const supply = {
 
   types: {
     eyebrow: 'What we supply',
-    headline: 'Three families of carbon.',
+    headline: 'Categories of carbon',
     items: [
       {
         title: 'Nature-based',

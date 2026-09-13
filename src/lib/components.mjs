@@ -236,8 +236,12 @@ export function cards(items, { stagger = 80, variant = 'plain' } = {}) {
         : `<div class="card reveal">${inner}</div>`;
     })
     .join('');
+  // The grid follows the count: three cards go three-up (never 2 + an orphan),
+  // four go 2x2, anything else auto-fits.
+  const n = items.length;
+  const grid = n === 3 ? ' cols--3' : n === 4 ? ' cols--2' : variant === 'media' ? ' cols--2' : '';
   return raw(
-    `<div class="cols${variant === 'media' ? ' cols--2' : ''}" data-stagger="${stagger}">${body}</div>`
+    `<div class="cols${grid}${variant === 'media' ? ' cols--media' : ''}" data-stagger="${stagger}">${body}</div>`
   );
 }
 

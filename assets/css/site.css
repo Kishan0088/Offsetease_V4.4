@@ -871,16 +871,39 @@ a:hover > .ph--zoom img,
   inset: 0;
   pointer-events: none;
 }
+/* Three layers, because the photography is not all dark: a vertical fade, a
+   corner glow, and a left-weighted wash that guarantees the text column has a
+   dark ground even under a bright photograph like the tree nursery. */
 .scrim--hero {
   background:
     linear-gradient(
+      100deg,
+      rgb(4 26 30 / 0.82) 0%,
+      rgb(4 26 30 / 0.62) 38%,
+      rgb(4 26 30 / 0.12) 72%,
+      rgb(4 26 30 / 0) 100%
+    ),
+    linear-gradient(
       180deg,
-      rgb(4 26 30 / 0.84) 0%,
-      rgb(4 26 30 / 0.52) 34%,
-      rgb(10 61 68 / 0.74) 74%,
+      rgb(4 26 30 / 0.8) 0%,
+      rgb(4 26 30 / 0.46) 34%,
+      rgb(10 61 68 / 0.72) 74%,
       var(--ink) 100%
     ),
     radial-gradient(90% 70% at 12% 96%, rgb(15 91 100 / 0.62) 0%, rgb(4 26 30 / 0) 62%);
+}
+@media (max-width: 860px) {
+  /* No room for a side wash on a phone — go back to a straight vertical one. */
+  .scrim--hero {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(4 26 30 / 0.86) 0%,
+        rgb(4 26 30 / 0.62) 34%,
+        rgb(10 61 68 / 0.8) 74%,
+        var(--ink) 100%
+      );
+  }
 }
 .scrim--band {
   background: linear-gradient(
@@ -935,7 +958,7 @@ a:hover > .ph--zoom img,
   aspect-ratio: auto;
 }
 .hero__bg img {
-  opacity: 0.62;
+  opacity: 0.56;
 }
 .hero__inner {
   position: relative;

@@ -3083,41 +3083,6 @@ a.card:hover .card__go svg {
   transform: translateX(4px);
 }
 
-/* ---- Five Checks summary ------------------------------------------------ */
-
-.csum {
-  display: grid;
-  grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 60px);
-  align-items: center;
-}
-@media (max-width: 820px) {
-  .csum {
-    grid-template-columns: 1fr;
-  }
-}
-.csum__dial svg {
-  width: min(100%, 260px);
-  aspect-ratio: 1;
-  height: auto;
-  overflow: visible;
-  color: var(--fg);
-}
-.csum__h {
-  font-size: clamp(20px, 2.2vw, 30px);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-  margin-bottom: 14px;
-}
-.csum__n {
-  font-family: var(--mono);
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--fg-soft);
-  margin-bottom: 18px;
-}
-
 /* ---- Desktop mega-menu -------------------------------------------------- */
 
 .nav__has-mega {
@@ -3654,24 +3619,26 @@ a.card:hover .card__go svg {
   text-transform: uppercase;
   color: var(--fg-mute);
 }
-.fcta__list a {
-  font-size: clamp(16px, 1.4vw, 19px);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  color: var(--fg);
-  text-decoration: none;
-  background-image: linear-gradient(var(--gold), var(--gold));
-  background-size: 0% 1px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  transition: background-size 0.4s var(--ease);
-}
-.fcta__list a:hover {
-  background-size: 100% 1px;
-}
+/* All three values are set identically — the email and phone are links, but
+   the only thing that marks them as such is a colour change on interaction. */
+.fcta__list a,
 .fcta__v {
-  font-size: 15px;
+  font-size: clamp(15.5px, 1.25vw, 17px);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.45;
   color: var(--fg-soft);
+}
+.fcta__list a {
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+.fcta__list a:hover,
+.fcta__list a:focus-visible {
+  color: var(--gold);
+}
+.fcta__list a:active {
+  color: var(--gold-lift);
 }
 
 /* ---- Contact page: the honest fallback while the form is unwired -------- */
@@ -3827,4 +3794,21 @@ a.card:hover .card__go svg {
 }
 .fbrand__nav a:hover {
   color: var(--bone);
+}
+
+/* ---- Enquiry form: honest about not being connected yet ----------------- */
+
+.form__pending {
+  margin: 0;
+  padding: 14px 18px;
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  border-radius: 6px;
+  background: var(--panel);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--fg-soft);
+}
+.form__pending a {
+  color: var(--accent-text);
 }

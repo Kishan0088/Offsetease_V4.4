@@ -428,20 +428,6 @@ export function inlineCta(text, label, href, { tone = '' } = {}) {
   );
 }
 
-/** Three-line summary of the Five Checks, for pages that should not repeat the block. */
-export function checksSummary(data, href = '/carbon-supply.html#five-checks') {
-  const names = data.items.map((c) => c.title).join(' · ');
-  return raw(
-    '<div class="csum reveal">' +
-      `<div class="csum__dial">${str(sunburst({ total: data.items.length, lit: data.items.length }))}</div>` +
-      '<div>' +
-      `<h3 class="csum__h">${esc(data.close)}</h3>` +
-      `<p class="csum__n">${esc(names)}</p>` +
-      `<a class="tlink" href="${url(href)}">How each check is applied ${ARROW}</a>` +
-      '</div></div>'
-  );
-}
-
 /**
  * The origination-to-supply pipeline as a scroll-drawn instrument: a rail
  * fills across the four stages as the section is read, and each stage's badge

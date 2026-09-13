@@ -8,7 +8,7 @@ import { url } from './lib/paths.mjs';
 import { picture } from './lib/media.mjs';
 import {
   hero, section, head, cards, ladder, fiveChecks, story, band, pills, steps,
-  faq, closeCta, proof, statStrip, marketStrip, inlineCta, checksSummary,
+  faq, closeCta, proof, statStrip, marketStrip, inlineCta,
   stages, btn, rail, sunburst, ARROW,
 } from './lib/components.mjs';
 
@@ -91,12 +91,12 @@ export function renderHome() {
       )
     ),
 
-    // The Five Checks — summarised here, applied in full on Carbon supply.
+    // The Five Checks, explained in full here as well as on Carbon supply.
     str(
       section(
         raw(
           str(head({ eyebrow: d.checks.eyebrow, headline: d.checks.headline })) +
-            str(checksSummary(d.checks)) +
+            str(fiveChecks(d.checks)) +
             str(
               inlineCta(
                 'Considering a project already? Send it over and we will run it through all five.',
@@ -625,29 +625,17 @@ export function renderContact() {
     `<div><label for="f-consent">I agree to ${esc(site.name)} storing these details in order ` +
     `to respond to my enquiry. See the <a href="${url('/privacy.html')}">privacy policy</a>.</label>` +
     '<span class="field__err" id="f-consent-err" aria-live="polite"></span></div></div>' +
+    (formLive
+      ? ''
+      : '<p class="form__pending" role="note">Heads up: the form is still being ' +
+        `connected. Until it is, please email <a href="mailto:${esc(site.email)}">` +
+        `${esc(site.email)}</a> — it reaches the same people.</p>`) +
     `<p class="form__note">${esc(d.assurance)} ${esc(site.responsePromise)}</p>` +
     '<div class="btns"><button class="btn btn--gold" type="submit" data-magnetic>' +
     `<span class="btn__label">Send enquiry</span><span class="btn__arrow">${ARROW}</span>` +
     '</button></div>' +
     '<p class="form__status" data-form-status role="status" tabindex="-1" hidden></p>' +
     '</form>';
-
-  // C1: a form that cannot send is worse than no form. Until an access key is
-  // configured the page offers the channels that actually work instead of
-  // asking for five fields and a consent tick and then failing.
-  const offline =
-    '<div class="offline">' +
-    '<p class="offline__t">Email or call us directly</p>' +
-    '<p class="offline__b">Our enquiry form is being connected. In the meantime these reach ' +
-    'a senior specialist straight away, and we reply within one business day.</p>' +
-    '<div class="btns">' +
-    `<a class="btn btn--gold" href="mailto:${esc(site.email)}?subject=${encodeURIComponent(
-      'Enquiry from the website'
-    )}" data-magnetic><span class="btn__label">Email ${esc(site.email)}</span>` +
-    `<span class="btn__arrow">${ARROW}</span></a>` +
-    `<a class="btn btn--ghost" href="tel:${esc(site.phoneHref)}">Call ${esc(site.phone)}` +
-    `<span class="btn__arrow">${ARROW}</span></a>` +
-    '</div></div>';
 
   const details =
     '<div class="contacts">' +
@@ -663,13 +651,7 @@ export function renderContact() {
     // a full-viewport photograph between them and the Name field is a tax.
     str(
       hero(
-        {
-          ...d.hero,
-          // Do not promise a form that is not wired up.
-          primary: formLive
-            ? { label: 'Send an enquiry', href: '#enquiry' }
-            : { label: 'How to reach us', href: '#enquiry' },
-        },
+        { ...d.hero, primary: { label: 'Send an enquiry', href: '#enquiry' } },
         { crumbs: [{ name: 'Contact', href: d.path }], variant: 'compact' }
       )
     ),
@@ -677,9 +659,7 @@ export function renderContact() {
       section(
         raw(
           '<div class="contact-grid">' +
-            `<div class="reveal"><h2 class="h3" style="margin-bottom:22px">${
-              formLive ? 'Send an enquiry' : 'Get in touch'
-            }</h2>${formLive ? form : offline}</div>` +
+            `<div class="reveal"><h2 class="h3" style="margin-bottom:22px">Send an enquiry</h2>${form}</div>` +
             '<div class="reveal">' +
             '<h2 class="label">How to reach us</h2>' +
             details +

@@ -169,11 +169,7 @@ function header(page) {
   // is already on — send them to the form instead.
   const onContact = page.path === '/contact.html';
   const ctaHref = onContact ? '#enquiry' : primaryCta.href;
-  const ctaLabel = onContact
-    ? site.form.accessKey
-      ? 'Go to the form'
-      : 'How to reach us'
-    : primaryCta.label;
+  const ctaLabel = onContact ? 'Go to the form' : primaryCta.label;
 
   const mobileGroups = groups
     .map(

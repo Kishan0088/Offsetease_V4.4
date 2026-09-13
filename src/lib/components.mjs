@@ -57,7 +57,12 @@ export function proof(text, fig) {
   );
 }
 
-export function statStrip(stats, { className = '' } = {}) {
+/**
+ * OUR figures. Gold numerals, dark cell, and a provenance note underneath, so a
+ * skimming visitor can never read a third party's number as OffsetEase's.
+ * Market statistics use `marketStrip` and never share a row with these.
+ */
+export function statStrip(stats, { className = '', note = '' } = {}) {
   const cells = stats
     .map((s) => {
       const numeric = String(s.value).replace(/[^0-9.]/g, '');
@@ -70,7 +75,36 @@ export function statStrip(stats, { className = '' } = {}) {
       );
     })
     .join('');
-  return raw(`<div class="stats ${esc(className)}" data-stagger="70">${cells}</div>`);
+  return raw(
+    `<div class="statblock ${esc(className)}">` +
+      `<div class="stats stats--ours" data-stagger="70">${cells}</div>` +
+      (note ? `<p class="stats__note">${esc(note)}</p>` : '') +
+      '</div>'
+  );
+}
+
+/**
+ * THIRD-PARTY figures. Deliberately unlike `statStrip`: muted numeral, ruled
+ * row, and the source named on the same line at readable size.
+ */
+export function marketStrip(stats, { title = 'Market context' } = {}) {
+  const rows = stats
+    .map(
+      (s) =>
+        '<li class="mkt__row reveal">' +
+        `<span class="mkt__v">${esc(s.value)}${
+          s.unit ? `<span class="mkt__u">${esc(s.unit)}</span>` : ''
+        }</span>` +
+        `<span class="mkt__l">${esc(s.label)}</span>` +
+        `<span class="mkt__s">${esc(s.source)}</span>` +
+        '</li>'
+    )
+    .join('');
+  return raw(
+    '<div class="mkt">' +
+      `<p class="label mkt__title">${esc(title)} — third-party data, not ours</p>` +
+      `<ul class="mkt__list">${rows}</ul></div>`
+  );
 }
 
 function orbit() {
@@ -103,7 +137,7 @@ export function breadcrumb(items) {
 /**
  * Full-bleed hero. `variant: 'home'` adds the orbital field and scroll cue.
  */
-export function hero(h, { variant = 'inner', crumbs = null, stats = null, scrollCue = null } = {}) {
+export function hero(h, { variant = 'inner', crumbs = null, stats = null, statsNote = '', scrollCue = null } = {}) {
   const bg = str(
     picture(h.photo, { alt: h.photoAlt, priority: true, sizes: '100vw', className: 'ph--free' })
   );
@@ -116,7 +150,9 @@ export function hero(h, { variant = 'inner', crumbs = null, stats = null, scroll
     ) + (h.secondary ? str(btn(h.secondary.label, h.secondary.href)) : '');
 
   return raw(
-    `<section class="hero${variant === 'inner' ? ' hero--inner' : ''}">` +
+    `<section class="hero${variant === 'inner' ? ' hero--inner' : ''}${
+      variant === 'compact' ? ' hero--compact' : ''
+    }">` +
       `<div class="hero__bg" data-parallax="0.1">${bg}</div>` +
       '<div class="scrim scrim--hero" aria-hidden="true"></div>' +
       '<div class="grid-overlay" aria-hidden="true"></div>' +
@@ -132,7 +168,7 @@ export function hero(h, { variant = 'inner', crumbs = null, stats = null, scroll
       `<p class="lede reveal">${esc(h.standfirst)}</p>` +
       `<div class="btns reveal">${buttons}</div>` +
       '</div>' +
-      (stats ? str(statStrip(stats)) : '') +
+      (stats ? str(statStrip(stats, { note: statsNote })) : '') +
       (scrollCue ? `<p class="scroll-cue">${esc(scrollCue)}</p>` : '') +
       '</div></section>'
   );
@@ -159,7 +195,7 @@ export function head({ eyebrow: e, headline, body, level = 'h2', split = false, 
   return raw(
     `<div class="head${split ? ' head--split' : ''}">` +
       `<div>${e ? `<p class="label">${esc(e)}</p>` : ''}` +
-      `<${level} class="h2 kinetic">${str(kinetic(headline))}</${level}></div>` +
+      `<${level} class="h2">${esc(headline)}</${level}></div>` +
       right +
       '</div>'
   );
@@ -224,8 +260,11 @@ export function fiveChecks(data) {
     '<div class="checks" data-checks>' +
       '<div class="checks__dial reveal reveal--scale">' +
       str(sunburst({ total: data.items.length })) +
-      `<p class="checks__count"><b data-checks-count>0</b>` +
+      // The animated numeral is decoration; the sentence a screen reader (or a
+      // no-JS visitor) gets must be the true one, not "0 of 5 checks passed".
+      `<p class="checks__count" aria-hidden="true"><b data-checks-count>${data.items.length}</b>` +
       `<span>of ${data.items.length} checks passed</span></p>` +
+      `<p class="sr">All ${data.items.length} checks must pass before we supply a credit.</p>` +
       '</div><div>' +
       `<ul class="checks__list">${items}</ul>` +
       `<p class="checks__close reveal">${esc(data.close)}</p>` +
@@ -284,7 +323,7 @@ export function band({ photo, photoAlt, eyebrow: e, headline, body, cta, tone = 
       '<div class="scrim scrim--soft" aria-hidden="true"></div>' +
       '<div class="band__inner">' +
       (e ? `<p class="label">${esc(e)}</p>` : '') +
-      `<h2 class="band__h kinetic">${str(kinetic(headline))}</h2>` +
+      `<h2 class="band__h">${esc(headline)}</h2>` +
       (body ? `<p class="band__b reveal">${str(md(body))}</p>` : '') +
       (cta
         ? `<div class="btns reveal" style="margin-top:28px">${str(
@@ -350,3 +389,27 @@ export function rail() {
 }
 
 export { ARROW };
+
+/** A single-line contextual CTA, for the long gaps between hero and footer. */
+export function inlineCta(text, label, href, { tone = '' } = {}) {
+  return raw(
+    `<aside class="icta ${esc(tone)} reveal">` +
+      `<p class="icta__t">${str(md(text))}</p>` +
+      `<a class="icta__a" href="${url(href)}">${esc(label)}` +
+      `<span class="btn__arrow">${ARROW}</span></a></aside>`
+  );
+}
+
+/** Three-line summary of the Five Checks, for pages that should not repeat the block. */
+export function checksSummary(data, href = '/carbon-supply.html#five-checks') {
+  const names = data.items.map((c) => c.title).join(' · ');
+  return raw(
+    '<div class="csum reveal">' +
+      `<div class="csum__dial">${str(sunburst({ total: data.items.length, lit: data.items.length }))}</div>` +
+      '<div>' +
+      `<h3 class="csum__h">${esc(data.close)}</h3>` +
+      `<p class="csum__n">${esc(names)}</p>` +
+      `<a class="tlink" href="${url(href)}">How each check is applied ${ARROW}</a>` +
+      '</div></div>'
+  );
+}

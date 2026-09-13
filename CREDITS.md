@@ -73,7 +73,12 @@ measurements are in `assets/brand/brand-geometry.json` and explained in the
 
 Site copy is the client's approved content document. Every market figure marked
 as a proof point is attributed to a named, dated source on
-[`/sources.html`](sources.html) — 26 sources spanning 2024–2026.
+[`/sources.html`](sources.html) — 26 sources spanning 2024–2026, each linked to
+the original.
+
+The privacy policy and terms of use were drafted for this build and describe how
+the site actually behaves. They have not been reviewed by a lawyer, and each
+page says so on its face.
 
 ## Code
 

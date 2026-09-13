@@ -239,6 +239,33 @@ async function checkAssets() {
   }
 }
 
+// 0.1 — the enquiry form is the only conversion path on the site. It must never
+// ship to production without a key. In preview this is a loud warning; the day
+// `indexable` flips to true it becomes a build failure.
+function checkFormKey() {
+  const key = site.form.accessKey || '';
+  if (key.length >= 20) return;
+  const msg =
+    'Enquiry form access key is missing or too short — the contact form will not submit. ' +
+    'Create one at https://web3forms.com and set site.form.accessKey in src/data/site.mjs.';
+  if (site.indexable) errors.push(`form: ${msg}`);
+  else warnings.push(`form: ${msg}`);
+}
+
+// Pages a visitor is entitled to find, whatever else changes.
+function checkRequiredPages(files) {
+  for (const f of ['privacy.html', 'terms.html', '404.html', 'sources.html']) {
+    if (!files.includes(f)) errors.push(`pages: ${f} is missing`);
+  }
+}
+
+// Every page must link to the privacy policy, or the consent wording is a lie.
+function checkLegalLinks(file, html) {
+  if (!html.includes(`href="${BASE}/privacy.html"`)) {
+    fail(file, 'no link to the privacy policy');
+  }
+}
+
 async function main() {
   const files = await htmlFiles();
   if (files.length < 20) errors.push(`only ${files.length} pages built`);
@@ -259,9 +286,12 @@ async function main() {
     checkA11y(f, html);
     checkBrand(f, html);
     checkPlaceholders(f, html);
+    checkLegalLinks(f, html);
     await checkLinks(f, html, idsByFile, files);
   }
   await checkAssets();
+  checkFormKey();
+  checkRequiredPages(files);
 
   // Every page must be reachable from the home page or the footer.
   const home = bodies.get('index.html') || '';

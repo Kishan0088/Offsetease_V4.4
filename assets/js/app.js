@@ -148,6 +148,80 @@
     });
   }
 
+  /* ---- Desktop mega-menu ----------------------------------------------- */
+  function initMega() {
+    $$('[data-mega-wrap]').forEach((wrap) => {
+      const toggle = $('[data-mega-toggle]', wrap);
+      const panel = $('[data-mega]', wrap);
+      if (!toggle || !panel) return;
+      let open = false;
+      let closeTimer = 0;
+
+      const set = (next) => {
+        open = next;
+        panel.hidden = false;
+        requestAnimationFrame(() => panel.classList.toggle('is-open', next));
+        toggle.setAttribute('aria-expanded', String(next));
+        if (!next) {
+          clearTimeout(closeTimer);
+          closeTimer = setTimeout(() => {
+            if (!open) panel.hidden = true;
+          }, 320);
+        } else {
+          clearTimeout(closeTimer);
+        }
+      };
+      set(false);
+
+      toggle.addEventListener('click', () => set(!open));
+      wrap.addEventListener('pointerenter', () => {
+        if (mqFine.matches) set(true);
+      });
+      wrap.addEventListener('pointerleave', () => {
+        if (mqFine.matches) set(false);
+      });
+      wrap.addEventListener('focusout', (e) => {
+        if (!wrap.contains(e.relatedTarget)) set(false);
+      });
+      doc.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && open) {
+          set(false);
+          toggle.focus();
+        }
+      });
+      doc.addEventListener('click', (e) => {
+        if (open && !wrap.contains(e.target)) set(false);
+      });
+    });
+  }
+
+  /* ---- Mobile menu accordions ------------------------------------------ */
+  function initAccordions() {
+    $$('[data-acc]').forEach((btn) => {
+      const group = btn.closest('.menu__group');
+      if (!group) return;
+      btn.addEventListener('click', () => {
+        const next = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', String(next));
+        group.classList.toggle('is-open', next);
+      });
+    });
+  }
+
+  /* ---- Persistent mobile CTA ------------------------------------------- */
+  function initSticky() {
+    const bar = $('[data-sticky]');
+    if (!bar) return;
+    bar.hidden = false;
+    onFrame(() => {
+      const max = doc.documentElement.scrollHeight - innerHeight;
+      if (max <= 0) return;
+      const p = scrollY / max;
+      // Show past a quarter of the page, hide again over the footer CTA.
+      bar.classList.toggle('is-up', p > 0.25 && p < 0.93);
+    });
+  }
+
   /* ---- Scroll progress (fallback where scroll-timeline is unsupported) -- */
   function initProgress() {
     const bar = $('.progress__bar');
@@ -229,8 +303,9 @@
           rays.forEach((r) => r.classList.add('is-lit'));
           return;
         }
-        // One viewport of scroll per scene, plus one to read the last.
-        story.style.height = `${(scenes.length + 1) * 100}vh`;
+        // Two viewports total, however many scenes: four viewports of
+        // scroll-jacking to deliver 75 words is a tax on the reader.
+        story.style.height = '200vh';
       };
 
       measure();
@@ -429,14 +504,19 @@
     };
 
     const showFieldError = (input) => {
-      const wrap = input.closest('.field');
+      const wrap = input.closest('.field') || input.closest('.consent');
       const err = wrap && $('.field__err', wrap);
       if (!err) return;
-      err.textContent = input.validity.valid ? '' : input.validationMessage;
+      err.textContent = input.validity.valid
+        ? ''
+        : input.type === 'checkbox'
+          ? 'Please confirm this before sending.'
+          : input.validationMessage;
     };
 
     $$('input, select, textarea', form).forEach((input) => {
       input.addEventListener('blur', () => showFieldError(input));
+      input.addEventListener('change', () => showFieldError(input));
       input.addEventListener('input', () => {
         if (input.validity.valid) showFieldError(input);
       });
@@ -502,6 +582,9 @@
     initPhotos();
     initReveal();
     initNav();
+    initMega();
+    initAccordions();
+    initSticky();
     initProgress();
     initRail();
     initStory();

@@ -1,6 +1,6 @@
 # OffsetEase — v4.4
 
-A 26-page, zero-dependency static site for OffsetEase: high-integrity carbon
+A 29-page, zero-dependency static site for OffsetEase: high-integrity carbon
 supply, carbon project development, Energy Attribute Certificates, and eighteen
 in-depth ESG & sustainability services.
 
@@ -30,7 +30,7 @@ To promote this build to production:
 No install step, no `node_modules`, no network access required.
 
 ```bash
-node src/build.mjs   # writes 26 .html files to the repository root
+node src/build.mjs   # writes 29 .html files to the repository root
 node src/check.mjs   # validates the result; exits non-zero on any error
 ```
 
@@ -45,8 +45,9 @@ canonical / Open Graph / Twitter tags, JSON-LD that does not parse, more than
 one `<h1>`, skipped heading levels, `<img>` without `alt` or without intrinsic
 `width`/`height`, duplicate `id`s, links or buttons with no accessible name,
 `target="_blank"` without `rel="noopener"`, missing skip link or `lang`,
-orphan pages, placeholder text, brand-spelling slips, and any internal URL that
-forgot the deployment base path.
+orphan pages, placeholder text, brand-spelling slips, any page missing a link
+to the privacy policy, any internal URL that forgot the deployment base path,
+and — once `indexable` is true — a missing enquiry-form access key.
 
 ---
 
@@ -122,15 +123,21 @@ Everything is progressive enhancement — the page is complete and readable with
 JavaScript disabled, and every entrance animation is skipped under
 `prefers-reduced-motion: reduce`.
 
-- Kinetic headlines: words rise from behind a per-word mask, staggered.
+- Kinetic headlines: words rise from behind a per-word mask, staggered — but the
+  **readable state is the default**, so the value proposition never waits on a
+  deferred script. Reserved for the hero `h1` and the closing CTA; the other ~38
+  headings simply appear.
 - Reveal-on-scroll via one `IntersectionObserver`; `data-stagger` spaces
   siblings without hand-written delays.
-- Pinned scrollytelling (`data-story`): one viewport of scroll per scene,
-  cross-fading photography, a progress spine and a ray dial. Collapses to a
-  plain stacked list below 940px and under reduced motion.
+- Pinned scrollytelling (`data-story`): **two viewports total**, whatever the
+  scene count — cross-fading photography, a progress spine and a ray dial.
+  Collapses to a plain stacked list below 940px and under reduced motion.
 - The Five Checks light up one ray at a time as the list is read.
 - Count-up figures, hero and band parallax, pointer-tracked card glow, magnetic
   primary buttons — all fine-pointer only, and all skipped on `saveData`.
+- Desktop mega-menu on ESG (hover **and** a real disclosure button for keyboard
+  users), mobile menu accordions with 44px targets, and a persistent mobile CTA
+  past a quarter of the page, because the header CTA retracts on scroll-down.
 - Scroll progress uses a CSS `scroll()` timeline where supported, with a rAF
   fallback. All scroll-linked work shares a single rAF loop.
 
@@ -148,16 +155,37 @@ JavaScript disabled, and every entrance animation is skipped under
 
 ---
 
-## Known gaps, deliberately left open
+## Pre-launch checklist
 
-- **Leadership.** The approved copy carries a `[ Leadership: name · role · one-line
-  credential — to add ]` placeholder. Nothing was invented; `about.leadership`
-  in `src/data/pages.mjs` is an empty array and the section renders only once
-  real people are supplied.
-- **Photography credits.** Twelve of the twenty-three photographs carry named
-  photographers (see `CREDITS.md`). The other eleven arrived as Unsplash IDs in
-  the approved design bundle; the IDs are recorded so attribution can be
-  completed.
-- **Market figures.** Every `▸` proof point on the site is dated and sourced on
-  `/sources.html`. They move — re-check them quarterly and update
-  `site.lastReviewed`.
+Flip all of these in the same deploy, or the site ranks for nothing:
+
+- [ ] `src/data/site.mjs` → `indexable: true`
+- [ ] `src/data/site.mjs` → `origin: 'https://offsetease.com'`, `basePath: ''`
+- [ ] `src/data/site.mjs` → a real `form.accessKey` (the build now **fails**
+      without one once `indexable` is true)
+- [ ] Submit a real enquiry through the production form and confirm delivery
+- [ ] `robots.txt` no longer says `Disallow: /`, and `sitemap.xml` is populated
+      (both follow automatically from `indexable`)
+- [ ] Canonicals, `og:image` and `twitter:image` resolve on offsetease.com
+- [ ] Redirect map from the current live offsetease.com URLs to these
+- [ ] `node src/check.mjs` passes
+
+## Known gaps — blocked on information, not on code
+
+Nothing below was invented. Each is a deliberate hole with a clearly marked
+place to put the real thing.
+
+| Gap | Where it goes |
+|---|---|
+| **Leadership** — 2–4 people: photo, name, role, one specific line of provenance, LinkedIn | `about.team.leadership` in `src/data/pages.mjs` (empty array; the section renders when filled) |
+| **Registered entity, address, CIN/GSTIN** | `site.legalName` + a new `site.address` in `src/data/site.mjs`; the footer and the `PostalAddress` JSON-LD read from there |
+| **Registry record for the 37,798 tCO₂e** — standard, methodology, VVB, project ID, URL | `home.impact` in `src/data/pages.mjs`; the Carbon projects page already carries a CTA asking for it |
+| **Photography of the actual project** — farmers, saplings, MRV fieldwork | drop into `assets/img/photos/` and re-run the encoder; currently the Impact and Carbon-projects art is Unsplash and says so in `CREDITS.md` |
+| **One case study and one attributed quote** | no component yet — add alongside `home.impact` |
+| **Which registries you hold accounts with**, and which bodies you are a member of | `supply.standards` is deliberately worded as "credits we supply are issued under" and "our screening maps to" — it claims no relationship. ICROA was removed, because listing an accreditation you do not hold is what a diligence team flags |
+| **Commercial parameters** — price bands, minimum volumes, lead times | no component yet; the audit's suggested "current supply sheet" needs real numbers |
+| **Web3Forms access key** | `site.form.accessKey` |
+| **Legal review** of `privacy.html` and `terms.html` | both pages carry a visible notice saying they were drafted alongside the build and not reviewed by a lawyer |
+
+Market figures move. Every one is dated and linked on `/sources.html`;
+re-check them quarterly and update `site.lastReviewed`.

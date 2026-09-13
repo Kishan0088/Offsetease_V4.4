@@ -1,5 +1,7 @@
 // Tiny HTML helpers. No template engine, no dependencies.
 
+import { url } from './paths.mjs';
+
 const ENT = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
 /** Escape for text nodes and attribute values. */
@@ -41,7 +43,13 @@ export const join = (arr, sep = '') => raw(arr.filter(Boolean).join(sep));
  */
 export function md(text) {
   let s = esc(text);
-  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, href) => `<a href="${href}">${t}</a>`);
+  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, href) => {
+    // Internal links written in copy must get the deployment base path too,
+    // and external ones must be safe to open.
+    const external = /^https?:/.test(href);
+    const target = external ? ' target="_blank" rel="noopener"' : '';
+    return `<a href="${external ? href : url(href)}"${target}>${t}</a>`;
+  });
   s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/(^|[\s(])\*([^*]+)\*/g, '$1<em>$2</em>');
   s = s.replace(/`([^`]+)`/g, '<code>$1</code>');

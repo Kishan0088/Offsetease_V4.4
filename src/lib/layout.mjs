@@ -1,4 +1,5 @@
-import { site, nav, footerNav } from '../data/site.mjs';
+import { site, nav, footerNav, footerFeature } from '../data/site.mjs';
+import { groups, servicesInGroup } from '../data/services.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
 import { preloadFor } from './media.mjs';
@@ -110,14 +111,76 @@ function siteNavJsonLd() {
   };
 }
 
+function megaPanel() {
+  const cols = groups
+    .map(
+      (g) =>
+        `<div class="mega__col"><p class="mega__t">${esc(g.title)}</p><ul>` +
+        servicesInGroup(g.id)
+          .map(
+            (sv) =>
+              `<li><a href="${url(sv.path)}">${esc(sv.shortTitle || sv.title)}</a></li>`
+          )
+          .join('') +
+        '</ul></div>'
+    )
+    .join('');
+  return (
+    '<div class="mega" id="mega-esg" data-mega hidden>' +
+      `<div class="mega__inner">${cols}` +
+      `<div class="mega__col mega__col--all"><p class="mega__t">All of it</p><ul>` +
+      `<li><a href="${url('/esg-sustainability.html')}">ESG &amp; sustainability overview</a></li>` +
+      `<li><a href="${url('/sources.html')}">Sources &amp; data</a></li>` +
+      '</ul></div></div></div>'
+  );
+}
+
 function header(page) {
   const items = nav
     .map((item) => {
-      const active = page.path === item.href || (page.parent && page.parent === item.href);
-      return `<a class="nav__link${active ? ' is-current' : ''}" href="${url(item.href)}"${
+      const active =
+        page.path === item.href || (page.parent && page.parent === item.href);
+      const cls = `nav__link${active ? ' is-current' : ''}`;
+      if (item.mega) {
+        // A real disclosure button, so keyboard and screen-reader users get the
+        // same path to CBAM that a mouse user gets by hovering.
+        return (
+          `<span class="nav__has-mega" data-mega-wrap>` +
+            `<a class="${cls}" href="${url(item.href)}"${active ? ' aria-current="page"' : ''}>` +
+            `${esc(item.label)}</a>` +
+            '<button class="nav__disc" type="button" data-mega-toggle aria-expanded="false" ' +
+            `aria-controls="mega-esg" aria-label="Show all ESG &amp; sustainability services">` +
+            '<svg width="10" height="7" viewBox="0 0 10 7" fill="none" aria-hidden="true">' +
+            '<path d="M1 1.5 5 5.5 9 1.5" stroke="currentColor" stroke-width="1.4" ' +
+            'stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+            megaPanel() +
+          '</span>'
+        );
+      }
+      return `<a class="${cls}" href="${url(item.href)}"${
         active ? ' aria-current="page"' : ''
       }>${esc(item.label)}</a>`;
     })
+    .join('');
+
+  // On the contact page the prominent CTA must not reload the page the visitor
+  // is already on — send them to the form instead.
+  const onContact = page.path === '/contact.html';
+  const ctaHref = onContact ? '#enquiry' : '/contact.html';
+  const ctaLabel = onContact ? 'Go to the form' : 'Talk to us';
+
+  const mobileGroups = groups
+    .map(
+      (g, i) =>
+        `<div class="menu__group"><button class="menu__gt" type="button" data-acc ` +
+        `aria-expanded="false" aria-controls="mg-${i}">${esc(g.title)}` +
+        '<span class="menu__gi" aria-hidden="true"></span></button>' +
+        `<div class="menu__gp" id="mg-${i}"><ul>` +
+        servicesInGroup(g.id)
+          .map((sv) => `<li><a href="${url(sv.path)}">${esc(sv.shortTitle || sv.title)}</a></li>`)
+          .join('') +
+        '</ul></div></div>'
+    )
     .join('');
 
   return html`
@@ -128,7 +191,7 @@ function header(page) {
           ${lockup({ className: 'lockup--nav' })}
         </a>
         <nav class="nav__links" aria-label="Primary">${raw(items)}</nav>
-        <a class="btn btn--gold nav__cta" href="${raw(url('/contact.html'))}">Talk to us</a>
+        <a class="btn btn--gold nav__cta" href="${raw(url(ctaHref))}">${ctaLabel}</a>
         <button class="nav__toggle" type="button" data-menu-toggle aria-expanded="false"
           aria-controls="site-menu" aria-label="Open menu">
           <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
@@ -140,29 +203,44 @@ function header(page) {
         <nav class="menu__primary" aria-label="Primary, mobile">
           <a class="menu__big" href="${raw(url('/'))}">Home</a>
           ${join(
-            nav.map(
-              (i) => `<a class="menu__big" href="${url(i.href)}">${esc(i.label)}</a>`
-            )
+            nav
+              .filter((i) => !i.mega)
+              .map((i) => `<a class="menu__big" href="${url(i.href)}">${esc(i.label)}</a>`)
           )}
-          <a class="menu__big menu__big--cta" href="${raw(url('/contact.html'))}">Talk to us</a>
+          <a class="menu__big" href="${raw(url('/esg-sustainability.html'))}">ESG &amp; sustainability</a>
         </nav>
-        <div class="menu__cols">
-          ${join(
-            footerNav.slice(1, 4).map(
-              (col) => `<div class="menu__col"><h2 class="label">${esc(col.title)}</h2><ul>${col.links
-                .map((l) => `<li><a href="${url(l.href)}">${esc(l.label)}</a></li>`)
-                .join('')}</ul></div>`
-            )
-          )}
+        <div class="menu__groups">${raw(mobileGroups)}</div>
+        <div class="menu__foot">
+          <a class="btn btn--gold" href="${raw(url(ctaHref))}">${ctaLabel}</a>
+          <a class="tlink" href="${raw(url('/sources.html'))}">Sources &amp; data</a>
         </div>
       </div>
     </div>
   `;
 }
 
+/**
+ * Mobile only. The header CTA retracts on scroll-down — exactly during the
+ * reading that should be interruptible — so small screens get a persistent
+ * one past a quarter of the page.
+ */
+function stickyCta(page) {
+  if (page.path === '/contact.html') return '';
+  return (
+    '<div class="sticky" data-sticky hidden>' +
+      `<a class="sticky__a" href="${url('/contact.html')}">Talk to us</a>` +
+      `<a class="sticky__e" href="mailto:${esc(site.email)}">or email</a>` +
+    '</div>'
+  );
+}
+
 function footer() {
   return html`
     <footer class="footer">
+      <a class="footer__feature" href="${raw(url(footerFeature.href))}">
+        <span class="footer__feature-l">${footerFeature.label}</span>
+        <span class="footer__feature-b">${footerFeature.blurb}</span>
+      </a>
       <div class="footer__top">
         <div class="footer__brand">
           ${lockup({ className: 'lockup--footer' })}
@@ -257,6 +335,7 @@ ${header(page)}
 <main id="main" tabindex="-1">
 ${body}
 </main>
+${stickyCta(page)}
 ${footer()}
 <script src="${url('/assets/js/app.js')}" defer></script>
 </body>

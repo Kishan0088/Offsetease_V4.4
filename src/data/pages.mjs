@@ -12,7 +12,7 @@ export const home = {
   preloadPhoto: 'earth-night',
 
   hero: {
-    eyebrow: 'Science-led climate, carbon & climate intelligence',
+    eyebrow: 'Science-led carbon & climate intelligence',
     headline: 'Carbon projects that deliver impact, with confidence.',
     accent: ['impact,'],
     standfirst:
@@ -21,13 +21,16 @@ export const home = {
     photoAlt: 'The Earth at night, city lights tracing the continents',
     primary: { label: 'Talk to us', href: '/contact.html' },
     secondary: { label: 'How we source', href: '/carbon-supply.html' },
+    // Our own figures only. Market statistics are never shown in the same row —
+    // they live in `marketStats` below, in a visibly different component.
+    statsNote: 'OffsetEase programme data',
     stats: [
-      { value: '$14.80', unit: '/t', label: 'A–AAA rated credits, 2025 average' },
-      { value: '51%', label: 'of Fortune Global 500 hold net-zero targets' },
-      { value: '37,798', unit: ' tCO₂e', label: 'verified and issued from our agroforestry programme' },
+      { value: '37,798', unit: ' tCO₂e', label: 'verified and issued' },
+      { value: '502', unit: ' ha', label: 'planted' },
+      { value: '468', label: 'farmers as partners' },
       { value: '5 / 5', label: 'checks passed, or we don’t supply it' },
     ],
-    scrollCue: 'Scroll — the integrity story, in seven chapters',
+    scrollCue: 'Scroll — the integrity story, in six chapters',
   },
 
   divided: {
@@ -45,6 +48,11 @@ export const home = {
       { side: 'high', label: 'A–AAA rated', value: '$14.80', note: 'Scarce, scrutinised, defensible.' },
     ],
     premium: { value: 'up to 400%', label: 'premium reported for CCP-aligned credits' },
+    marketStats: [
+      { value: '$14.80', unit: '/t', label: 'A–AAA rated credits, 2025 average', source: 'MSCI Carbon Markets, 2025' },
+      { value: '51%', label: 'of Fortune Global 500 hold net-zero targets', source: 'Terrapass / SBTi, 2026' },
+      { value: '36%', label: 'of 2025 retirement value was A-rated or higher', source: 'MSCI Carbon Markets, 2025' },
+    ],
   },
 
   story: {
@@ -297,10 +305,22 @@ export const supply = {
   },
 
   standards: {
-    eyebrow: 'Standards, frameworks & bodies we work to',
-    headline: 'The registries and integrity frameworks behind every credit.',
+    eyebrow: 'Standards & frameworks we screen against',
+    headline: 'What the registries certify, and what our screening tests.',
+    // Deliberately worded as "credits we supply are issued under" and "our
+    // screening maps to" — not as membership or accreditation. Nothing here
+    // claims a relationship with a body. Accreditations, if and when held,
+    // belong in their own block with the certificate number.
+    registriesNote:
+      'Credits we source and supply are issued under these standards. We screen the project’s registry record in each case.',
     registries: ['Verra (VCS)', 'Gold Standard', 'Puro.earth', 'Isometric', 'Global Carbon Council (GCC)', 'Plan Vivo', 'ACR', 'Climate Action Reserve'],
-    frameworks: ['ICVCM — Core Carbon Principles (CCP)', 'VCMI', 'CORSIA', 'ICROA'],
+    frameworksNote:
+      'The integrity frameworks The Five Checks are written against. We apply their tests to every credit; we do not claim endorsement by them.',
+    frameworks: [
+      { name: 'ICVCM — Core Carbon Principles', how: 'Additionality, permanence and quantification tested against the CCP assessment framework.' },
+      { name: 'VCMI Claims Code', how: 'How a buyer may describe a retirement, applied to the claim we help you make.' },
+      { name: 'CORSIA', how: 'Eligibility screening where an aviation-sector buyer needs it.' },
+    ],
   },
 
   close: {
@@ -481,10 +501,12 @@ export const about = {
       'Rooted in India, developing projects on the ground, and serving companies across India and global markets.',
     proof:
       'India is emerging as a serious origination base — around 49 carbon-removal projects were active as of August 2025, with roughly 214,000 verified credits issued (AlliedOffsets, 2025) — while Asia-Pacific is increasingly described as the centre of gravity of the voluntary carbon market (carboncredits.com, 2025).',
-    stats: [
-      { value: '49', label: 'carbon-removal projects active in India, August 2025' },
-      { value: '214,000', label: 'verified credits issued' },
-      { value: '114,000', label: 'credits under offtake' },
+    // India-wide market context, not OffsetEase figures. Rendered in the market
+    // component with the source on the same line, at readable size.
+    marketStats: [
+      { value: '49', label: 'carbon-removal projects active in India', source: 'AlliedOffsets, August 2025' },
+      { value: '214,000', label: 'verified credits issued across India', source: 'AlliedOffsets, August 2025' },
+      { value: '114,000', label: 'Indian credits under offtake', source: 'AlliedOffsets, August 2025' },
     ],
     photo: 'farmland-sunrise',
     photoAlt: 'Farmland catching the first light of sunrise',
@@ -517,6 +539,10 @@ export const contact = {
       'Every engagement begins with a senior advisor and a confidential conversation to understand what you need — no scripts, no hard sell. We reply within one business day.',
     photo: 'wind-fog',
     photoAlt: 'A wind turbine standing in heavy fog',
+    // Never /contact.html — on this page the prominent CTA must move the
+    // visitor down to the form, not reload the page away from it.
+    primary: { label: 'Send an enquiry', href: '#enquiry' },
+    secondary: { label: 'Email us instead', href: 'mailto:info@offsetease.com' },
   },
 
   topics: [
@@ -539,33 +565,187 @@ export const sources = {
   description:
     'Every market figure on this site, with its named source and date. Compiled September 2026 and refreshed quarterly.',
   intro:
-    'Every proof point on this site is drawn from the named, dated sources below. Verify against the primary source before relying on a figure, and note the review date — these numbers move.',
+    'Every proof point on this site is drawn from the named, dated sources below, each linked to the original. Verify against the primary source before relying on a figure, and note the review date — these numbers move.',
   items: [
-    { n: 1, name: 'MSCI Carbon Markets — 2025 Year in Review', detail: 'Price divergence, retirement value, offtake premium.', via: 'regreener.earth/blog/voluntary-carbon-market-update; centerforsustainablefinance.com' },
-    { n: 2, name: 'Calyx Global & ClearBlue Markets — “The State of Quality and Pricing in the VCM: 2026”', detail: 'Integrity price gap ~50%.', via: 'carbonherald.com' },
-    { n: 3, name: 'Fiegenbaum Solutions (2026)', detail: 'CCP premium up to 400%.', via: 'fiegenbaum.solutions' },
-    { n: 4, name: 'South Pole — 2026 Carbon Market Buyer’s Guide', detail: 'Integrity as baseline.', via: 'southpole.com' },
-    { n: 5, name: 'Center for Sustainable Finance (2026)', detail: 'Record ~US$16bn corporate commitments, ~182Mt retirements.', via: 'centerforsustainablefinance.com' },
-    { n: 6, name: 'carboncredits.com (December 2025)', detail: '>US$10bn to new credit generation H1 2025 (~3× 2024); Asia-Pacific centre of gravity.', via: 'carboncredits.com' },
-    { n: 7, name: 'green.earth (December 2025)', detail: 'ARR spot ~$24/t by September 2025.', via: 'green.earth' },
-    { n: 8, name: 'Grand View Research (2026)', detail: 'VCM and REC market size; nature-based and engineered removals dominate the premium segment.', via: 'grandviewresearch.com' },
-    { n: 9, name: 'CDR.fyi (2025)', detail: 'Biochar ~86% of durable CDR deliveries in 2024.', via: 'cdr.fyi' },
-    { n: 10, name: 'Puro.earth (2026)', detail: '408,000+ biochar CORCs by June 2025; ~43% of durable removal volumes.', via: 'puro.earth/insights' },
-    { n: 11, name: 'Planet2050 (2025)', detail: 'Biochar $125–145/t; >90% of industrial supply contracted by late 2025.', via: 'planet2050.earth' },
-    { n: 12, name: 'AlliedOffsets (2025)', detail: 'India ~49 CDR projects, ~214,000 credits issued, ~114,000 under offtake.', via: 'blog.alliedoffsets.com' },
-    { n: 13, name: 'CEEW / S&P Global Commodity Insights (2025–26)', detail: 'Indian developers transacted ~360,000t durable CDR in 2024.', via: 'ceew.in/publications' },
-    { n: 14, name: 'GreenPowerHub (2024)', detail: 'I-REC issuance 188M certificates H1 2024 (+17%); redemptions +58%.', via: 'greenpowerhub.com' },
-    { n: 15, name: 'Fortune Business Insights / MarketsandMarkets (2026)', detail: 'REC/EAC market size and CAGR.', via: 'fortunebusinessinsights.com; marketsandmarkets.com' },
-    { n: 16, name: 'Climate Group / CDP — RE100', detail: '440+ members, 570+ TWh, 15-year facility-age limit, 28% on the CDP A-list.', via: 'nossadata.com/blog/re100-cdp' },
-    { n: 17, name: 'CDP & Boston Consulting Group', detail: 'Supply-chain Scope 3 ~26× operational emissions.', via: 'cdp.net' },
-    { n: 18, name: 'CDP — Scores and A Lists 2025', detail: '22,100+ companies disclosed, more than half of global market capitalisation.', via: 'cdp.net/en/data/scores' },
-    { n: 19, name: 'European Commission — CBAM definitive regime & 50-tonne threshold', detail: '~90% of importers exempt while ~99% of embedded emissions stay covered.', via: 'taxation-customs.ec.europa.eu' },
-    { n: 20, name: 'Gerlach Customs / Coolset (2026)', detail: 'CBAM €75.36/t Q1 2026, €100/t penalty, declaration due 30 September 2027.', via: 'gerlach-customs.com; coolset.com' },
-    { n: 21, name: 'Directive (EU) 2026/470 (Omnibus I)', detail: 'CSRD thresholds >1,000 employees and >€450m; ~85% fewer companies in scope; FY2027 start; assurance retained.', via: 'mofo.com; nortonrosefulbright.com; accountancyeurope.eu' },
-    { n: 22, name: 'SEBI BRSR / BRSR Core circulars', detail: 'Glide path to the top 1,000 by FY 2026-27; value-chain disclosure now voluntary.', via: 'perspectives.se.com; onestopesg.com' },
-    { n: 23, name: 'S&P Global / ESGsource / ISSB (2026)', detail: 'IFRS S1/S2 adopted in 28 jurisdictions (April 2026); 30+ moving to adopt; >60% of global GDP.', via: 'spglobal.com/sustainable1; esgsource.com' },
-    { n: 24, name: 'SBTi — Corporate Net-Zero Standard V2', detail: '11,000+ organisations; 51% of Fortune Global 500 with net-zero targets; V2 mandatory 2028; removals from 2035; net-zero pledges cover 92% of GDP.', via: 'terrapass.com; icor.cloud' },
-    { n: 25, name: 'EcoVadis methodology (2025-26)', detail: 'Percentile medals (Platinum 1% / Gold 5% / Silver 15% / Bronze 35%); a theme below 30 disqualifies; weights 25/40/35.', via: 'getsunhat.com; yourcarbonsteps.com' },
-    { n: 26, name: 'Regulation (EU) 2025/2650 (EUDR)', detail: 'Large/medium operators from 30 December 2026; micro/small from 30 June 2027; seven commodities.', via: 'European Commission Access2Markets; psqr.eu' },
+    { n: 1, name: 'MSCI Carbon Markets — 2025 Year in Review', detail: 'Price divergence, retirement value, offtake premium.', via: 'regreener.earth/blog/voluntary-carbon-market-update; centerforsustainablefinance.com' , url: 'https://www.centerforsustainablefinance.com/keep-updated/carbon-markets-2025-review' },
+    { n: 2, name: 'Calyx Global & ClearBlue Markets — “The State of Quality and Pricing in the VCM: 2026”', detail: 'Integrity price gap ~50%.', via: 'carbonherald.com' , url: 'https://carbonherald.com/' },
+    { n: 3, name: 'Fiegenbaum Solutions (2026)', detail: 'CCP premium up to 400%.', via: 'fiegenbaum.solutions' , url: 'https://fiegenbaum.solutions/en/blog/voluntary-vs-regulated-carbon-markets-risks-verification-price-differences' },
+    { n: 4, name: 'South Pole — 2026 Carbon Market Buyer’s Guide', detail: 'Integrity as baseline.', via: 'southpole.com' , url: 'https://www.southpole.com/blog/2026-carbon-market-buyers-guide-what-you-need-to-know' },
+    { n: 5, name: 'Center for Sustainable Finance (2026)', detail: 'Record ~US$16bn corporate commitments, ~182Mt retirements.', via: 'centerforsustainablefinance.com' , url: 'https://www.centerforsustainablefinance.com/' },
+    { n: 6, name: 'carboncredits.com (December 2025)', detail: '>US$10bn to new credit generation H1 2025 (~3× 2024); Asia-Pacific centre of gravity.', via: 'carboncredits.com' , url: 'https://carboncredits.com/' },
+    { n: 7, name: 'green.earth (December 2025)', detail: 'ARR spot ~$24/t by September 2025.', via: 'green.earth' , url: 'https://www.green.earth/news/quality-takes-the-lead-a-year-end-look-at-the-voluntary-carbon-market' },
+    { n: 8, name: 'Grand View Research (2026)', detail: 'VCM and REC market size; nature-based and engineered removals dominate the premium segment.', via: 'grandviewresearch.com' , url: 'https://www.grandviewresearch.com/' },
+    { n: 9, name: 'CDR.fyi (2025)', detail: 'Biochar ~86% of durable CDR deliveries in 2024.', via: 'cdr.fyi' , url: 'https://www.cdr.fyi/blog/biochar-carbon-removal-market-snapshot-2025' },
+    { n: 10, name: 'Puro.earth (2026)', detail: '408,000+ biochar CORCs by June 2025; ~43% of durable removal volumes.', via: 'puro.earth/insights' , url: 'https://puro.earth/insights' },
+    { n: 11, name: 'Planet2050 (2025)', detail: 'Biochar $125–145/t; >90% of industrial supply contracted by late 2025.', via: 'planet2050.earth' , url: 'https://www.planet2050.earth/blog/cdr-spotlight-biochar' },
+    { n: 12, name: 'AlliedOffsets (2025)', detail: 'India ~49 CDR projects, ~214,000 credits issued, ~114,000 under offtake.', via: 'blog.alliedoffsets.com' , url: 'https://blog.alliedoffsets.com/indias-carbon-removal-market-projects-buyers-and-whats-next' },
+    { n: 13, name: 'CEEW / S&P Global Commodity Insights (2025–26)', detail: 'Indian developers transacted ~360,000t durable CDR in 2024.', via: 'ceew.in/publications' , url: 'https://www.ceew.in/publications' },
+    { n: 14, name: 'GreenPowerHub (2024)', detail: 'I-REC issuance 188M certificates H1 2024 (+17%); redemptions +58%.', via: 'greenpowerhub.com' , url: 'https://www.greenpowerhub.com/news/sourcing-re-scope2' },
+    { n: 15, name: 'Fortune Business Insights / MarketsandMarkets (2026)', detail: 'REC/EAC market size and CAGR.', via: 'fortunebusinessinsights.com; marketsandmarkets.com' , url: 'https://www.fortunebusinessinsights.com/' },
+    { n: 16, name: 'Climate Group / CDP — RE100', detail: '440+ members, 570+ TWh, 15-year facility-age limit, 28% on the CDP A-list.', via: 'nossadata.com/blog/re100-cdp' , url: 'https://www.nossadata.com/blog/re100-cdp' },
+    { n: 17, name: 'CDP & Boston Consulting Group', detail: 'Supply-chain Scope 3 ~26× operational emissions.', via: 'cdp.net' , url: 'https://www.cdp.net/en/press-releases' },
+    { n: 18, name: 'CDP — Scores and A Lists 2025', detail: '22,100+ companies disclosed, more than half of global market capitalisation.', via: 'cdp.net/en/data/scores' , url: 'https://www.cdp.net/en/data/scores' },
+    { n: 19, name: 'European Commission — CBAM definitive regime & 50-tonne threshold', detail: '~90% of importers exempt while ~99% of embedded emissions stay covered.', via: 'taxation-customs.ec.europa.eu' , url: 'https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism/cbam-definitive-regime_en' },
+    { n: 20, name: 'Gerlach Customs / Coolset (2026)', detail: 'CBAM €75.36/t Q1 2026, €100/t penalty, declaration due 30 September 2027.', via: 'gerlach-customs.com; coolset.com' , url: 'https://www.coolset.com/' },
+    { n: 21, name: 'Directive (EU) 2026/470 (Omnibus I)', detail: 'CSRD thresholds >1,000 employees and >€450m; ~85% fewer companies in scope; FY2027 start; assurance retained.', via: 'mofo.com; nortonrosefulbright.com; accountancyeurope.eu' , url: 'https://www.mofo.com/' },
+    { n: 22, name: 'SEBI BRSR / BRSR Core circulars', detail: 'Glide path to the top 1,000 by FY 2026-27; value-chain disclosure now voluntary.', via: 'perspectives.se.com; onestopesg.com' , url: 'https://www.onestopesg.com/' },
+    { n: 23, name: 'S&P Global / ESGsource / ISSB (2026)', detail: 'IFRS S1/S2 adopted in 28 jurisdictions (April 2026); 30+ moving to adopt; >60% of global GDP.', via: 'spglobal.com/sustainable1; esgsource.com' , url: 'https://www.esgsource.com/page/issb-adoption-tracker-2026' },
+    { n: 24, name: 'SBTi — Corporate Net-Zero Standard V2', detail: '11,000+ organisations; 51% of Fortune Global 500 with net-zero targets; V2 mandatory 2028; removals from 2035; net-zero pledges cover 92% of GDP.', via: 'terrapass.com; icor.cloud' , url: 'https://www.terrapass.com/' },
+    { n: 25, name: 'EcoVadis methodology (2025-26)', detail: 'Percentile medals (Platinum 1% / Gold 5% / Silver 15% / Bronze 35%); a theme below 30 disqualifies; weights 25/40/35.', via: 'getsunhat.com; yourcarbonsteps.com' , url: 'https://www.getsunhat.com/' },
+    { n: 26, name: 'Regulation (EU) 2025/2650 (EUDR)', detail: 'Large/medium operators from 30 December 2026; micro/small from 30 June 2027; seven commodities.', via: 'European Commission Access2Markets; psqr.eu' , url: 'https://trade.ec.europa.eu/access-to-markets/' },
   ],
+};
+
+
+export const projects = {
+  id: 'projects',
+  path: '/carbon-projects.html',
+  title: 'We develop carbon projects at the source',
+  metaTitle: 'Carbon Project Development — Origination to Issuance | OffsetEase',
+  shortTitle: 'Carbon projects',
+  description:
+    'End-to-end carbon project development: origination, feasibility, financing, PDD, validation, registration, MRV and issuance — with revenue shared with the communities who create it.',
+  preloadPhoto: 'tree-nursery',
+  service: { name: 'Carbon project development', type: 'Carbon project origination and development' },
+
+  hero: {
+    eyebrow: 'Carbon projects',
+    headline: 'We develop carbon projects at the source.',
+    accent: ['source.'],
+    standfirst:
+      'Nature-based and durable removal projects taken end to end — identified, financed, designed, validated, registered, monitored and verified. The credits trace back to the ground, and the value flows back to the communities who created them.',
+    photo: 'tree-nursery',
+    photoAlt: 'Rows of young trees in a nursery',
+    primary: { label: 'Discuss a project', href: '/contact.html' },
+    secondary: { label: 'Buy from our projects', href: '/carbon-supply.html' },
+  },
+
+  why: {
+    eyebrow: 'Why we develop, and do not only trade',
+    headline: 'Screening alone cannot create the supply that passes.',
+    body: [
+      'The half of the market that holds up is scarce. A buyer who only screens what already exists is competing for a shrinking pool against everyone else who screens well.',
+      'Developing at the source is how we keep supplying carbon that passes The Five Checks — and it is the only way the revenue reaches the people doing the work on the ground.',
+    ],
+  },
+
+  close: {
+    headline: 'Bring us a landscape, or a tonne you need in 2030.',
+    body:
+      'We originate where carbon finance creates real impact, and we structure offtake early so the project is funded from the start. A senior specialist replies within one business day.',
+    photo: 'farmland-sunrise',
+    photoAlt: 'Farmland catching the first light of sunrise',
+  },
+};
+
+export const privacy = {
+  id: 'privacy',
+  path: '/privacy.html',
+  title: 'Privacy policy',
+  metaTitle: 'Privacy Policy | OffsetEase',
+  shortTitle: 'Privacy policy',
+  description:
+    'What OffsetEase collects through this website, why, who processes it, how long it is kept, and how to have it deleted.',
+  updated: 'September 2026',
+  intro:
+    'This policy covers this website only. It is written to be read, not to be survived. If anything here is unclear, email us and ask.',
+  sections: [
+    {
+      title: 'What this site collects',
+      body: [
+        'Nothing, unless you send us an enquiry. This site sets **no cookies**, runs **no analytics**, embeds **no tracking pixels** and loads **no third-party scripts**. Fonts and images are served from this domain, so no external service is told that you visited.',
+        'If you submit the enquiry form we receive the **name, work email address and company** you type, the **topic** you select, and your **message** if you write one. That is the whole of it.',
+      ],
+    },
+    {
+      title: 'Why we hold it, and on what basis',
+      body: [
+        'Solely to reply to your enquiry and to carry on the conversation you started. We do not add you to a mailing list, we do not profile you, and we do not sell, rent or share your details with anyone for their own purposes.',
+        'The lawful basis is your consent, which you give by ticking the consent box and submitting the form. You can withdraw it at any time.',
+      ],
+    },
+    {
+      title: 'Who else touches it',
+      body: [
+        'The enquiry form is delivered by **Web3Forms**, a third-party form-delivery service acting as our processor. Your submission passes through their infrastructure on its way to our inbox. Their privacy terms are at [web3forms.com/privacy](https://web3forms.com/privacy).',
+        'Our email is hosted by our mail provider. Beyond that, enquiry data stays with us.',
+      ],
+    },
+    {
+      title: 'How long we keep it',
+      body: [
+        'Enquiries that do not become an engagement are deleted within **24 months**. Where an enquiry becomes a client engagement, the records are kept for as long as the engagement runs and then for the period our statutory and tax obligations require.',
+      ],
+    },
+    {
+      title: 'Your rights',
+      body: [
+        'You can ask us for a copy of what we hold about you, ask us to correct it, ask us to delete it, or withdraw your consent — by emailing **info@offsetease.com**. We will act within 30 days.',
+        'If you are in the EU or the UK and you are not satisfied with how we have handled a request, you may complain to your national data protection authority.',
+      ],
+    },
+    {
+      title: 'Changes',
+      body: [
+        'If this policy changes materially we will update the date at the top. This version is current as of the date shown.',
+      ],
+    },
+  ],
+  // Named so nobody mistakes a drafted policy for a reviewed one.
+  notice:
+    'This policy describes how this website actually behaves, and was drafted alongside the build. It has not been reviewed by a lawyer, and it does not yet name the registered entity or its address — supply those and they will be added here and to the footer.',
+};
+
+export const terms = {
+  id: 'terms',
+  path: '/terms.html',
+  title: 'Terms of use',
+  metaTitle: 'Terms of Use | OffsetEase',
+  shortTitle: 'Terms of use',
+  description:
+    'The terms on which this website is provided: what the content is and is not, how figures are sourced, and the limits of what a website can promise.',
+  updated: 'September 2026',
+  intro:
+    'These terms govern your use of this website. They do not govern any engagement with OffsetEase — that is set out in a signed agreement.',
+  sections: [
+    {
+      title: 'What this site is',
+      body: [
+        'A description of services. Nothing on this website is an offer, a quotation, a price, or a commitment to supply. Availability, volumes, vintages and prices are agreed in writing, engagement by engagement.',
+      ],
+    },
+    {
+      title: 'Not advice',
+      body: [
+        'The material here is general information about carbon markets, disclosure regimes and sustainability regulation. It is **not legal, tax, accounting, investment or compliance advice**, and it is not a substitute for it. Regulatory positions turn on facts we do not know about you. Take advice before you act.',
+      ],
+    },
+    {
+      title: 'Market figures',
+      body: [
+        'Every market statistic on this site is attributed to a named, dated third-party source on the [Sources & data](/sources.html) page and was accurate as published. These markets move quickly. We refresh the figures periodically and show the review date in the footer, but we do not warrant that any figure is current at the moment you read it. Verify against the primary source before you rely on one.',
+        'Figures identified as OffsetEase programme data are ours. Figures shown in the market component are third parties’ and are labelled with their source.',
+      ],
+    },
+    {
+      title: 'Third-party links',
+      body: [
+        'We link to registries, regulators, standards bodies and research publishers so you can check our work. We do not control those sites and are not responsible for their content.',
+      ],
+    },
+    {
+      title: 'Intellectual property',
+      body: [
+        'The text, design, diagrams and code of this website belong to OffsetEase, except the photography, which is licensed from Unsplash, and the typefaces, which are used under the SIL Open Font License. Credits are listed in the repository’s CREDITS file.',
+      ],
+    },
+    {
+      title: 'Liability',
+      body: [
+        'We take care to keep this site accurate, but to the extent the law allows we exclude liability for loss arising from reliance on it. Nothing here limits liability that cannot lawfully be limited.',
+      ],
+    },
+  ],
+  notice:
+    'These terms were drafted alongside the build and have not been reviewed by a lawyer. The governing-law clause and the registered entity name are deliberately absent until you supply them.',
 };

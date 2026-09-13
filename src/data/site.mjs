@@ -63,9 +63,13 @@ export const site = {
 
 export const nav = [
   { label: 'Carbon supply', href: '/carbon-supply.html' },
-  { label: 'Certificates', href: '/energy-attribute-certificates.html' },
-  { label: 'ESG & sustainability', href: '/esg-sustainability.html' },
+  { label: 'Carbon projects', href: '/carbon-projects.html' },
+  { label: 'Certificates (I-RECs)', href: '/energy-attribute-certificates.html' },
+  // `mega: true` makes the desktop header open the five ESG discipline groups
+  // rather than forcing a visitor to guess that CBAM lives under this label.
+  { label: 'ESG & sustainability', href: '/esg-sustainability.html', mega: 'esg' },
   { label: 'About', href: '/about.html' },
+  { label: 'Contact', href: '/contact.html' },
 ];
 
 export const footerNav = [
@@ -74,8 +78,8 @@ export const footerNav = [
     links: [
       { label: 'Carbon supply', href: '/carbon-supply.html' },
       { label: 'The Five Checks', href: '/carbon-supply.html#five-checks' },
-      { label: 'Origination to supply', href: '/carbon-supply.html#pipeline' },
-      { label: 'Energy Attribute Certificates', href: '/energy-attribute-certificates.html' },
+      { label: 'Carbon project development', href: '/carbon-projects.html' },
+      { label: 'Energy Attribute Certificates (I-RECs)', href: '/energy-attribute-certificates.html' },
     ],
   },
   {
@@ -116,7 +120,16 @@ export const footerNav = [
     links: [
       { label: 'About', href: '/about.html' },
       { label: 'Contact', href: '/contact.html' },
-      { label: 'Sources & data', href: '/sources.html' },
+      { label: 'Privacy policy', href: '/privacy.html' },
+      { label: 'Terms of use', href: '/terms.html' },
     ],
   },
 ];
+
+// Sources sits above the footer columns, not buried in one of them: it is the
+// single best trust asset on the site.
+export const footerFeature = {
+  label: 'Sources & data',
+  href: '/sources.html',
+  blurb: 'Every market figure on this site, with its named source, its date and a link to the original.',
+};

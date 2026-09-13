@@ -43,6 +43,8 @@ export const services = [
       { q: 'Is Scope 3 mandatory?', a: 'It varies by jurisdiction, but exporters and EU suppliers are asked for it regardless. Building it early is the defensible choice.' },
     ],
     cta: 'Build your baseline.',
+    closeBody:
+      'Send us last year’s energy bills and a site list and we will tell you what a defensible baseline actually takes.',
     related: ['product-carbon-footprint', 'sbti-target-setting', 'supplier-value-chain-esg'],
   },
 
@@ -79,6 +81,8 @@ export const services = [
       { q: 'How does it relate to CBAM?', a: 'CBAM charges on embedded emissions; a rigorous PCF supports verified data that beats default values.' },
     ],
     cta: 'Get your PCFs tender-ready.',
+    closeBody:
+      'Tell us the SKU and the buyer asking for the data, and we will scope the footprint against what they will accept.',
     related: ['life-cycle-assessment', 'cbam-compliance', 'environmental-product-declaration'],
   },
 
@@ -111,6 +115,8 @@ export const services = [
       { q: 'Do we need an LCA for an EPD?', a: 'Yes. A compliant LCA is the technical foundation of a verified EPD.' },
     ],
     cta: 'Commission an LCA.',
+    closeBody:
+      'Tell us the product and the claim you need to stand behind, and we will scope the study to match.',
     related: ['environmental-product-declaration', 'product-carbon-footprint', 'ghg-accounting'],
   },
 
@@ -144,6 +150,8 @@ export const services = [
       { q: 'How long is it valid?', a: 'Typically five years, then updated.' },
     ],
     cta: 'Get EPDs that win work.',
+    closeBody:
+      'Tell us which scheme your buyers use and we will work back from the PCR you need.',
     related: ['life-cycle-assessment', 'product-carbon-footprint', 'iscc-certification'],
   },
 
@@ -179,6 +187,8 @@ export const services = [
       { q: 'What is BRSR Core?', a: 'A subset of KPIs requiring reasonable assurance, reaching the top 1,000 by FY 2026-27.' },
     ],
     cta: 'Get BRSR-ready.',
+    closeBody:
+      'Tell us your market-cap rank and we will map which BRSR Core KPIs need assurance, and by when.',
     related: ['ifrs-s1-s2', 'supplier-value-chain-esg', 'double-materiality-assessment'],
   },
 
@@ -214,6 +224,8 @@ export const services = [
       { q: 'What changed?', a: 'Higher thresholds, later timelines; double materiality and assurance remain.' },
     ],
     cta: 'Map your CSRD obligations.',
+    closeBody:
+      'Give us your EU turnover and headcount and we will tell you, plainly, whether the Omnibus took you out of scope.',
     related: ['double-materiality-assessment', 'ifrs-s1-s2', 'brsr-reporting'],
   },
 
@@ -249,6 +261,8 @@ export const services = [
       { q: 'How does it relate to TCFD?', a: 'S2 builds on TCFD, so TCFD work maps straight across.' },
     ],
     cta: 'Build to the global baseline.',
+    closeBody:
+      'Tell us which frameworks you already answer to and we will show you how much of S1/S2 you have already built.',
     related: ['climate-risk-tcfd', 'csrd-esrs', 'cdp-disclosure'],
   },
 
@@ -281,6 +295,8 @@ export const services = [
       { q: 'Single vs double materiality?', a: 'Single looks only at financial impact on the company; double adds the company’s impact outward.' },
     ],
     cta: 'Run a defensible assessment.',
+    closeBody:
+      'Tell us who your stakeholders are and we will scope an assessment that survives assurance.',
     related: ['csrd-esrs', 'brsr-reporting', 'esg-csr-strategy'],
   },
 
@@ -306,8 +322,8 @@ export const services = [
     approach: [
       'Diagnose your scorecard',
       'Run a gap analysis against the methodology',
+      'Prioritise the highest-weighted themes — actions carry 40% of the score, results 35%, policies 25%',
       'Build evidence, policies and actions across all four themes',
-      'Prioritise the highest-weighted themes',
       'Manage submission and improvement toward Gold or Platinum',
     ],
     standards: ['EcoVadis methodology', 'Aligned to GRI, UN Global Compact and ISO 26000'],
@@ -316,6 +332,8 @@ export const services = [
       { q: 'How do we move up?', a: 'By closing the highest-weighted evidence and policy gaps; we manage the process end to end.' },
     ],
     cta: 'Improve your EcoVadis medal.',
+    closeBody:
+      'Send us your current scorecard and we will tell you which theme is costing you the medal.',
     related: ['supplier-value-chain-esg', 'cdp-disclosure', 'esg-csr-strategy'],
   },
 
@@ -349,6 +367,8 @@ export const services = [
       { q: 'Who sees our score?', a: 'It’s public and used by investors and buyers.' },
     ],
     cta: 'Improve your CDP score.',
+    closeBody:
+      'Send us last year’s CDP response and we will show you where the scoring points went.',
     related: ['ifrs-s1-s2', 'ghg-accounting', 'climate-risk-tcfd'],
   },
 
@@ -372,11 +392,11 @@ export const services = [
       'The financial regime is now live: CBAM’s definitive phase began on 1 January 2026 (European Commission, 2026). The Omnibus 50-tonne de minimis exempts roughly 90% of importers while still covering about 99% of embedded emissions (European Commission, 2026). The Q1 2026 reference price was €75.36 per tonne of CO₂, with a €100-per-tonne penalty for non-surrender, and the first declaration for 2026 imports is due 30 September 2027 (Gerlach Customs; Coolset, 2026).',
     proofFigure: { value: '€75.36/t', label: 'CBAM reference price, Q1 2026' },
     approach: [
+      'Confirm exactly where you sit in scope — the rules changed just before the definitive regime began',
       'Calculate product-level embedded emissions',
       'Produce verified data to replace defaults',
-      'Support your declarants',
       'Model the margin impact',
-      'Confirm exactly where you sit in scope',
+      'Support your declarants through submission',
     ],
     standards: ['EU CBAM Regulation', 'Underpinned by rigorous PCF and GHG data'],
     faqs: [
@@ -384,6 +404,8 @@ export const services = [
       { q: 'Why does verified data matter?', a: 'Defaults are conservative and usually higher; verified data typically lowers the cost.' },
     ],
     cta: 'Protect your EU margin.',
+    closeBody:
+      'Send us your CN codes and import volumes and we will model what defaults are costing you.',
     related: ['product-carbon-footprint', 'climate-risk-tcfd', 'eudr-compliance'],
   },
 
@@ -417,6 +439,8 @@ export const services = [
       { q: 'What are the deadlines?', a: 'Large/medium operators from 30 December 2026; small operators from 30 June 2027.' },
     ],
     cta: 'Get EUDR-ready.',
+    closeBody:
+      'Tell us your commodity and supplier footprint and we will scope the plot-level data you still need.',
     related: ['supplier-value-chain-esg', 'iscc-certification', 'cbam-compliance'],
   },
 
@@ -448,6 +472,8 @@ export const services = [
       { q: 'What is mass balance?', a: 'A method for tracking sustainable material through mixed supply chains.' },
     ],
     cta: 'Get ISCC-certified.',
+    closeBody:
+      'Tell us your market and material and we will tell you which scheme fits and what the audit will ask.',
     related: ['eudr-compliance', 'environmental-product-declaration', 'supplier-value-chain-esg'],
   },
 
@@ -482,6 +508,8 @@ export const services = [
       { q: 'What changes under V2?', a: 'Formal recognition of credits, interim removals, and mandatory application to new targets from 2028.' },
     ],
     cta: 'Set validated targets.',
+    closeBody:
+      'Tell us your baseline year and growth plan and we will model a target that is ambitious and fundable.',
     related: ['net-zero-decarbonization', 'ghg-accounting', 'ifrs-s1-s2'],
   },
 
@@ -516,6 +544,8 @@ export const services = [
       { q: 'How do reductions and removals fit together?', a: 'Reductions carry the target; removals address the residual you can’t yet eliminate.' },
     ],
     cta: 'Fund your net-zero pathway.',
+    closeBody:
+      'Tell us your emissions profile and cost of capital and we will build the curve your CFO will read.',
     related: ['sbti-target-setting', 'ghg-accounting', 'climate-risk-tcfd'],
   },
 
@@ -547,6 +577,8 @@ export const services = [
       { q: 'Can CSR reinforce our carbon and ESG work?', a: 'Yes — the strongest programmes concentrate where your operations and projects already have a footprint.' },
     ],
     cta: 'Build a strategy that pays back.',
+    closeBody:
+      'Tell us where your operations touch communities and we will build the thesis around it.',
     related: ['double-materiality-assessment', 'ecovadis-rating', 'supplier-value-chain-esg'],
   },
 
@@ -582,6 +614,8 @@ export const services = [
       { q: 'Is TCFD still relevant under IFRS S2?', a: 'Yes — S2 builds on TCFD, so the work maps straight across.' },
     ],
     cta: 'Quantify your climate risk.',
+    closeBody:
+      'Send us a site list and we will scope the physical and transition exposure worth quantifying.',
     related: ['ifrs-s1-s2', 'cbam-compliance', 'net-zero-decarbonization'],
   },
 
@@ -617,6 +651,8 @@ export const services = [
       { q: 'How does it support Scope 3?', a: 'Primary supplier data replaces averages, for a more accurate, defensible footprint.' },
     ],
     cta: 'Strengthen your value chain.',
+    closeBody:
+      'Tell us how many suppliers you have and where, and we will scope a screen that is actually completable.',
     related: ['ghg-accounting', 'ecovadis-rating', 'brsr-reporting'],
   },
 ];

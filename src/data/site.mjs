@@ -61,8 +61,47 @@ export const site = {
   lastReviewed: 'September 2026',
 };
 
+// Sections revealed by a nav disclosure. Carbon supply gets one too, so the
+// service we most want to sell — project development — is visible from the
+// header instead of hiding behind an in-page anchor.
+export const megaMenus = {
+  supply: [
+    {
+      title: 'How to buy',
+      links: [
+        { label: 'Spot supply', href: '/carbon-supply.html#ways' },
+        { label: 'Managed portfolio', href: '/carbon-supply.html#ways' },
+        { label: 'Offtake & forward purchase', href: '/carbon-supply.html#ways' },
+      ],
+    },
+    {
+      title: 'What we supply',
+      links: [
+        { label: 'Nature-based', href: '/carbon-supply.html#supply-types' },
+        { label: 'Durable removals', href: '/carbon-supply.html#supply-types' },
+        { label: 'Avoidance & reduction', href: '/carbon-supply.html#supply-types' },
+      ],
+    },
+    {
+      title: 'How we develop',
+      links: [
+        { label: 'Carbon project development', href: '/carbon-supply.html#develop' },
+        { label: 'Origination to supply', href: '/carbon-supply.html#pipeline' },
+        { label: 'Standards & frameworks', href: '/carbon-supply.html#standards' },
+      ],
+    },
+    {
+      title: 'How we screen',
+      links: [
+        { label: 'The Five Checks', href: '/carbon-supply.html#five-checks' },
+        { label: 'Sources & data', href: '/sources.html' },
+      ],
+    },
+  ],
+};
+
 export const nav = [
-  { label: 'Carbon supply', href: '/carbon-supply.html' },
+  { label: 'Carbon supply', href: '/carbon-supply.html', mega: 'supply' },
   { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
   // `mega` opens the five ESG discipline groups on desktop, so a visitor
   // looking for CBAM does not have to guess which label hides it.
@@ -125,11 +164,3 @@ export const footerNav = [
     ],
   },
 ];
-
-// Sources sits above the footer columns, not buried in one of them: it is the
-// single best trust asset on the site.
-export const footerFeature = {
-  label: 'Sources & data',
-  href: '/sources.html',
-  blurb: 'Every market figure on this site, with its named source, its date and a link to the original.',
-};

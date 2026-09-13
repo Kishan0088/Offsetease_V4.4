@@ -1,4 +1,4 @@
-import { site, nav, footerNav, footerFeature, primaryCta } from '../data/site.mjs';
+import { site, nav, footerNav, primaryCta, megaMenus } from '../data/site.mjs';
 import { groups, servicesInGroup } from '../data/services.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
@@ -57,7 +57,8 @@ function organisationJsonLd() {
 }
 
 function breadcrumbJsonLd(page) {
-  if (!page.breadcrumb || !page.breadcrumb.length) return null;
+  if (page.path === '/' || page.path === '/404.html') return null;
+  if (!page.breadcrumb) page.breadcrumb = [];
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -111,28 +112,36 @@ function siteNavJsonLd() {
   };
 }
 
-function megaPanel() {
-  const cols = groups
+function megaPanel(kind) {
+  const columns =
+    kind === 'esg'
+      ? groups.map((g) => ({
+          title: g.title,
+          links: servicesInGroup(g.id).map((sv) => ({
+            label: sv.shortTitle || sv.title,
+            href: sv.path,
+          })),
+        }))
+      : megaMenus[kind] || [];
+
+  const cols = columns
     .map(
-      (g) =>
-        `<div class="mega__col"><p class="mega__t">${esc(g.title)}</p><ul>` +
-        servicesInGroup(g.id)
-          .map(
-            (sv) =>
-              `<li><a href="${url(sv.path)}">${esc(sv.shortTitle || sv.title)}</a></li>`
-          )
-          .join('') +
+      (c) =>
+        `<div class="mega__col"><p class="mega__t">${esc(c.title)}</p><ul>` +
+        c.links.map((l) => `<li><a href="${url(l.href)}">${esc(l.label)}</a></li>`).join('') +
         '</ul></div>'
     )
     .join('');
-  return (
-    '<div class="mega" id="mega-esg" data-mega hidden>' +
-      `<div class="mega__inner">${cols}` +
-      `<div class="mega__col mega__col--all"><p class="mega__t">All of it</p><ul>` +
-      `<li><a href="${url('/esg-sustainability.html')}">ESG &amp; sustainability overview</a></li>` +
-      `<li><a href="${url('/sources.html')}">Sources &amp; data</a></li>` +
-      '</ul></div></div></div>'
-  );
+
+  const all =
+    kind === 'esg'
+      ? '<div class="mega__col mega__col--all"><p class="mega__t">All of it</p><ul>' +
+        `<li><a href="${url('/esg-sustainability.html')}">ESG &amp; sustainability overview</a></li>` +
+        `<li><a href="${url('/sources.html')}">Sources &amp; data</a></li></ul></div>`
+      : '';
+
+  return `<div class="mega" id="mega-${esc(kind)}" data-mega hidden>` +
+    `<div class="mega__inner">${cols}${all}</div></div>`;
 }
 
 function header(page) {
@@ -149,11 +158,11 @@ function header(page) {
             `<a class="${cls}" href="${url(item.href)}"${active ? ' aria-current="page"' : ''}>` +
             `${esc(item.label)}</a>` +
             '<button class="nav__disc" type="button" data-mega-toggle aria-expanded="false" ' +
-            `aria-controls="mega-esg" aria-label="Show all ESG &amp; sustainability services">` +
+            `aria-controls="mega-${item.mega}" aria-label="Show everything under ${esc(item.label)}">` +
             '<svg width="10" height="7" viewBox="0 0 10 7" fill="none" aria-hidden="true">' +
             '<path d="M1 1.5 5 5.5 9 1.5" stroke="currentColor" stroke-width="1.4" ' +
             'stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
-            megaPanel() +
+            megaPanel(item.mega) +
           '</span>'
         );
       }
@@ -167,7 +176,11 @@ function header(page) {
   // is already on — send them to the form instead.
   const onContact = page.path === '/contact.html';
   const ctaHref = onContact ? '#enquiry' : primaryCta.href;
-  const ctaLabel = onContact ? 'Go to the form' : primaryCta.label;
+  const ctaLabel = onContact
+    ? site.form.accessKey
+      ? 'Go to the form'
+      : 'How to reach us'
+    : primaryCta.label;
 
   const mobileGroups = groups
     .map(
@@ -227,10 +240,14 @@ function header(page) {
 function stickyCta(page) {
   if (page.path === '/contact.html') return '';
   return (
-    '<div class="sticky" data-sticky hidden>' +
+    '<aside class="sticky" data-sticky aria-label="Quick contact" hidden>' +
       `<a class="sticky__a" href="${url(primaryCta.href)}">${esc(primaryCta.label)}</a>` +
       `<a class="sticky__e" href="mailto:${esc(site.email)}">or email</a>` +
-    '</div>'
+      '<button class="sticky__x" type="button" data-sticky-close aria-label="Hide quick contact">' +
+      '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">' +
+      '<path d="M1 1l11 11M12 1L1 12" stroke="currentColor" stroke-width="1.5" ' +
+      'stroke-linecap="round"/></svg></button>' +
+    '</aside>'
   );
 }
 
@@ -250,18 +267,14 @@ function footer() {
 
         <div class="fcta">
           <div>
-            <p class="label">Start here</p>
-            <p class="fcta__h">Tell us what you need to stand behind.</p>
+            <p class="label">Speak to a specialist</p>
+            <p class="fcta__h">A senior advisor, not a form queue.</p>
           </div>
-          <div class="fcta__side">
-            <a class="btn btn--gold" href="${raw(url(primaryCta.href))}" data-magnetic>
-              ${primaryCta.label}
-              <span class="btn__arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                aria-hidden="true"><path d="M1 7h11M8 3l4 4-4 4" stroke="currentColor"
-                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </a>
-            <p class="fcta__n">${site.responsePromise}</p>
-          </div>
+          <ul class="fcta__list">
+            <li><span>Email</span><a href="mailto:${site.email}">${site.email}</a></li>
+            <li><span>Phone</span><a href="tel:${site.phoneHref}">${site.phone}</a></li>
+            <li><span>Reply</span><span class="fcta__v">Within one business day</span></li>
+          </ul>
         </div>
 
         <div class="fmain">
@@ -278,18 +291,8 @@ function footer() {
           <nav class="fnav" aria-label="Footer">${raw(cols)}</nav>
         </div>
 
-        <a class="fsources" href="${raw(url(footerFeature.href))}">
-          <span class="fsources__k">${footerFeature.label}</span>
-          <span class="fsources__b">${footerFeature.blurb}</span>
-          <span class="fsources__a" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M1 7h11M8 3l4 4-4 4"
-              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </a>
-
         <div class="fbase">
           <p>© ${raw(YEAR)} ${site.legalName}</p>
-          <p class="fbase__m">Market figures reviewed ${site.lastReviewed}</p>
           <ul class="fbase__l">
             <li><a href="${raw(url('/privacy.html'))}">Privacy</a></li>
             <li><a href="${raw(url('/terms.html'))}">Terms</a></li>

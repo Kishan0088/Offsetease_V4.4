@@ -100,8 +100,8 @@ export function renderHome() {
             str(
               inlineCta(
                 'Considering a project already? Send it over and we will run it through all five.',
-                'Ask us to screen it',
-                '/contact.html'
+                'Send us a project to screen',
+                '/contact.html?topic=Carbon+projects'
               )
             )
         ),
@@ -164,8 +164,8 @@ export function renderHome() {
             str(
               inlineCta(
                 'Want the detail behind these numbers — standard, methodology, verifier and registry record?',
-                'Ask for the project file',
-                '/contact.html'
+                'Request the project file',
+                '/contact.html?topic=Carbon+projects'
               )
             )
         ),
@@ -173,7 +173,12 @@ export function renderHome() {
       )
     ),
 
-    str(closeCta(d.close)),
+    str(
+      closeCta(d.close, {
+        label: 'Start a conversation',
+        secondary: { label: 'How we screen carbon', href: '/carbon-supply.html#five-checks' },
+      })
+    ),
   ].join('\n');
 
   return { page: { ...d, bodyClass: 'page-home' }, body };
@@ -260,7 +265,14 @@ export function renderSupply() {
             })
           ) +
             str(stages(d.pipeline.stages)) +
-            `<div style="margin-top:clamp(28px,3.4vw,48px)">${str(proof(d.pipeline.proof))}</div>`
+            `<div style="margin-top:clamp(28px,3.4vw,48px)">${str(proof(d.pipeline.proof))}</div>` +
+            str(
+              inlineCta(
+                'Bringing us a landscape rather than buying a tonne? We originate, finance and register projects from scratch.',
+                'Discuss developing a project',
+                '/contact.html?topic=Carbon+projects'
+              )
+            )
         ),
         { tone: 'on-ink', id: 'pipeline', chapter: 'Pipeline' }
       )
@@ -303,7 +315,13 @@ export function renderSupply() {
       section(raw(str(fiveChecksTeaser())), { tone: 'on-bone', id: 'five-checks', chapter: 'Checks' })
     ),
 
-    str(closeCta(d.close, { secondary: { label: 'Certificates', href: '/energy-attribute-certificates.html' } })),
+    str(
+      closeCta(d.close, {
+        label: 'Get indicative pricing',
+        topic: 'Carbon supply',
+        secondary: { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
+      })
+    ),
   ].join('\n');
 
   return { page: d, body };
@@ -383,7 +401,13 @@ export function renderEac() {
       })
     ),
 
-    str(closeCta(d.close, { secondary: { label: 'ESG & sustainability', href: '/esg-sustainability.html' } })),
+    str(
+      closeCta(d.close, {
+        label: 'Match my consumption',
+        topic: 'Energy Attribute Certificates',
+        secondary: { label: 'ESG & sustainability', href: '/esg-sustainability.html' },
+      })
+    ),
   ].join('\n');
 
   return { page: d, body };
@@ -445,8 +469,8 @@ export function renderEsg() {
             str(
               inlineCta(
                 'Not sure which of these applies to you? Tell us which regulator or buyer is asking, and we will tell you.',
-                'Ask which ones apply',
-                '/contact.html'
+                'Ask which ones apply to us',
+                '/contact.html?topic=ESG+%26+sustainability'
               )
             )
         ),
@@ -464,7 +488,13 @@ export function renderEsg() {
       })
     ),
 
-    str(closeCta(d.close, { secondary: { label: 'Carbon supply', href: '/carbon-supply.html' } })),
+    str(
+      closeCta(d.close, {
+        label: 'Map my obligations',
+        topic: 'ESG & sustainability',
+        secondary: { label: 'Carbon supply', href: '/carbon-supply.html' },
+      })
+    ),
   ].join('\n');
 
   return { page: d, body };
@@ -520,7 +550,12 @@ export function renderAbout() {
       })
     ),
 
-    str(closeCta(d.close, { secondary: { label: 'What we supply', href: '/carbon-supply.html' } })),
+    str(
+      closeCta(d.close, {
+        label: 'Start a conversation',
+        secondary: { label: 'What we supply', href: '/carbon-supply.html' },
+      })
+    ),
   ].join('\n');
 
   return { page: d, body };
@@ -530,45 +565,89 @@ export function renderAbout() {
 
 export function renderContact() {
   const d = contact;
-  const options = d.topics
-    .map((t) => `<option value="${esc(t)}">${esc(t)}</option>`)
-    .join('');
+  const options = d.topics.map((t) => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  const formLive = Boolean(site.form.accessKey);
+
+  // Labelled control + a sibling error node the input points at, so the error
+  // becomes the field's *description*, not part of its accessible name.
+  const field = (id, label, control, { pair = false, optional = false } = {}) =>
+    `<div class="field${pair ? '' : ''}">` +
+    `<label class="field__lab" for="${id}">${esc(label)}` +
+    (optional ? ' <em>(optional)</em>' : ' <i class="req" aria-hidden="true">*</i>') +
+    '</label>' +
+    control +
+    `<span class="field__err" id="${id}-err" aria-live="polite"></span></div>`;
 
   const form =
     `<form class="form" data-form method="POST" action="${esc(site.form.endpoint)}" ` +
     `data-access-key="${esc(site.form.accessKey)}" novalidate>` +
     `<input type="hidden" name="subject" value="${esc(site.form.subject)}">` +
     `<input type="hidden" name="from_name" value="${esc(site.name)} website">` +
-    '<div class="hp" aria-hidden="true"><label>Leave this empty' +
-    '<input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label></div>' +
+    '<div class="hp" aria-hidden="true"><label for="botcheck">Leave this empty</label>' +
+    '<input id="botcheck" type="text" name="botcheck" tabindex="-1" autocomplete="off"></div>' +
     '<div class="field--pair">' +
-    '<label class="field"><span>Name <i class="req">*</i></span>' +
-    '<input type="text" name="name" required autocomplete="name" maxlength="120">' +
-    '<span class="field__err" aria-live="polite"></span></label>' +
-    '<label class="field"><span>Work email <i class="req">*</i></span>' +
-    '<input type="email" name="email" required autocomplete="email" maxlength="160">' +
-    '<span class="field__err" aria-live="polite"></span></label>' +
+    field(
+      'f-name',
+      'Name',
+      '<input id="f-name" type="text" name="name" required autocomplete="name" ' +
+        'maxlength="120" aria-describedby="f-name-err">'
+    ) +
+    field(
+      'f-email',
+      'Work email',
+      '<input id="f-email" type="email" name="email" required autocomplete="email" ' +
+        'maxlength="160" aria-describedby="f-email-err">'
+    ) +
+    '</div><div class="field--pair">' +
+    field(
+      'f-company',
+      'Company',
+      '<input id="f-company" type="text" name="company" required autocomplete="organization" ' +
+        'maxlength="160" aria-describedby="f-company-err">'
+    ) +
+    field(
+      'f-topic',
+      'What can we help with?',
+      '<select id="f-topic" name="topic" required aria-describedby="f-topic-err">' +
+        `<option value="" disabled selected>Choose one</option>${options}</select>`
+    ) +
     '</div>' +
-    '<div class="field--pair">' +
-    '<label class="field"><span>Company <i class="req">*</i></span>' +
-    '<input type="text" name="company" required autocomplete="organization" maxlength="160">' +
-    '<span class="field__err" aria-live="polite"></span></label>' +
-    '<label class="field"><span>What can we help with? <i class="req">*</i></span>' +
-    `<select name="topic" required><option value="" disabled selected>Choose one</option>${options}</select>` +
-    '<span class="field__err" aria-live="polite"></span></label>' +
-    '</div>' +
-    '<label class="field"><span>Message <em>(optional)</em></span>' +
-    '<textarea name="message" rows="5" maxlength="4000"></textarea>' +
-    '<span class="field__err" aria-live="polite"></span></label>' +
-    '<label class="consent"><input type="checkbox" name="consent" value="yes" required>' +
-    `<span>I agree to ${esc(site.name)} storing these details in order to respond to my ` +
-    `enquiry. See the <a href="${url('/privacy.html')}">privacy policy</a>.` +
-    '<span class="field__err" aria-live="polite"></span></span></label>' +
+    field(
+      'f-message',
+      'Message',
+      '<textarea id="f-message" name="message" rows="5" maxlength="4000" ' +
+        'aria-describedby="f-message-err"></textarea>',
+      { optional: true }
+    ) +
+    '<div class="consent">' +
+    '<input id="f-consent" type="checkbox" name="consent" value="yes" required ' +
+    'aria-describedby="f-consent-err">' +
+    `<div><label for="f-consent">I agree to ${esc(site.name)} storing these details in order ` +
+    `to respond to my enquiry. See the <a href="${url('/privacy.html')}">privacy policy</a>.</label>` +
+    '<span class="field__err" id="f-consent-err" aria-live="polite"></span></div></div>' +
     `<p class="form__note">${esc(d.assurance)} ${esc(site.responsePromise)}</p>` +
-    '<div class="btns"><button class="btn btn--gold" type="submit" data-magnetic>Send enquiry' +
-    `<span class="btn__arrow">${ARROW}</span></button></div>` +
+    '<div class="btns"><button class="btn btn--gold" type="submit" data-magnetic>' +
+    `<span class="btn__label">Send enquiry</span><span class="btn__arrow">${ARROW}</span>` +
+    '</button></div>' +
     '<p class="form__status" data-form-status role="status" tabindex="-1" hidden></p>' +
     '</form>';
+
+  // C1: a form that cannot send is worse than no form. Until an access key is
+  // configured the page offers the channels that actually work instead of
+  // asking for five fields and a consent tick and then failing.
+  const offline =
+    '<div class="offline">' +
+    '<p class="offline__t">Email or call us directly</p>' +
+    '<p class="offline__b">Our enquiry form is being connected. In the meantime these reach ' +
+    'a senior specialist straight away, and we reply within one business day.</p>' +
+    '<div class="btns">' +
+    `<a class="btn btn--gold" href="mailto:${esc(site.email)}?subject=${encodeURIComponent(
+      'Enquiry from the website'
+    )}" data-magnetic><span class="btn__label">Email ${esc(site.email)}</span>` +
+    `<span class="btn__arrow">${ARROW}</span></a>` +
+    `<a class="btn btn--ghost" href="tel:${esc(site.phoneHref)}">Call ${esc(site.phone)}` +
+    `<span class="btn__arrow">${ARROW}</span></a>` +
+    '</div></div>';
 
   const details =
     '<div class="contacts">' +
@@ -582,12 +661,25 @@ export function renderContact() {
   const body = [
     // A short hero on this page only: the visitor arrived to do one thing, and
     // a full-viewport photograph between them and the Name field is a tax.
-    str(hero(d.hero, { crumbs: [{ name: 'Contact', href: d.path }], variant: 'compact' })),
+    str(
+      hero(
+        {
+          ...d.hero,
+          // Do not promise a form that is not wired up.
+          primary: formLive
+            ? { label: 'Send an enquiry', href: '#enquiry' }
+            : { label: 'How to reach us', href: '#enquiry' },
+        },
+        { crumbs: [{ name: 'Contact', href: d.path }], variant: 'compact' }
+      )
+    ),
     str(
       section(
         raw(
           '<div class="contact-grid">' +
-            `<div class="reveal"><h2 class="h3" style="margin-bottom:22px">Send an enquiry</h2>${form}</div>` +
+            `<div class="reveal"><h2 class="h3" style="margin-bottom:22px">${
+              formLive ? 'Send an enquiry' : 'Get in touch'
+            }</h2>${formLive ? form : offline}</div>` +
             '<div class="reveal">' +
             '<h2 class="label">How to reach us</h2>' +
             details +
@@ -658,7 +750,10 @@ function breadcrumb_(items) {
   const li = items
     .map((c) => `<li><span aria-current="page">${esc(c.name)}</span></li>`)
     .join('');
-  return raw(`<ol class="crumb"><li><a href="${url('/')}">Home</a></li>${li}</ol>`);
+  return raw(
+    '<nav class="crumb-nav" aria-label="Breadcrumb">' +
+      `<ol class="crumb"><li><a href="${url('/')}">Home</a></li>${li}</ol></nav>`
+  );
 }
 
 /* ------------------------------------------------------ SERVICE DETAIL -- */
@@ -789,7 +884,11 @@ export function renderService(s) {
           body: s.closeBody || 'Tell us where you are and we will map the shortest defensible route through it.',
           photo: s.photo,
         },
-        { secondary: { label: 'All ESG services', href: esg.path } }
+        {
+          label: 'Talk to a specialist',
+          topic: 'ESG & sustainability',
+          secondary: { label: 'All ESG services', href: esg.path },
+        }
       )
     ),
   ]

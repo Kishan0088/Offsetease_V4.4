@@ -111,6 +111,7 @@
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       root.classList.toggle('is-menu-open', open);
+      doc.body.classList.toggle('is-menu-open', open);
       nav.classList.remove('is-hidden');
       if (open) {
         const first = $('a, button', menu);
@@ -125,7 +126,8 @@
 
     toggle.addEventListener('click', () => setMenu(!openMenu));
     menu.addEventListener('click', (e) => {
-      if (e.target.closest('a')) setMenu(false);
+      // A link, or the backdrop either side of the content column.
+      if (e.target.closest('a') || e.target === menu) setMenu(false);
     });
     doc.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && openMenu) setMenu(false);
@@ -156,6 +158,7 @@
       if (!toggle || !panel) return;
       let open = false;
       let closeTimer = 0;
+      let openTimer = 0;
 
       const set = (next) => {
         open = next;
@@ -175,10 +178,16 @@
 
       toggle.addEventListener('click', () => set(!open));
       wrap.addEventListener('pointerenter', () => {
-        if (mqFine.matches) set(true);
+        if (!mqFine.matches) return;
+        clearTimeout(closeTimer);
+        clearTimeout(openTimer);
+        openTimer = setTimeout(() => set(true), 130);
       });
       wrap.addEventListener('pointerleave', () => {
-        if (mqFine.matches) set(false);
+        if (!mqFine.matches) return;
+        clearTimeout(openTimer);
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => set(false), 260);
       });
       wrap.addEventListener('focusout', (e) => {
         if (!wrap.contains(e.relatedTarget)) set(false);
@@ -278,7 +287,27 @@
   function initSticky() {
     const bar = $('[data-sticky]');
     if (!bar) return;
+    try {
+      if (sessionStorage.getItem('oe_sticky_off') === '1') {
+        bar.remove();
+        return;
+      }
+    } catch (e) {
+      /* private mode: just show it */
+    }
     bar.hidden = false;
+    const dismiss = $('[data-sticky-close]', bar);
+    if (dismiss) {
+      dismiss.addEventListener('click', () => {
+        bar.classList.remove('is-up');
+        setTimeout(() => bar.remove(), 450);
+        try {
+          sessionStorage.setItem('oe_sticky_off', '1');
+        } catch (e) {
+          /* nothing to do */
+        }
+      });
+    }
     onFrame(() => {
       const max = doc.documentElement.scrollHeight - innerHeight;
       if (max <= 0) return;
@@ -567,6 +596,16 @@
     const submit = $('[type="submit"]', form);
     const key = form.dataset.accessKey || '';
 
+    // Intent-matched CTAs pass ?topic=… so the visitor does not re-state what
+    // the link they just clicked already said.
+    const wanted = new URLSearchParams(location.search).get('topic');
+    if (wanted && form.elements.topic) {
+      const match = [...form.elements.topic.options].find(
+        (o) => o.value.toLowerCase() === wanted.toLowerCase()
+      );
+      if (match) form.elements.topic.value = match.value;
+    }
+
     const say = (tone, msg) => {
       status.hidden = false;
       status.dataset.tone = tone;
@@ -576,8 +615,11 @@
     const showFieldError = (input) => {
       const wrap = input.closest('.field') || input.closest('.consent');
       const err = wrap && $('.field__err', wrap);
+      const ok = input.validity.valid;
+      // Screen readers need the state, not just the sentence.
+      input.setAttribute('aria-invalid', String(!ok));
       if (!err) return;
-      err.textContent = input.validity.valid
+      err.textContent = ok
         ? ''
         : input.type === 'checkbox'
           ? 'Please confirm this before sending.'
@@ -616,8 +658,9 @@
       }
 
       submit.disabled = true;
-      const original = submit.textContent;
-      submit.textContent = 'Sending…';
+      const labelEl = $('.btn__label', submit) || submit;
+      const original = labelEl.textContent;
+      labelEl.textContent = 'Sending…';
 
       try {
         const body = new FormData(form);
@@ -642,7 +685,7 @@
         );
       } finally {
         submit.disabled = false;
-        submit.textContent = original;
+        labelEl.textContent = original;
       }
     });
   }

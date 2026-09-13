@@ -92,10 +92,28 @@ breadcrumb, its JSON-LD and its sitemap row all follow.
 The contact form posts to [Web3Forms](https://web3forms.com). Paste your free
 access key into `site.form.accessKey` in `src/data/site.mjs` and rebuild.
 
-Until a key is present the form validates normally but **refuses to submit**,
-and tells the visitor to email `info@offsetease.com` instead. It never silently
-swallows an enquiry. A honeypot field and client-side validation are already
-wired.
+**While that key is empty the form is not rendered at all.** The contact page
+shows a direct email/phone block instead, the page's own CTA reads "How to
+reach us" rather than "Send an enquiry", and `check.mjs` warns. Asking a
+visitor for five fields and a consent tick and *then* telling them it cannot
+send is worse than not offering the form — so the site offers the channels that
+actually work until the key exists.
+
+The moment a key is set the full form returns: labelled controls with
+`aria-describedby` error nodes and `aria-invalid`, a honeypot, a required
+consent checkbox, and `?topic=` prefill so an intent-matched CTA arrives with
+the subject already chosen. Once `indexable` is true, a missing key **fails**
+the build.
+
+### Deliberate deviations from the UX audit
+
+- **About stays out of the primary navigation.** The audit recommends adding
+  it; you asked for exactly three links plus one button. Your call wins. About
+  is the first link in the footer's Company column.
+- **No `FAQPage` schema on Carbon supply, ESG & sustainability or About.**
+  Those pages have no FAQ content in the approved copy, and inventing question
+  and answer pairs to win rich results would be fabricating content.
+  `BreadcrumbList` is now emitted on every page below the root.
 
 ---
 

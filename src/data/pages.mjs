@@ -108,7 +108,7 @@ export const home = {
   what: {
     chapter: 'Capability',
     eyebrow: 'What we do',
-    headline: 'Four capabilities, one standard of integrity.',
+    headline: 'Three capabilities, one standard of integrity.',
     items: [
       {
         title: 'Carbon supply',
@@ -116,13 +116,6 @@ export const home = {
         href: '/carbon-supply.html',
         photo: 'sunlit-forest',
         photoAlt: 'Sunlight falling through a stand of tall trees',
-      },
-      {
-        title: 'Carbon projects',
-        body: 'We develop high-integrity projects at the source — nature-based and durable removals.',
-        href: '/carbon-supply.html#pipeline',
-        photo: 'tree-nursery',
-        photoAlt: 'Rows of young trees in a nursery',
       },
       {
         title: 'Renewable Energy (EACs)',

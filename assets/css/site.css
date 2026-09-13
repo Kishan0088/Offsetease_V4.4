@@ -77,6 +77,7 @@
   /* Small mono accents need more contrast than the display gold provides at
      11–12px, so they get their own deeper tone. */
   --accent-text: #6f5119;
+  --focus: #6f5119;
   --panel: rgb(10 61 68 / 0.045);
 
   --sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, -apple-system,
@@ -125,6 +126,7 @@
   --rule-soft: rgb(245 243 238 / 0.09);
   --accent: var(--gold);
   --accent-text: var(--gold);
+  --focus: var(--gold);
   --panel: rgb(245 243 238 / 0.05);
 }
 .on-deep {
@@ -139,6 +141,7 @@
   --rule-soft: rgb(245 243 238 / 0.09);
   --accent: var(--gold);
   --accent-text: var(--gold);
+  --focus: var(--gold);
   --panel: rgb(245 243 238 / 0.05);
 }
 
@@ -207,9 +210,18 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--focus, var(--gold));
   outline-offset: 3px;
   border-radius: 3px;
+}
+/* The nav bar over the hero is a dark surface even though the page is light. */
+.nav.is-top :focus-visible,
+.hero :focus-visible,
+.band :focus-visible,
+.close :focus-visible,
+.footer :focus-visible,
+.story :focus-visible {
+  outline-color: var(--gold);
 }
 
 .skip {
@@ -767,6 +779,16 @@ code {
 .nav__toggle:hover {
   opacity: 1;
 }
+/* The menu is a light surface, so the close control must take the dark token
+   regardless of what the nav bar behind it is doing. */
+.is-menu-open .nav__toggle {
+  color: var(--deep);
+  border-color: rgb(10 61 68 / 0.6);
+  opacity: 1;
+}
+.is-menu-open .nav__brand {
+  color: var(--deep);
+}
 .nav__bars {
   display: block;
   width: 17px;
@@ -780,7 +802,10 @@ code {
 .nav__bars i + i {
   margin-top: 5px;
 }
-html.is-menu-open {
+html.is-menu-open,
+body.is-menu-open {
+  /* Both, because iOS ignores the lock on one of them depending on which
+     element ends up as the scroll root. */
   overflow: hidden;
 }
 .is-menu-open .nav__bars i:first-child {
@@ -942,9 +967,9 @@ a:hover > .ph--zoom img,
     ),
     linear-gradient(
       180deg,
-      rgb(4 26 30 / 0.8) 0%,
-      rgb(4 26 30 / 0.46) 34%,
-      rgb(10 61 68 / 0.72) 74%,
+      rgb(4 26 30 / 0.9) 0%,
+      rgb(4 26 30 / 0.62) 48%,
+      rgb(10 61 68 / 0.78) 76%,
       var(--ink) 100%
     ),
     radial-gradient(90% 70% at 12% 96%, rgb(15 91 100 / 0.62) 0%, rgb(4 26 30 / 0) 62%);
@@ -1027,6 +1052,12 @@ a:hover > .ph--zoom img,
 }
 .hero__eyebrow {
   margin-bottom: clamp(18px, 3vw, 32px);
+}
+/* Belt and braces where a glyph lands on a city light. */
+.hero .label,
+.hero h1,
+.hero .lede {
+  text-shadow: 0 1px 20px rgb(4 26 30 / 0.75);
 }
 .hero__lede {
   display: flex;
@@ -2170,12 +2201,20 @@ a.card:hover .card__go svg {
   display: grid;
   gap: 8px;
 }
-.field > span {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.field__lab {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: rgb(6 40 46 / 0.9);
+  cursor: pointer;
+}
+.field__lab em {
+  font-style: normal;
   color: var(--fg-mute);
+}
+.on-ink .field__lab,
+.on-deep .field__lab {
+  color: rgb(245 243 238 / 0.92);
 }
 .field .req {
   color: var(--accent);
@@ -2186,7 +2225,8 @@ a.card:hover .card__go svg {
   width: 100%;
   padding: 15px 16px;
   background: var(--panel);
-  border: 1px solid var(--rule);
+  /* Control boundaries need 3:1, which the decorative --rule token does not give. */
+  border: 1px solid rgb(10 61 68 / 0.42);
   border-radius: 8px;
   color: var(--fg);
   transition:
@@ -3076,12 +3116,17 @@ a.card:hover .card__go svg {
   color: var(--gold);
 }
 .mega {
-  position: absolute;
-  top: calc(100% + 14px);
+  /* Fixed, not absolute: anchored to the viewport so it cannot hang off the
+     right edge the way an item-centred panel does. */
+  position: fixed;
+  top: calc(var(--nav-h) + 10px);
   left: 50%;
   translate: -50% 0;
   z-index: 60;
-  width: min(92vw, 1040px);
+  width: min(94vw, 1040px);
+  max-height: calc(100vh - var(--nav-h) - 28px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: clamp(22px, 2.4vw, 32px);
   color: var(--deep);
   background: rgb(250 249 245 / 0.99);
@@ -3101,6 +3146,9 @@ a.card:hover .card__go svg {
   opacity: 1;
   translate: -50% 0;
   pointer-events: auto;
+}
+.nav.is-hidden .mega {
+  display: none;
 }
 .mega__inner {
   display: grid;
@@ -3261,22 +3309,24 @@ a.card:hover .card__go svg {
 
 .consent {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 24px minmax(0, 1fr);
   gap: 12px;
   align-items: start;
   font-size: 15px;
   color: var(--fg-soft);
+}
+.consent label {
   cursor: pointer;
 }
 .consent input {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   margin: 1px 0 0;
   accent-color: var(--accent);
   cursor: pointer;
 }
 .consent a {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* ---- Contact layout ----------------------------------------------------- */
@@ -3538,5 +3588,185 @@ a.card:hover .card__go svg {
 @media (prefers-reduced-motion: reduce) {
   .band--film .band__bg .ph img {
     animation: none;
+  }
+}
+
+/* ---- Footer contact block (replaces the second closing CTA) ------------- */
+
+.fcta__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+.fcta__list li {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.fcta__list li > span:first-child {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.fcta__list a {
+  font-size: clamp(16px, 1.4vw, 19px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.4s var(--ease);
+}
+.fcta__list a:hover {
+  background-size: 100% 1px;
+}
+.fcta__v {
+  font-size: 15px;
+  color: var(--fg-soft);
+}
+
+/* ---- Contact page: the honest fallback while the form is unwired -------- */
+
+.offline {
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+.offline__t {
+  margin: 0 0 10px;
+  font-size: clamp(19px, 1.8vw, 25px);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+.offline__b {
+  margin: 0 0 clamp(20px, 2.4vw, 28px);
+  max-width: 52ch;
+  color: var(--fg-soft);
+}
+.offline .btns {
+  gap: 10px;
+}
+.offline .btn {
+  max-width: 100%;
+}
+.offline .btn__label {
+  overflow-wrap: anywhere;
+}
+
+/* ---- Hero headline: painted first, then settled -------------------------- */
+
+.kinetic--soft .kw {
+  overflow: visible;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.js .kinetic--soft.is-in .kw__i {
+  animation: kw-soft 0.55s var(--ease) calc(var(--kw) * 30ms) both;
+}
+@keyframes kw-soft {
+  from {
+    transform: translateY(0.2em);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ---- Sticky bar dismiss -------------------------------------------------- */
+
+.sticky__x {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  padding: 0;
+  background: none;
+  border: 1px solid rgb(10 61 68 / 0.2);
+  border-radius: 999px;
+  color: var(--deep);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.sticky__x:hover {
+  opacity: 1;
+}
+
+/* ---- Breadcrumb landmark ------------------------------------------------ */
+
+.crumb-nav {
+  display: block;
+}
+
+/* ---- Skip past the pinned story ----------------------------------------- */
+
+.story__skip {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--nav-h) + 18px);
+  right: var(--gutter);
+  padding: 10px 18px;
+  border: 1px solid rgb(245 243 238 / 0.3);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+.story:hover .story__skip,
+.story__skip:focus-visible {
+  opacity: 1;
+}
+.story__skip:hover {
+  background: rgb(245 243 238 / 0.14);
+}
+.story__end {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+}
+@media (max-width: 940px) {
+  .story__skip {
+    display: none;
+  }
+}
+
+/* ---- Mobile menu: the CTA must be reachable ----------------------------- */
+
+@media (max-width: 1020px) {
+  .menu__inner {
+    padding-top: calc(var(--nav-h) + 20px);
+    gap: clamp(22px, 4vw, 40px);
+  }
+  .menu__big {
+    min-height: 50px;
+    font-size: clamp(25px, 6.6vw, 38px);
+  }
+  .menu__foot {
+    position: sticky;
+    bottom: 0;
+    margin-top: 4px;
+    padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgb(247 245 240 / 0), var(--bone) 26%);
   }
 }

@@ -160,7 +160,8 @@ async function checkLinks(file, html, idsByFile, pages) {
       fail(file, `link "${href}" is missing the base path ${BASE}`);
       continue;
     }
-    const [pathPart, frag] = href.slice(BASE.length).split('#');
+    const [pathAndQuery, frag] = href.slice(BASE.length).split('#');
+    const pathPart = pathAndQuery.split('?')[0];
     const target = pathPart === '/' || pathPart === '' ? 'index.html' : pathPart.replace(/^\//, '');
     if (!existsSync(join(ROOT, target))) {
       fail(file, `dead link "${href}" → ${target} does not exist`);

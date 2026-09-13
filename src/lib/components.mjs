@@ -132,7 +132,10 @@ export function breadcrumb(items) {
         : `<li><a href="${url(c.href)}">${esc(c.name)}</a></li>`
     )
     .join('');
-  return raw(`<ol class="crumb"><li><a href="${url('/')}">Home</a></li>${li}</ol>`);
+  return raw(
+    '<nav class="crumb-nav" aria-label="Breadcrumb">' +
+      `<ol class="crumb"><li><a href="${url('/')}">Home</a></li>${li}</ol></nav>`
+  );
 }
 
 /**
@@ -162,12 +165,14 @@ export function hero(h, { variant = 'inner', crumbs = null, stats = null, statsN
       '<div class="hero__inner">' +
       (crumbs ? str(breadcrumb(crumbs)) : '') +
       `<p class="label hero__eyebrow">${esc(h.eyebrow)}</p>` +
-      `<h1 class="${variant === 'home' ? 'display' : 'h1'} kinetic">${str(
+      // `kinetic--soft`: no clipping mask and opacity stays at 1, so the LCP
+      // text candidate is painted immediately and only settles into place.
+      `<h1 class="${variant === 'home' ? 'display' : 'h1'} kinetic kinetic--soft">${str(
         kinetic(h.headline, { accent: h.accent || [] })
       )}</h1>` +
       '<div class="hero__lede">' +
-      `<p class="lede reveal">${esc(h.standfirst)}</p>` +
-      `<div class="btns reveal">${buttons}</div>` +
+      `<p class="lede">${esc(h.standfirst)}</p>` +
+      `<div class="btns">${buttons}</div>` +
       '</div>' +
       (stats ? str(statStrip(stats, { note: statsNote })) : '') +
       (scrollCue ? `<p class="scroll-cue">${esc(scrollCue)}</p>` : '') +
@@ -300,13 +305,14 @@ export function story(data, { id = 'story' } = {}) {
       '<div class="story__pin">' +
       `<div class="story__layers" aria-hidden="true">${layers}</div>` +
       '<div class="scrim scrim--band" aria-hidden="true"></div>' +
+      `<a class="story__skip" href="#after-${esc(id)}">Skip the story</a>` +
       '<div class="story__inner"><div class="story__track">' +
       '<div class="story__spine" aria-hidden="true"><i></i></div>' +
       `<div class="story__scenes">${scenes}</div></div>` +
       '<div class="story__dial" aria-hidden="true">' +
       str(sunburst({ total: data.scenes.length, spread: 'even', className: 'story__sun' })) +
       `<span class="story__count">01 / ${String(data.scenes.length).padStart(2, '0')}</span>` +
-      '</div></div></div></section>'
+      `</div></div></div><span id="after-${esc(id)}" class="story__end"></span></section>`
   );
 }
 
@@ -373,7 +379,14 @@ export function faq(items, { title = 'Common questions' } = {}) {
   return raw((title ? `<p class="label">${esc(title)}</p>` : '') + `<div class="faq">${body}</div>`);
 }
 
-export function closeCta(data, { label = primaryCta.label, secondary = { label: 'How we work', href: '/about.html' } } = {}) {
+export function closeCta(
+  data,
+  { label = primaryCta.label, topic = '', secondary = { label: 'How we work', href: '/about.html' } } = {}
+) {
+  // A CTA that says what it is for, and arrives with the topic already chosen.
+  const href = topic
+    ? `/contact.html?topic=${encodeURIComponent(topic)}`
+    : primaryCta.href;
   return raw(
     '<section class="close">' +
       `<div class="close__bg" data-parallax="0.07">${str(
@@ -389,7 +402,7 @@ export function closeCta(data, { label = primaryCta.label, secondary = { label: 
       `<h2 class="close__h kinetic">${str(kinetic(data.headline))}</h2>` +
       `<p class="close__b reveal">${esc(data.body)}</p>` +
       '<div class="btns reveal">' +
-      str(btn(label, '/contact.html', { variant: 'gold', magnetic: true })) +
+      str(btn(label, href, { variant: 'gold', magnetic: true })) +
       (secondary ? str(btn(secondary.label, secondary.href)) : '') +
       '</div></div></section>'
   );

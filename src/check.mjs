@@ -1,97 +1,285 @@
-/* Site validator — run after a build. `node src/check.mjs`
-   Checks internal links, asset references, heading order, alt text,
-   duplicate ids, metadata completeness and JSON-LD validity. */
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
-import { join, resolve, dirname } from 'node:path';
+#!/usr/bin/env node
+// Post-build validation. Fails the build on anything that would ship broken:
+// dead internal links, missing assets, duplicate ids, heading-order breaks,
+// images without alt text, missing or duplicated metadata, invalid JSON-LD,
+// and brand-spelling slips.
+
+import { readdir, readFile, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+import { site } from './data/site.mjs';
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pages = readdirSync(ROOT).filter(f => f.endsWith('.html') && !f.startsWith('_'));
-let errors = 0, warnings = 0;
-const err = (f, m) => { console.log(`  ✗ ${f}: ${m}`); errors++; };
-const warn = (f, m) => { console.log(`  ! ${f}: ${m}`); warnings++; };
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const BASE = site.basePath.replace(/\/$/, '');
 
-const titles = new Map(), descs = new Map(), canons = new Map();
+const errors = [];
+const warnings = [];
+const fail = (page, msg) => errors.push(`${page}: ${msg}`);
+const warn = (page, msg) => warnings.push(`${page}: ${msg}`);
 
-for (const f of pages) {
-  const html = readFileSync(join(ROOT, f), 'utf8');
+const attr = (tag, name) => {
+  const m = tag.match(new RegExp(`\\b${name}\\s*=\\s*"([^"]*)"`, 'i'));
+  return m ? m[1] : null;
+};
+const tagsOf = (html, tag) => html.match(new RegExp(`<${tag}\\b[^>]*>`, 'gi')) || [];
 
-  /* --- internal links --- */
-  const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map(m => m[1]);
-  for (const h of new Set(hrefs)) {
-    if (/^(https?:|mailto:|tel:|#|data:)/.test(h)) continue;
-    const [path, hash] = h.split('#');
-    if (!path) continue;
-    if (!existsSync(join(ROOT, path))) err(f, `dead link -> ${h}`);
-    if (hash && !html.includes(`id="${hash}"`) && path === f) warn(f, `missing anchor #${hash}`);
-  }
-
-  /* --- asset references --- */
-  for (const m of html.matchAll(/(?:src|content)="((?:assets|site)[^"]+)"/g)) {
-    const p = m[1].split('?')[0];
-    if (!existsSync(join(ROOT, p))) err(f, `missing asset -> ${p}`);
-  }
-  for (const m of html.matchAll(/srcset="([^"]+)"/g)) {
-    for (const part of m[1].split(',')) {
-      const p = part.trim().split(/\s+/)[0];
-      if (p && !existsSync(join(ROOT, p))) err(f, `missing srcset asset -> ${p}`);
-    }
-  }
-
-  /* --- metadata --- */
-  const unesc = (t) => t.replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#8217;/g, '\u2019').replace(/&#160;/g, ' ');
-  const title = unesc((html.match(/<title>([^<]*)<\/title>/) || [])[1] || '');
-  const desc = unesc((html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '');
-  const canon = (html.match(/<link rel="canonical" href="([^"]*)"/) || [])[1] || '';
-  if (!title) err(f, 'no <title>');
-  if (title.length > 65) warn(f, `title ${title.length} chars (>65): ${title}`);
-  if (!desc) err(f, 'no meta description');
-  if (desc.length > 165) warn(f, `description ${desc.length} chars (>165)`);
-  if (!canon) err(f, 'no canonical');
-  if (titles.has(title)) err(f, `duplicate title with ${titles.get(title)}`); else titles.set(title, f);
-  if (descs.has(desc)) err(f, `duplicate description with ${descs.get(desc)}`); else descs.set(desc, f);
-  if (canons.has(canon)) err(f, `duplicate canonical with ${canons.get(canon)}`); else canons.set(canon, f);
-
-  /* --- headings --- */
-  const h1s = [...html.matchAll(/<h1[\s>]/g)].length;
-  if (h1s !== 1) err(f, `${h1s} <h1> elements (expected 1)`);
-  const levels = [...html.matchAll(/<h([1-4])[\s>]/g)].map(m => +m[1]);
-  for (let i = 1; i < levels.length; i++) {
-    if (levels[i] - levels[i - 1] > 1) { warn(f, `heading jump h${levels[i - 1]} -> h${levels[i]}`); break; }
-  }
-
-  /* --- images --- */
-  for (const m of html.matchAll(/<img\b[^>]*>/g)) {
-    if (!/\salt=/.test(m[0])) err(f, 'img without alt');
-    if (!/\swidth=/.test(m[0]) || !/\sheight=/.test(m[0])) warn(f, 'img without width/height (layout shift)');
-  }
-
-  /* --- duplicate ids --- */
-  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);
-  const dupes = ids.filter((v, i) => ids.indexOf(v) !== i);
-  if (dupes.length) err(f, `duplicate id(s): ${[...new Set(dupes)].join(', ')}`);
-
-  /* --- JSON-LD --- */
-  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
-    try { JSON.parse(m[1]); } catch (e) { err(f, `invalid JSON-LD: ${e.message}`); }
-  }
-
-  /* --- brand name --- */
-  const bad = html.match(/OffsetEase/g);
-  if (bad) err(f, `"OffsetEase" appears ${bad.length}x — must be "Offsetease" or "OFFSETEASE"`);
-
-  /* --- unresolved template literals / placeholders --- */
-  if (/\$\{/.test(html)) err(f, 'unresolved ${} template literal');
-  if (/\[(?:X|N|C|XX|TBD|PLACEHOLDER)\]/.test(html)) err(f, 'bracketed placeholder left in copy');
-  if (/\bundefined\b/.test(html.replace(/<script[\s\S]*?<\/script>/g, ''))) err(f, '"undefined" in rendered output');
+async function htmlFiles() {
+  const all = await readdir(ROOT);
+  return all.filter((f) => f.endsWith('.html')).sort();
 }
 
-/* --- sitemap coverage --- */
-const sm = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
-const locs = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-const indexable = pages.filter(f => f !== '404.html');   // 404 is deliberately not listed
-if (locs.length !== indexable.length) err('sitemap.xml', `${locs.length} urls for ${indexable.length} indexable pages`);
+function checkMeta(file, html, seen) {
+  const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1];
+  if (!title) fail(file, 'missing <title>');
+  else {
+    if (title.length > 70) warn(file, `title is ${title.length} chars (over 70): "${title}"`);
+    if (seen.titles.has(title)) fail(file, `duplicate <title> with ${seen.titles.get(title)}`);
+    seen.titles.set(title, file);
+  }
 
-console.log(`\n  ${pages.length} pages checked — ${errors} error(s), ${warnings} warning(s)`);
-process.exit(errors ? 1 : 0);
+  const desc = attr(tagsOf(html, 'meta').find((t) => attr(t, 'name') === 'description') || '', 'content');
+  if (!desc) fail(file, 'missing meta description');
+  else {
+    if (desc.length < 70 || desc.length > 185) {
+      warn(file, `meta description is ${desc.length} chars (aim 70–185)`);
+    }
+    if (seen.descs.has(desc)) fail(file, `duplicate meta description with ${seen.descs.get(desc)}`);
+    seen.descs.set(desc, file);
+  }
+
+  const canonical = (html.match(/<link rel="canonical" href="([^"]+)"/) || [])[1];
+  if (!canonical) fail(file, 'missing canonical');
+
+  const robots = html.includes('name="robots" content="noindex');
+  if (site.indexable && robots) fail(file, 'indexable build still emits noindex');
+  if (!site.indexable && !robots) fail(file, 'preview build is missing noindex');
+
+  for (const prop of ['og:title', 'og:description', 'og:image', 'og:url']) {
+    if (!html.includes(`property="${prop}"`)) fail(file, `missing ${prop}`);
+  }
+  if (!html.includes('name="twitter:card"')) fail(file, 'missing twitter:card');
+
+  // JSON-LD must parse.
+  const blocks = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g) || [];
+  if (!blocks.length) fail(file, 'no JSON-LD');
+  blocks.forEach((b, i) => {
+    const json = b.replace(/^<script[^>]*>/, '').replace(/<\/script>$/, '');
+    try {
+      const parsed = JSON.parse(json);
+      if (!parsed['@context']) fail(file, `JSON-LD block ${i} has no @context`);
+    } catch (e) {
+      fail(file, `JSON-LD block ${i} is not valid JSON (${e.message})`);
+    }
+  });
+}
+
+function checkHeadings(file, html) {
+  const hs = [...html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map((m) => ({
+    level: Number(m[1]),
+    text: m[2].replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(),
+  }));
+  const h1s = hs.filter((h) => h.level === 1);
+  if (h1s.length === 0) fail(file, 'no <h1>');
+  if (h1s.length > 1) fail(file, `${h1s.length} <h1> elements`);
+  let prev = 0;
+  for (const h of hs) {
+    if (prev && h.level > prev + 1) {
+      fail(file, `heading jumps h${prev} → h${h.level} at "${h.text.slice(0, 48)}"`);
+    }
+    prev = h.level;
+  }
+  for (const h of hs) {
+    if (!h.text) fail(file, `empty h${h.level}`);
+  }
+}
+
+function checkImages(file, html) {
+  for (const tag of tagsOf(html, 'img')) {
+    const alt = attr(tag, 'alt');
+    if (alt === null) fail(file, `<img> with no alt attribute: ${tag.slice(0, 90)}`);
+    if (alt === '' && !/aria-hidden="true"/.test(tag)) {
+      warn(file, `decorative <img alt=""> without aria-hidden: ${tag.slice(0, 90)}`);
+    }
+    if (!attr(tag, 'width') || !attr(tag, 'height')) {
+      fail(file, `<img> without width/height (layout shift): ${tag.slice(0, 90)}`);
+    }
+    if (!attr(tag, 'loading')) warn(file, '<img> without loading attribute');
+  }
+}
+
+function checkIds(file, html) {
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (dupes.length) fail(file, `duplicate id(s): ${[...new Set(dupes)].join(', ')}`);
+  return new Set(ids);
+}
+
+function checkA11y(file, html) {
+  if (!html.includes('class="skip"')) fail(file, 'missing skip link');
+  if (!/<html lang="[a-z-]+"/i.test(html)) fail(file, 'missing lang on <html>');
+  if (!html.includes('<main')) fail(file, 'missing <main>');
+
+  for (const tag of tagsOf(html, 'button')) {
+    // every button must have a text child or an accessible name
+    if (!attr(tag, 'aria-label') && !attr(tag, 'aria-labelledby')) {
+      // checked loosely below by scanning the element's inner text
+    }
+  }
+  const buttons = [...html.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/gi)];
+  for (const [, attrs, inner] of buttons) {
+    const text = inner.replace(/<[^>]*>/g, '').trim();
+    if (!text && !/aria-label=/.test(attrs)) fail(file, 'button with no accessible name');
+  }
+  const links = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)];
+  for (const [, attrs, inner] of links) {
+    const text = inner.replace(/<[^>]*>/g, '').trim();
+    const aria = /aria-label=/.test(attrs);
+    if (!text && !aria) fail(file, `link with no accessible name: <a${attrs.slice(0, 70)}>`);
+    if (/target="_blank"/.test(attrs) && !/rel="[^"]*noopener/.test(attrs)) {
+      fail(file, 'target="_blank" without rel="noopener"');
+    }
+  }
+}
+
+async function checkLinks(file, html, idsByFile, pages) {
+  const hrefs = [...html.matchAll(/\b(?:href|src)="([^"]+)"/g)].map((m) => m[1]);
+  for (const href of hrefs) {
+    if (/^(https?:|mailto:|tel:|data:)/.test(href)) continue;
+
+    if (href.startsWith('#')) {
+      const id = decodeURIComponent(href.slice(1));
+      if (id && !idsByFile.get(file).has(id)) fail(file, `fragment #${id} has no target`);
+      continue;
+    }
+    if (!href.startsWith('/')) {
+      fail(file, `relative link "${href}" — every internal URL must be base-prefixed`);
+      continue;
+    }
+    if (!href.startsWith(BASE + '/') && href !== BASE) {
+      fail(file, `link "${href}" is missing the base path ${BASE}`);
+      continue;
+    }
+    const [pathPart, frag] = href.slice(BASE.length).split('#');
+    const target = pathPart === '/' || pathPart === '' ? 'index.html' : pathPart.replace(/^\//, '');
+    if (!existsSync(join(ROOT, target))) {
+      fail(file, `dead link "${href}" → ${target} does not exist`);
+      continue;
+    }
+    if (frag && target.endsWith('.html')) {
+      const ids = idsByFile.get(target);
+      if (ids && !ids.has(frag)) fail(file, `dead fragment "${href}" — no #${frag} in ${target}`);
+    }
+  }
+}
+
+function checkBrand(file, html) {
+  // The body copy spells it OffsetEase; the lockup/eyebrows use OFFSETEASE.
+  const body = html.replace(/<script[\s\S]*?<\/script>/g, '');
+  const bad = body.match(/\bOffset\s?[Ee]ase\b/g) || [];
+  for (const hit of bad) {
+    if (hit !== 'OffsetEase') fail(file, `brand spelled "${hit}" (must be OffsetEase or OFFSETEASE)`);
+  }
+  // Lower case is correct inside an address or a URL, so strip those first.
+  const prose = body
+    .replace(/(href|src|content)="[^"]*"/g, '')
+    .replace(/[\w.+-]+@[\w.-]+/g, '')
+    .replace(/\b(?:[\w-]+\.)+(?:com|in|org|net|earth|io)\b[^\s<]*/g, '');
+  if (/\boffsetease\b/.test(prose)) {
+    warn(file, 'lower-case "offsetease" appears in visible copy');
+  }
+}
+
+function checkPlaceholders(file, html) {
+  const patterns = [/\bLorem ipsum\b/i, /\bTODO\b/, /\bFIXME\b/, /\[\s*(?:to add|placeholder|tbd)\s*\]/i, /XXXX/];
+  for (const p of patterns) {
+    if (p.test(html)) fail(file, `placeholder text found (${p})`);
+  }
+}
+
+async function checkAssets() {
+  const must = [
+    'assets/css/site.css',
+    'assets/js/app.js',
+    'assets/brand/favicon.svg',
+    'assets/brand/favicon-32.png',
+    'assets/brand/favicon-192.png',
+    'assets/brand/favicon-512.png',
+    'assets/brand/apple-touch-icon.png',
+    'assets/brand/social-card.png',
+    'assets/brand/offsetease-lockup.svg',
+    'assets/fonts/schibsted-latin-400700.woff2',
+    'assets/fonts/plexmono-latin-400.woff2',
+    'site.webmanifest',
+    'robots.txt',
+    '.nojekyll',
+  ];
+  for (const f of must) {
+    if (!existsSync(join(ROOT, f))) errors.push(`assets: missing ${f}`);
+  }
+
+  // Budget: no single page over 120 KB of HTML, no image over 260 KB.
+  for (const f of await htmlFiles()) {
+    const { size } = await stat(join(ROOT, f));
+    if (size > 120 * 1024) warn(f, `HTML is ${(size / 1024).toFixed(0)} KB (budget 120 KB)`);
+  }
+  const photos = join(ROOT, 'assets/img/photos');
+  if (existsSync(photos)) {
+    for (const f of await readdir(photos)) {
+      const m = f.match(/\.(avif|webp|jpg|png)$/);
+      if (!m) continue;
+      // AVIF is the format almost every visitor actually downloads, so it gets
+      // the tight budget; WebP is the legacy fallback and is allowed more room.
+      const budget = (m[1] === 'avif' ? 260 : 380) * 1024;
+      const { size } = await stat(join(photos, f));
+      if (size > budget) {
+        warn('assets', `${f} is ${(size / 1024).toFixed(0)} KB (budget ${budget / 1024} KB)`);
+      }
+    }
+  }
+}
+
+async function main() {
+  const files = await htmlFiles();
+  if (files.length < 20) errors.push(`only ${files.length} pages built`);
+
+  const bodies = new Map();
+  const idsByFile = new Map();
+  for (const f of files) {
+    const html = await readFile(join(ROOT, f), 'utf8');
+    bodies.set(f, html);
+    idsByFile.set(f, checkIds(f, html));
+  }
+
+  const seen = { titles: new Map(), descs: new Map() };
+  for (const [f, html] of bodies) {
+    checkMeta(f, html, seen);
+    checkHeadings(f, html);
+    checkImages(f, html);
+    checkA11y(f, html);
+    checkBrand(f, html);
+    checkPlaceholders(f, html);
+    await checkLinks(f, html, idsByFile, files);
+  }
+  await checkAssets();
+
+  // Every page must be reachable from the home page or the footer.
+  const home = bodies.get('index.html') || '';
+  for (const f of files) {
+    if (f === 'index.html' || f === '404.html') continue;
+    const reachable = [...bodies.values()].some((h) => h.includes(`href="${BASE}/${f}"`));
+    if (!reachable) errors.push(`orphan: nothing links to ${f}`);
+  }
+
+  for (const w of warnings) console.warn(`  warn  ${w}`);
+  for (const e of errors) console.error(`  FAIL  ${e}`);
+  console.log(
+    `\n${files.length} pages checked · ${errors.length} errors · ${warnings.length} warnings`
+  );
+  if (errors.length) process.exit(1);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

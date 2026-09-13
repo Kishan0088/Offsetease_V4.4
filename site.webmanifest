@@ -1,28 +1,28 @@
 {
-  "name": "Offsetease",
-  "short_name": "Offsetease",
-  "description": "High-integrity carbon, at the source.",
-  "start_url": "./",
-  "scope": "./",
+  "name": "OffsetEase",
+  "short_name": "OffsetEase",
+  "description": "OffsetEase sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. One partner, one standard of integrity, across carbon and sustainability.",
+  "start_url": "/Offsetease_V4.4/",
+  "scope": "/Offsetease_V4.4/",
   "display": "standalone",
-  "background_color": "#04171A",
-  "theme_color": "#0A3D44",
+  "background_color": "#041A1E",
+  "theme_color": "#041A1E",
   "icons": [
     {
-      "src": "assets/brand/favicon-192.png",
+      "src": "/Offsetease_V4.4/assets/brand/favicon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "assets/brand/favicon-512.png",
+      "src": "/Offsetease_V4.4/assets/brand/favicon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "assets/brand/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "src": "/Offsetease_V4.4/assets/brand/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

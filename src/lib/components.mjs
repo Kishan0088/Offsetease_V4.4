@@ -1,0 +1,352 @@
+import { esc, html, raw, join, md, kinetic, slug, str } from './html.mjs';
+import { url } from './paths.mjs';
+import { picture } from './media.mjs';
+
+const ARROW =
+  '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">' +
+  '<path d="M1 7h11M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/**
+ * The brand sunburst, reused as a diagram primitive.
+ * `spread: 'brand'` reproduces the lockup exactly (five rays on the 45° grid,
+ * three omitted) and is only correct at total = 5. `spread: 'even'` distributes
+ * any number of rays around the full circle so a 3- or 4-step dial still reads
+ * as a dial rather than a broken logo.
+ */
+export function sunburst({ lit = 0, total = 5, className = '', rayClass = 'checks__ray', spread = 'brand' } = {}) {
+  const BRAND = [120, 165, 210, 255, 300];
+  const degs =
+    spread === 'brand' && total === BRAND.length
+      ? BRAND
+      : Array.from({ length: total }, (_, i) => 120 + (i * 360) / total);
+  return raw(
+    `<svg class="${esc(className)}" viewBox="-142 -142 284 284" aria-hidden="true" focusable="false">` +
+      degs
+        .map(
+          (d, i) =>
+            // Rotation on a wrapper <g>: a `transform-box` on the rect would
+            // re-anchor this rotate() to the rect's own centre and scatter the rays.
+            `<g transform="rotate(${d})"><rect class="${rayClass}${i < lit ? ' is-lit' : ''}" ` +
+            `x="36" y="-6.75" width="98" height="13.5" rx="1" style="--i:${i}"/></g>`
+        )
+        .join('') +
+      '<circle class="checks__ring" r="22"/></svg>'
+  );
+}
+
+export function btn(label, href, { variant = 'ghost', magnetic = false, arrow = true } = {}) {
+  return raw(
+    `<a class="btn btn--${variant}" href="${url(href)}"${magnetic ? ' data-magnetic' : ''}>` +
+      `${esc(label)}${arrow ? `<span class="btn__arrow">${ARROW}</span>` : ''}</a>`
+  );
+}
+
+export function eyebrow(text) {
+  return raw(`<p class="label">${esc(text)}</p>`);
+}
+
+/** Cited research block. */
+export function proof(text, fig) {
+  if (!text) return raw('');
+  const figHtml = fig
+    ? `<div><div class="proof__fig">${esc(fig.value)}</div>` +
+      `<span class="proof__figl">${esc(fig.label)}</span></div>`
+    : '';
+  return raw(
+    `<div class="proof reveal">${figHtml}<p class="proof__t">${str(md(text))}</p></div>`
+  );
+}
+
+export function statStrip(stats, { className = '' } = {}) {
+  const cells = stats
+    .map((s) => {
+      const numeric = String(s.value).replace(/[^0-9.]/g, '');
+      const countAttr = numeric ? ` data-count="${numeric}"` : '';
+      return (
+        `<div class="stats__cell reveal"><div class="stats__v">` +
+        `<span class="fig"${countAttr}><span class="fig__v">${esc(s.value)}</span></span>` +
+        (s.unit ? `<span class="stats__u">${esc(s.unit)}</span>` : '') +
+        `</div><div class="stats__l">${esc(s.label)}</div></div>`
+      );
+    })
+    .join('');
+  return raw(`<div class="stats ${esc(className)}" data-stagger="70">${cells}</div>`);
+}
+
+function orbit() {
+  const degs = [120, 165, 210, 255, 300];
+  return (
+    '<div class="orbit" aria-hidden="true">' +
+    '<svg class="orbit__rays" viewBox="-142 -142 284 284">' +
+    degs
+      .map((d) => `<rect x="36" y="-6.75" width="98" height="13.5" rx="1" transform="rotate(${d})"/>`)
+      .join('') +
+    '</svg>' +
+    '<span class="orbit__ring orbit__ring--a"></span>' +
+    '<span class="orbit__ring orbit__ring--b"></span>' +
+    '<span class="orbit__ring orbit__ring--c"></span>' +
+    '</div>'
+  );
+}
+
+export function breadcrumb(items) {
+  const li = items
+    .map((c, i) =>
+      i === items.length - 1
+        ? `<li><span aria-current="page">${esc(c.name)}</span></li>`
+        : `<li><a href="${url(c.href)}">${esc(c.name)}</a></li>`
+    )
+    .join('');
+  return raw(`<ol class="crumb"><li><a href="${url('/')}">Home</a></li>${li}</ol>`);
+}
+
+/**
+ * Full-bleed hero. `variant: 'home'` adds the orbital field and scroll cue.
+ */
+export function hero(h, { variant = 'inner', crumbs = null, stats = null, scrollCue = null } = {}) {
+  const bg = str(
+    picture(h.photo, { alt: h.photoAlt, priority: true, sizes: '100vw', className: 'ph--free' })
+  );
+  const buttons =
+    str(
+      btn(h.primary?.label || 'Talk to us', h.primary?.href || '/contact.html', {
+        variant: 'gold',
+        magnetic: true,
+      })
+    ) + (h.secondary ? str(btn(h.secondary.label, h.secondary.href)) : '');
+
+  return raw(
+    `<section class="hero${variant === 'inner' ? ' hero--inner' : ''}">` +
+      `<div class="hero__bg" data-parallax="0.1">${bg}</div>` +
+      '<div class="scrim scrim--hero" aria-hidden="true"></div>' +
+      '<div class="grid-overlay" aria-hidden="true"></div>' +
+      '<span class="hero__scan" aria-hidden="true"></span>' +
+      (variant === 'home' ? orbit() : '') +
+      '<div class="hero__inner">' +
+      (crumbs ? str(breadcrumb(crumbs)) : '') +
+      `<p class="label hero__eyebrow">${esc(h.eyebrow)}</p>` +
+      `<h1 class="${variant === 'home' ? 'display' : 'h1'} kinetic">${str(
+        kinetic(h.headline, { accent: h.accent || [] })
+      )}</h1>` +
+      '<div class="hero__lede">' +
+      `<p class="lede reveal">${esc(h.standfirst)}</p>` +
+      `<div class="btns reveal">${buttons}</div>` +
+      '</div>' +
+      (stats ? str(statStrip(stats)) : '') +
+      (scrollCue ? `<p class="scroll-cue">${esc(scrollCue)}</p>` : '') +
+      '</div></section>'
+  );
+}
+
+/** Section wrapper; `chapter` registers it with the chapter rail. */
+export function section(content, { tone = '', id = '', chapter = '', className = '', wrap = 'wrap' } = {}) {
+  const cls = ['section', tone, className].filter(Boolean).join(' ');
+  return raw(
+    `<section class="${esc(cls)}"${id ? ` id="${esc(id)}"` : ''}` +
+      `${chapter ? ` data-chapter="${esc(chapter)}"` : ''}>` +
+      `<div class="${esc(wrap)}">${str(content)}</div></section>`
+  );
+}
+
+export function head({ eyebrow: e, headline, body, level = 'h2', split = false, aside = '' }) {
+  const paras = Array.isArray(body) ? body : body ? [body] : [];
+  const right =
+    paras.length || aside
+      ? `<div class="reveal">${paras
+          .map((p) => `<p class="body-lg">${str(md(p))}</p>`)
+          .join('')}${str(aside)}</div>`
+      : '';
+  return raw(
+    `<div class="head${split ? ' head--split' : ''}">` +
+      `<div>${e ? `<p class="label">${esc(e)}</p>` : ''}` +
+      `<${level} class="h2 kinetic">${str(kinetic(headline))}</${level}></div>` +
+      right +
+      '</div>'
+  );
+}
+
+export function cards(items, { stagger = 80, variant = 'plain' } = {}) {
+  const body = items
+    .map((it) => {
+      const inner =
+        (it.n ? `<span class="card__n">${esc(it.n)}</span>` : '') +
+        `<h3 class="card__t">${esc(it.title)}</h3>` +
+        `<p class="card__b">${str(md(it.body))}</p>` +
+        (it.href ? `<span class="card__go">${esc(it.cta || 'Explore')} ${ARROW}</span>` : '');
+
+      if (variant === 'media' && it.photo) {
+        const pic = str(
+          picture(it.photo, {
+            alt: it.photoAlt || '',
+            decorative: !it.photoAlt,
+            sizes: '(max-width: 900px) 100vw, 45vw',
+            ratio: '16 / 10',
+            className: 'ph--zoom',
+          })
+        );
+        const inner2 = `<div class="mcard__body">${inner}</div>`;
+        return it.href
+          ? `<a class="card mcard reveal tilt" href="${url(it.href)}">${pic}${inner2}</a>`
+          : `<div class="card mcard reveal">${pic}${inner2}</div>`;
+      }
+      return it.href
+        ? `<a class="card reveal" href="${url(it.href)}">${inner}</a>`
+        : `<div class="card reveal">${inner}</div>`;
+    })
+    .join('');
+  return raw(
+    `<div class="cols${variant === 'media' ? ' cols--2' : ''}" data-stagger="${stagger}">${body}</div>`
+  );
+}
+
+export function ladder(rows) {
+  const body = rows
+    .map(
+      (r) =>
+        `<div class="ladder__row"><div class="ladder__n">${esc(r.n)}</div><div>` +
+        `<h3 class="ladder__t">${esc(r.title)}</h3>` +
+        `<p class="ladder__b">${str(md(r.body))}</p></div></div>`
+    )
+    .join('');
+  return raw(`<div class="ladder">${body}</div>`);
+}
+
+export function fiveChecks(data) {
+  const items = data.items
+    .map(
+      (c) =>
+        `<li class="checks__item"><span class="checks__i">${esc(c.n)}</span><div>` +
+        `<h3 class="checks__h">${esc(c.title)}</h3>` +
+        `<p class="checks__d">${esc(c.body)}</p></div></li>`
+    )
+    .join('');
+  return raw(
+    '<div class="checks" data-checks>' +
+      '<div class="checks__dial reveal reveal--scale">' +
+      str(sunburst({ total: data.items.length })) +
+      `<p class="checks__count"><b data-checks-count>0</b>` +
+      `<span>of ${data.items.length} checks passed</span></p>` +
+      '</div><div>' +
+      `<ul class="checks__list">${items}</ul>` +
+      `<p class="checks__close reveal">${esc(data.close)}</p>` +
+      '</div></div>'
+  );
+}
+
+/** Pinned scrollytelling act. */
+export function story(data, { id = 'story' } = {}) {
+  const layers = data.scenes
+    .map(
+      (s, i) =>
+        `<div class="story__layer${i === 0 ? ' is-on' : ''}">` +
+        str(
+          picture(s.photo, { alt: '', decorative: true, sizes: '100vw', className: 'ph--free' })
+        ) +
+        '</div>'
+    )
+    .join('');
+  const scenes = data.scenes
+    .map(
+      (s, i) =>
+        `<article class="story__scene${i === 0 ? ' is-on' : ''}">` +
+        `<p class="label story__eyebrow">${esc(s.eyebrow)}</p>` +
+        `<h2 class="story__h">${esc(s.title)}</h2>` +
+        `<p class="story__b">${esc(s.body)}</p></article>`
+    )
+    .join('');
+  return raw(
+    `<section class="story" id="${esc(id)}" data-story` +
+      `${data.chapter ? ` data-chapter="${esc(data.chapter)}"` : ''}>` +
+      '<div class="story__pin">' +
+      `<div class="story__layers" aria-hidden="true">${layers}</div>` +
+      '<div class="scrim scrim--band" aria-hidden="true"></div>' +
+      '<div class="story__inner"><div class="story__track">' +
+      '<div class="story__spine" aria-hidden="true"><i></i></div>' +
+      `<div class="story__scenes">${scenes}</div></div>` +
+      '<div class="story__dial" aria-hidden="true">' +
+      str(sunburst({ total: data.scenes.length, spread: 'even', className: 'story__sun' })) +
+      `<span class="story__count">01 / ${String(data.scenes.length).padStart(2, '0')}</span>` +
+      '</div></div></div></section>'
+  );
+}
+
+export function band({ photo, photoAlt, eyebrow: e, headline, body, cta, tone = '' }) {
+  return raw(
+    `<section class="band ${esc(tone)}">` +
+      `<div class="band__bg" data-parallax="0.08">${str(
+        picture(photo, {
+          alt: photoAlt || '',
+          decorative: !photoAlt,
+          sizes: '100vw',
+          className: 'ph--free',
+        })
+      )}</div>` +
+      '<div class="scrim scrim--soft" aria-hidden="true"></div>' +
+      '<div class="band__inner">' +
+      (e ? `<p class="label">${esc(e)}</p>` : '') +
+      `<h2 class="band__h kinetic">${str(kinetic(headline))}</h2>` +
+      (body ? `<p class="band__b reveal">${str(md(body))}</p>` : '') +
+      (cta
+        ? `<div class="btns reveal" style="margin-top:28px">${str(
+            btn(cta.label, cta.href, { variant: 'gold', magnetic: true })
+          )}</div>`
+        : '') +
+      '</div></section>'
+  );
+}
+
+export function pills(title, items) {
+  return raw(
+    '<div class="reveal">' +
+      (title ? `<p class="label">${esc(title)}</p>` : '') +
+      `<ul class="pills">${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div>`
+  );
+}
+
+export function steps(items) {
+  return raw(`<ul class="steps">${items.map((i) => `<li>${str(md(i))}</li>`).join('')}</ul>`);
+}
+
+export function faq(items, { title = 'Common questions' } = {}) {
+  if (!items || !items.length) return raw('');
+  const body = items
+    .map((f, i) => {
+      const id = `faq-${slug(f.q).slice(0, 40)}-${i}`;
+      return (
+        '<div class="faq__item"><h3 class="faq__hd">' +
+        `<button class="faq__q" type="button" aria-expanded="false" aria-controls="${id}">` +
+        `<span>${esc(f.q)}</span><span class="faq__icon" aria-hidden="true"></span></button></h3>` +
+        `<div class="faq__a" id="${id}"><div><p>${esc(f.a)}</p></div></div></div>`
+      );
+    })
+    .join('');
+  return raw((title ? `<p class="label">${esc(title)}</p>` : '') + `<div class="faq">${body}</div>`);
+}
+
+export function closeCta(data, { label = 'Talk to us', secondary = { label: 'How we work', href: '/about.html' } } = {}) {
+  return raw(
+    '<section class="close">' +
+      `<div class="close__bg" data-parallax="0.07">${str(
+        picture(data.photo, {
+          alt: '',
+          decorative: true,
+          sizes: '100vw',
+          className: 'ph--free',
+        })
+      )}</div>` +
+      '<div class="scrim scrim--hero" aria-hidden="true"></div>' +
+      '<div class="close__inner">' +
+      `<h2 class="close__h kinetic">${str(kinetic(data.headline))}</h2>` +
+      `<p class="close__b reveal">${esc(data.body)}</p>` +
+      '<div class="btns reveal">' +
+      str(btn(label, '/contact.html', { variant: 'gold', magnetic: true })) +
+      (secondary ? str(btn(secondary.label, secondary.href)) : '') +
+      '</div></div></section>'
+  );
+}
+
+export function rail() {
+  return raw('<nav class="rail" data-rail aria-label="Page chapters"></nav>');
+}
+
+export { ARROW };

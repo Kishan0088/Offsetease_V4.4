@@ -1,134 +1,111 @@
-/* Static site generator. No dependencies — `node src/build.mjs`.
-   Reads the page data in src/data, writes flat .html files to the repo root. */
+#!/usr/bin/env node
+// Builds the whole site into flat .html files at the repository root.
+// Zero dependencies: `node src/build.mjs`.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { writeFile, readFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 import { site } from './data/site.mjs';
-import { U, clean } from './data/nav.mjs';
-import { setLogo } from './templates/layout.mjs';
-import { buildPage } from './templates/page.mjs';
-import { pages } from './data/pages/index.mjs';
+import { renderDocument } from './lib/layout.mjs';
+import { absolute, url } from './lib/paths.mjs';
+import { allPages } from './render.mjs';
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const rd = (p) => readFileSync(join(ROOT, p), 'utf8');
-const wr = (p, s) => {
-  const f = join(ROOT, p);
-  mkdirSync(dirname(f), { recursive: true });
-  writeFileSync(f, s);
-  return s.length;
-};
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/* Inline the logo so it inherits colour and can be animated. */
-const logoSvg = rd('assets/brand/offsetease-logo-compact.svg')
-  .replace(/<\?xml[^>]*\?>/, '')
-  .replace(/\s*<desc>[\s\S]*?<\/desc>/, '')
-  .replace('<svg ', '<svg aria-hidden="true" focusable="false" ')
-  .replace(/role="img"\s*/, '')
-  .replace(/aria-label="[^"]*"\s*/, '')
-  .trim();
-setLogo(logoSvg);
+/** Pull the traced wordmark path out of the brand SVG so it can be inlined. */
+async function wordmarkPath() {
+  const svg = await readFile(join(ROOT, 'assets/brand/offsetease-lockup.svg'), 'utf8');
+  const match = svg.match(/<g class="oe-word"><path d="([^"]+)"\/><\/g>/);
+  if (!match) throw new Error('Could not read the wordmark path from offsetease-lockup.svg');
+  return match[1];
+}
 
-const lqip = existsSync(join(ROOT, 'assets/img/photos/lqip.json'))
-  ? JSON.parse(rd('assets/img/photos/lqip.json')) : {};
-const ctx = { lqip };
+function filenameFor(path) {
+  if (path === '/') return 'index.html';
+  return path.replace(/^\//, '');
+}
 
-/* ---------------------------------------------------------------- pages */
-let total = 0;
-const built = [];
-
-/* Guard: a block can carry ready-made markup in `fig`, `after` or `aside`.
-   If a renderer forgets to output one of those, the content vanishes with no
-   error. Assert every such fragment actually reaches the page. */
-function assertFragmentsRendered(page, html) {
-  for (const b of page.blocks || []) {
-    for (const key of ['fig', 'after', 'aside', 'html']) {
-      const frag = b[key];
-      if (typeof frag !== 'string' || frag.length < 24) continue;
-      const probe = frag.trim().slice(0, 60);
-      if (!html.includes(probe)) {
-        throw new Error(`${page.file}: block "${b.type}" (${b.n || '?'}) defines ` +
-          `\`${key}\` but it was not rendered — the block template is dropping it.`);
-      }
-    }
+async function writeSitemap(pages) {
+  if (!site.indexable) {
+    // A preview build must not advertise itself.
+    await writeFile(join(ROOT, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+    await writeFile(
+      join(ROOT, 'sitemap.xml'),
+      '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>\n'
+    );
+    return;
   }
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = pages
+    .filter((p) => p.page.path !== '/404.html')
+    .map(
+      (p) =>
+        `  <url><loc>${absolute(p.page.path)}</loc><lastmod>${today}</lastmod>` +
+        `<changefreq>monthly</changefreq><priority>${p.page.path === '/' ? '1.0' : '0.7'}</priority></url>`
+    )
+    .join('\n');
+  await writeFile(
+    join(ROOT, 'sitemap.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`
+  );
+  await writeFile(
+    join(ROOT, 'robots.txt'),
+    `User-agent: *\nAllow: /\n\nSitemap: ${absolute('/sitemap.xml')}\n`
+  );
 }
 
-for (const page of pages) {
-  const html = buildPage(page, ctx);
-  assertFragmentsRendered(page, html);
-  const bytes = wr(page.file, html);
-  built.push({ file: page.file, url: clean(page.file), bytes });
-  total += bytes;
-  console.log(`  ${page.file.padEnd(38)} ${String(bytes).padStart(7)} bytes`);
-}
-
-/* ------------------------------------------------------------------ 404 */
-{
-  const notFound = {
-    file: '404.html', url: '/404',
-    title: 'Page not found | Offsetease',
-    description: 'That page does not exist. Find high-integrity carbon, ESG advisory and the rest of the Offsetease site from here.',
-    h1: 'That page is not here.',
-    crumbLabel: 'Not found',
-    heroShort: true,
-    hero: {
-      photo: 'fog-forest', sideScrim: true,
-      kicker: 'Error 404',
-      headline: 'That page is not here.',
-      lede: 'The link may be old, or the address mistyped. Everything below is where the work actually lives.',
-      buttons: [
-        { href: U.home, label: 'Back to the home page', variant: 'primary' },
-        { href: U.contact, label: 'Request a briefing', variant: 'ghost' }
-      ],
-      scrollHint: false
-    },
-    blocks: [{
-      type: 'tiles', tone: 'paper', n: '01', kicker: 'Where to go', cols: 'g-3',
-      title: 'The main routes through the site.',
-      items: [
-        { k: 'Markets', title: 'Environmental markets', body: 'Development, supply and renewable attributes.', href: U.markets },
-        { k: 'Method', title: 'The Source Standard', body: 'Our four-dimension integrity screen.', href: U.source },
-        { k: 'ESG', title: 'ESG & sustainability', body: 'Measurement, strategy, disclosure and targets.', href: U.esg },
-        { k: 'Sectors', title: 'Industries', body: 'Where the obligation actually bites.', href: U.industries },
-        { k: 'Answers', title: 'FAQ', body: 'The questions we are asked most often.', href: U.faq },
-        { k: 'Company', title: 'About Offsetease', body: 'Why we exist and how we work.', href: U.about }
-      ]
-    }],
-    cta: false
+async function writeManifest() {
+  const manifest = {
+    name: site.name,
+    short_name: site.name,
+    description: site.description,
+    start_url: url('/'),
+    scope: url('/'),
+    display: 'standalone',
+    background_color: site.colors.ink,
+    theme_color: site.colors.ink,
+    icons: [
+      { src: url('/assets/brand/favicon-192.png'), sizes: '192x192', type: 'image/png' },
+      { src: url('/assets/brand/favicon-512.png'), sizes: '512x512', type: 'image/png' },
+      { src: url('/assets/brand/favicon-512.png'), sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+    ],
   };
-  const bytes = wr('404.html', buildPage(notFound, ctx));
-  console.log(`  ${'404.html'.padEnd(38)} ${String(bytes).padStart(7)} bytes  (not in sitemap)`);
+  await writeFile(join(ROOT, 'site.webmanifest'), JSON.stringify(manifest, null, 2));
 }
 
-/* --------------------------------------------------------------- extras */
-const today = new Date().toISOString().slice(0, 10);
-const priority = (f) => f === U.home ? '1.0'
-  : [U.markets, U.esg, U.source, U.contact].includes(f) ? '0.9' : '0.7';
+async function main() {
+  const wordPath = await wordmarkPath();
+  const pages = allPages();
 
-wr('sitemap.xml',
-  `<?xml version="1.0" encoding="UTF-8"?>\n` +
-  `<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">\n`.replace('www.sitemap.org', 'www.sitemaps.org') +
-  built.map(b => `  <url>\n    <loc>${site.origin}${b.url}</loc>\n` +
-    `    <lastmod>${today}</lastmod>\n    <priority>${priority(b.file)}</priority>\n  </url>`).join('\n') +
-  `\n</urlset>\n`);
+  const seen = new Set();
+  for (const p of pages) {
+    if (seen.has(p.page.path)) throw new Error(`Duplicate page path: ${p.page.path}`);
+    seen.add(p.page.path);
+  }
 
-wr('robots.txt',
-  `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`);
+  let bytes = 0;
+  for (const { page, body } of pages) {
+    const doc = renderDocument({ page, body, wordPath });
+    const file = filenameFor(page.path);
+    await mkdir(dirname(join(ROOT, file)), { recursive: true });
+    await writeFile(join(ROOT, file), doc);
+    bytes += Buffer.byteLength(doc);
+    process.stdout.write(`  ${file.padEnd(42)} ${(Buffer.byteLength(doc) / 1024).toFixed(1)} KB\n`);
+  }
 
-/* Paths are relative so the site also works when served from a sub-path,
-   as it is on a GitHub Pages project site. */
-wr('site.webmanifest', JSON.stringify({
-  name: site.name, short_name: site.name,
-  description: 'High-integrity carbon, at the source.',
-  start_url: './', scope: './', display: 'standalone',
-  background_color: '#04171A', theme_color: '#0A3D44',
-  icons: [
-    { src: 'assets/brand/favicon-192.png', sizes: '192x192', type: 'image/png' },
-    { src: 'assets/brand/favicon-512.png', sizes: '512x512', type: 'image/png' },
-    { src: 'assets/brand/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }
-  ]
-}, null, 2) + '\n');
+  await writeSitemap(pages);
+  await writeManifest();
+  await writeFile(join(ROOT, '.nojekyll'), '');
 
-console.log(`\n  ${built.length} pages, ${(total / 1024).toFixed(0)} KB of HTML`);
+  console.log(
+    `\n${pages.length} pages · ${(bytes / 1024).toFixed(0)} KB of HTML · ` +
+      `indexable: ${site.indexable}`
+  );
+}
+
+main().catch((err) => {
+  console.error('\nBuild failed:', err.message);
+  console.error(err.stack);
+  process.exit(1);
+});

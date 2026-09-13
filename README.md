@@ -1,283 +1,163 @@
-# Offsetease — v4.4
+# OffsetEase — v4.4
 
-**High-integrity carbon, at the source.**
+A 26-page, zero-dependency static site for OffsetEase: high-integrity carbon
+supply, carbon project development, Energy Attribute Certificates, and eighteen
+in-depth ESG & sustainability services.
 
-A cinematic, scroll-driven marketing site for Offsetease: 31 pages, no
-framework, no runtime dependencies, no build step required to view it.
-
-The brand name is always **Offsetease** or **OFFSETEASE** — never
-inter-capitalised. The build fails its own check if that slips.
-
----
-
-## Quick start
-
-The site in the repository root is already built. To look at it:
-
-```bash
-python3 -m http.server 4477
-```
-
-Then open <http://localhost:4477>. That is the whole requirement — Python 3 ships
-with macOS and most Linux distributions. Opening `index.html` directly from the
-file system also works, because every internal link is relative.
-
-To rebuild the HTML after editing content:
-
-```bash
-node src/build.mjs && node src/check.mjs
-```
-
-Node 18 or newer. There is nothing to `npm install` — the generator uses only
-the Node standard library.
-
-| Command | What it does |
-|---|---|
-| `npm run build` | Regenerates all 31 HTML pages, the sitemap, robots.txt and the web manifest |
-| `npm run check` | Validates links, assets, headings, alt text, metadata, JSON-LD and brand spelling |
-| `npm run serve` | Serves the built site on port 4477 |
-| `npm run dev` | Builds, then serves and opens a browser |
+**Preview:** https://kishan0088.github.io/Offsetease_V4.4/
+**Live site (untouched by this repository):** https://offsetease.com
 
 ---
 
-## How the site is built
+## This is a preview build, and it deliberately does not compete with the live site
 
-Page content lives in plain JavaScript data files. A small generator turns that
-data into static HTML. There is no template language to learn and no
-dependency that can rot.
+`src/data/site.mjs` has `indexable: false`. While that is set, every page ships
+`<meta name="robots" content="noindex, nofollow">`, `robots.txt` disallows
+everything and `sitemap.xml` is emitted empty. That is on purpose: publishing a
+full duplicate of the company's copy on a second public domain would split
+search signals with offsetease.com.
+
+To promote this build to production:
+
+1. Set `indexable: true`.
+2. Point `origin` at `https://offsetease.com` and set `basePath: ''`.
+3. Rebuild. Canonicals, the sitemap and `robots.txt` all follow automatically.
+
+---
+
+## Build
+
+No install step, no `node_modules`, no network access required.
+
+```bash
+node src/build.mjs   # writes 26 .html files to the repository root
+node src/check.mjs   # validates the result; exits non-zero on any error
+```
+
+GitHub Actions runs both on every push to `main` and deploys the repository
+root to Pages (`.github/workflows/pages.yml`).
+
+### What the validator enforces
+
+It fails the build — not just warns — on: dead internal links and dead
+fragments, missing or duplicated `<title>` / meta descriptions, missing
+canonical / Open Graph / Twitter tags, JSON-LD that does not parse, more than
+one `<h1>`, skipped heading levels, `<img>` without `alt` or without intrinsic
+`width`/`height`, duplicate `id`s, links or buttons with no accessible name,
+`target="_blank"` without `rel="noopener"`, missing skip link or `lang`,
+orphan pages, placeholder text, brand-spelling slips, and any internal URL that
+forgot the deployment base path.
+
+---
+
+## Layout of the source
 
 ```
 src/
-  build.mjs              the generator — run this to rebuild
-  check.mjs              the validator — run this before committing
   data/
-    site.mjs             ← global config: domain, contact details, figures
-    nav.mjs              ← site architecture: every URL, the menus, the footer
-    pages/
-      index.mjs          the page registry (order = sitemap order)
-      home.mjs           the home page narrative
-      markets.mjs        environmental markets, 7 pages
-      esg.mjs            ESG & sustainability, 17 pages
-      company.mjs        industries, insights, about, contact, FAQ
+    site.mjs       deployment, contact, brand tokens, form key   ← edit this first
+    pages.mjs      copy for the seven core pages
+    services.mjs   copy for the eighteen ESG service pages
   lib/
-    html.mjs             escaping, typographic polish, small element helpers
-    figures.mjs          every custom diagram and chart on the site
-  templates/
-    layout.mjs           document shell: head, header, footer, structured data
-    hero.mjs             the three hero variants
-    blocks.mjs           the twelve section types a page is assembled from
-    page.mjs             assembles hero + blocks + FAQ + closing CTA
-
+    html.mjs       escaping, the `html` tagged template, kinetic-text helper
+    paths.mjs      every internal URL goes through url() / absolute()
+    media.mjs      <picture> generation from the photo manifest
+    layout.mjs     document shell, nav, footer, JSON-LD
+    components.mjs hero, story, five-checks, ladder, cards, FAQ, CTA …
+  render.mjs       one function per page template
+  build.mjs        writes the HTML, sitemap, robots.txt and web manifest
+  check.mjs        post-build validation
 assets/
-  brand/                 logo SVGs, favicons, the traced geometry
-  css/site.css           the entire design system, one file
-  css/fonts.css          self-hosted @font-face declarations
-  fonts/                 Inter (variable) and IBM Plex Mono, woff2
-  img/photos/            photography, two widths each, plus blur-up placeholders
-  js/app.js              motion runtime, navigation, accordions, form
-  js/hero-canvas.js      the generative hero field
+  brand/           lockup, mark, favicons, social card, measured geometry
+  css/site.css     the whole design system, one file
+  js/app.js        the whole behaviour layer, one file
+  fonts/           Schibsted Grotesk + IBM Plex Mono, latin & latin-ext
+  img/photos/      AVIF + WebP ladders and manifest.json
 ```
 
-### Editing content
+Adding a nineteenth ESG service means adding one object to
+`src/data/services.mjs`. The page, its nav entry, its footer link, its
+breadcrumb, its JSON-LD and its sitemap row all follow.
 
-Almost everything a non-developer needs is in **`src/data/site.mjs`**: the
-canonical domain, email, phone, LinkedIn, the list of registries and standards,
-and the pipeline figures.
+---
 
-Page copy lives in `src/data/pages/`. A page is an array of typed blocks:
+## The enquiry form
 
-```js
-{
-  type: 'prose',            // prose · points · figure · tiles · split · statement
-  tone: 'bone',             // paper · bone · dark · deep · abyss
-  n: '02',                  // the section number shown in the kicker
-  kicker: 'Why it matters',
-  title: 'One backbone. Every framework.',
-  paras: ['…', '…']
-}
-```
+The contact form posts to [Web3Forms](https://web3forms.com). Paste your free
+access key into `site.form.accessKey` in `src/data/site.mjs` and rebuild.
 
-Add a block, rebuild, done. `npm run check` will tell you if anything broke.
-
-### The live pipeline figures
-
-`src/data/site.mjs` contains:
-
-```js
-pipeline: {
-  tonnesUnderDevelopment: null,
-  projectsInOrigination: null,
-  countries: null
-}
-```
-
-These are deliberately `null`. The source content marked them as figures to be
-supplied, and **no number has been invented to fill the gap**. While they are
-`null`, the home page hero renders without the numeric strip and the page reads
-perfectly well. Set real, current values and the animated counters appear
-automatically. Refresh them quarterly.
-
-The same principle applies throughout: every dated claim on the site (CBAM's
-January 2026 definitive regime, the EUDR deadlines, SBTi V2 from 2028) comes
-from the supplied source content. Schematic charts say so in their captions, and
-carry no invented axis values.
+Until a key is present the form validates normally but **refuses to submit**,
+and tells the visitor to email `info@offsetease.com` instead. It never silently
+swallows an enquiry. A honeypot field and client-side validation are already
+wired.
 
 ---
 
 ## Brand
 
-The visual system is built from the supplied logo — an oversized ring with a
-sunburst radiating from it.
+The mark was measured off the supplied artwork rather than eyeballed. It is an
+**eight-point sunburst on a 45° grid with three rays omitted** — the three that
+would collide with the wordmark. The five surviving rays sit at 120°, 165°,
+210°, 255° and 300°, each running from radius 36 to 134 at width 13.5, around a
+hub circle of radius 22 with an 8-unit stroke.
 
-Measuring the original raster showed the mark is an **eight-point sunburst on a
-45° grid**, with the three rays on the right omitted because the wordmark sits
-there. The rays are exact rectangles: inner radius 1.39×, outer radius 5.10× and
-width 0.53× the ring's outer radius. That geometry is recorded in
-`assets/brand/brand-geometry.json` and drives:
+Those numbers live in `assets/brand/brand-geometry.json` and are the single
+source for the lockup, the favicons, the hero's orbital field, the Five Checks
+dial and the scrollytelling progress dial. The mark is emitted as exact
+primitives (five `<rect>`s and a `<circle>`), so it stays crisp at any size and
+each ray can animate independently. The wordmark is a contour trace of the
+supplied raster, inlined once per document and referenced by `<use>`.
 
-- `offsetease-logo.svg` — the primary lockup, traced from the original and
-  verified against it by pixel difference
-- `offsetease-logo-compact.svg` — the same mark with shortened rays, so the
-  wordmark stays legible at navigation size
-- `favicon.svg` and the PNG icons — the full eight-ray sunburst, symmetrical
-- the hero canvas, which streams particles along the five real ray angles
-- the section markers, the scroll indicator and the diagram geometry
-
-| Token | Value | Use |
-|---|---|---|
-| `--core` | `#0A3D44` | the brand primary |
-| `--abyss` `--deep` `--raised` `--mid` | teal scale | cinematic grounds |
-| `--signal` | `#5BC9D4` | the accent — one colour, used sparingly |
-| `--bone` `--paper` `--ink` `--slate` | neutrals | editorial surfaces and text |
-| `--moss` `--amber` | environmental tones | nature-based and risk signals only |
-
-Type is **Inter** throughout — a refined grotesque with exceptional readability —
-with **IBM Plex Mono** for technical labels, figure captions and section numbers.
+> **Gotcha, twice paid for:** never put a CSS `transform` (or `transform-box`)
+> directly on an SVG element that carries a `transform="rotate(…)"` attribute.
+> The CSS property replaces the attribute rather than composing with it, and
+> every ray collapses onto the hub. Rotation goes on a wrapper `<g>`; CSS
+> animates the child.
 
 ---
 
 ## Motion
 
-Motion is written from scratch in `assets/js/app.js` (about 13 KB unminified) and
-`assets/js/hero-canvas.js`.
+Everything is progressive enhancement — the page is complete and readable with
+JavaScript disabled, and every entrance animation is skipped under
+`prefers-reduced-motion: reduce`.
 
-- Entrance reveals and staggers via `IntersectionObserver`
-- Scroll-linked progress published as a CSS custom property, from a single
-  `requestAnimationFrame` loop shared by every scroll effect
-- Clamped parallax, so an unusual viewport can never shear the layout
-- Animated counters, SVG draw-on, masked wipes, sticky narrative stages
-- A generative hero field on canvas: particles streaming outward from a single
-  origin along the logo's ray angles, paused when off-screen or when the tab
-  is hidden, and rendered as a single static frame under reduced motion
-
-Everything degrades honestly:
-
-- **No JavaScript** — all content is visible. Reveal styles are scoped behind a
-  `.js` class added in the document head, so nothing is ever hidden from a
-  visitor whose script did not load.
-- **`prefers-reduced-motion: reduce`** — every transition, animation and
-  parallax is disabled and final states are shown immediately.
-- **`?motion=off`** — append it to any URL to freeze entrance animations in
-  their finished state. A QA aid for screenshots, print checks and debugging.
+- Kinetic headlines: words rise from behind a per-word mask, staggered.
+- Reveal-on-scroll via one `IntersectionObserver`; `data-stagger` spaces
+  siblings without hand-written delays.
+- Pinned scrollytelling (`data-story`): one viewport of scroll per scene,
+  cross-fading photography, a progress spine and a ray dial. Collapses to a
+  plain stacked list below 940px and under reduced motion.
+- The Five Checks light up one ray at a time as the list is read.
+- Count-up figures, hero and band parallax, pointer-tracked card glow, magnetic
+  primary buttons — all fine-pointer only, and all skipped on `saveData`.
+- Scroll progress uses a CSS `scroll()` timeline where supported, with a rAF
+  fallback. All scroll-linked work shares a single rAF loop.
 
 ---
 
-## Performance, SEO and accessibility
+## Performance
 
-- No framework, no third-party script, no external font or CSS request. One
-  stylesheet, two small scripts, both deferred.
-- Fonts are self-hosted woff2, subset to latin and latin-ext, with the primary
-  face preloaded. The latin path is 73 KB.
-- Every photograph is served at two widths with `srcset` and explicit
-  `width`/`height`, lazily except the hero, behind an inline blur-up
-  placeholder. No layout shift.
-- Every page carries a unique title and meta description, a canonical URL, Open
-  Graph and Twitter tags, and JSON-LD for `Organization`, `WebSite`, `WebPage`,
-  `BreadcrumbList`, `Service` and `FAQPage`.
-- Every colour pair used for text meets **WCAG 2.1 AA** (4.5:1); meaningful
-  borders and axes meet 3:1. The palette was solved against that constraint
-  rather than checked afterwards.
-- One `<h1>` per page, ordered headings, visible focus rings, a skip link,
-  labelled form fields, `aria-expanded` on every disclosure, and alt text on
-  every image.
-- Complex diagrams scroll inside their own track below 760px rather than
-  shrinking their labels into illegibility. The signature radial becomes a
-  stacked list on a phone.
-
-`npm run check` enforces the mechanical parts of this on every build.
+- No framework, no CDN, no third-party runtime. Two files: one CSS, one JS.
+- Self-hosted variable fonts, latin + latin-ext only, preloaded, `swap`.
+- Photography ships as an AVIF ladder (720 / 1440 / 2160) with a WebP fallback
+  capped at 1440 — a fallback for browsers without AVIF should not outweigh the
+  format it is backing up. Every image has intrinsic dimensions and an inline
+  base64 LQIP for blur-up, so there is no layout shift.
+- Hero art is preloaded with `fetchpriority="high"`; everything else is lazy.
 
 ---
 
-## URLs
+## Known gaps, deliberately left open
 
-Pages are flat `.html` files at the repository root. GitHub Pages, Netlify,
-Cloudflare Pages and most static hosts serve `/about` from `about.html`
-automatically, and every canonical URL uses that extensionless form.
-
-Two pages differ from the original content plan: the children of Carbon Project
-Development are published at `/nature-based-carbon` and `/durable-removals`
-rather than nested under `/carbon-project-development/`. Flat files keep the
-site working when opened directly from the file system, and the hierarchy is
-expressed through breadcrumbs and `BreadcrumbList` structured data, which is
-what search engines actually read.
-
-Change `site.origin` in `src/data/site.mjs` and rebuild to point every canonical
-URL, sitemap entry and JSON-LD id at a different domain.
-
----
-
-## Deployment
-
-### GitHub Pages
-
-A workflow is included at `.github/workflows/pages.yml`. Enable Pages for the
-repository (**Settings → Pages → Source: GitHub Actions**) and every push to
-`main` rebuilds and deploys.
-
-### Netlify or Cloudflare Pages
-
-Point the project at this repository and use:
-
-- **Build command:** `node src/build.mjs`
-- **Publish directory:** `.`
-
-`netlify.toml` and `_headers` are included with sensible cache headers and a
-404 mapping.
-
-### Any static host
-
-The repository root is the site. Upload it as-is.
-
----
-
-## Testing before you ship
-
-```bash
-npm run build && npm run check
-```
-
-Then look at the site at three widths — a phone, a tablet and a desktop — with
-`?motion=off` for layout and without it for motion.
-
----
-
-## What is deliberately not here
-
-- **Stock video.** The brief suggested cinematic video. Every video source
-  reachable from this build environment required an API key, and an
-  uncompressed stock clip would have added megabytes to a repository that
-  currently loads in well under a second. The hero is a generative canvas
-  instead, built from the logo's own geometry, which is lighter, sharper at any
-  resolution, and not a clip a competitor can also license. `hero.photo` and the
-  `band` block accept an image today; dropping in a `<video>` poster-backed
-  element is a contained change to `src/templates/hero.mjs` if a real,
-  brand-shot film becomes available.
-- **Invented numbers.** See *The live pipeline figures* above.
-- **Named authors and case studies.** The Insights hub ships as twelve genuine
-  question-and-answer briefings drawn from the source content rather than stub
-  links to articles that do not exist yet.
-
----
-
-© Offsetease LLP. Content and brand assets are the property of Offsetease LLP.
-See `CREDITS.md` for photography and typeface licensing.
+- **Leadership.** The approved copy carries a `[ Leadership: name · role · one-line
+  credential — to add ]` placeholder. Nothing was invented; `about.leadership`
+  in `src/data/pages.mjs` is an empty array and the section renders only once
+  real people are supplied.
+- **Photography credits.** Twelve of the twenty-three photographs carry named
+  photographers (see `CREDITS.md`). The other eleven arrived as Unsplash IDs in
+  the approved design bundle; the IDs are recorded so attribution can be
+  completed.
+- **Market figures.** Every `▸` proof point on the site is dated and sourced on
+  `/sources.html`. They move — re-check them quarterly and update
+  `site.lastReviewed`.

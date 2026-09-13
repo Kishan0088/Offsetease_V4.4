@@ -1,324 +1,522 @@
-/* OFFSETEASE — interaction + motion runtime. No dependencies. */
-(function () {
+/* =========================================================================
+   OFFSETEASE — behaviour layer
+   Vanilla, no dependencies, deferred. Every enhancement degrades to a
+   perfectly usable static page if this file never runs.
+   ========================================================================= */
+(() => {
   'use strict';
-  var root = document.documentElement;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var $ = function (s, c) { return (c || document).querySelector(s); };
-  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* ------------------------------------------------------------- reveal */
-  function initReveal() {
-    var items = $$('[data-reveal], [data-viz], .lines');
-    if (!items.length) return;
-    if (reduce.matches || !('IntersectionObserver' in window)) {
-      items.forEach(function (el) { el.classList.add('is-in'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target;
-        el.classList.add('is-in');
-        // stagger direct children that opt in
-        var group = el.getAttribute('data-stagger');
-        if (group) {
-          $$(':scope > *', el).forEach(function (child, i) {
-            child.style.setProperty('--d', (i * parseFloat(group)) + 's');
-            child.classList.add('is-in');
-          });
-        }
-        io.unobserve(el);
-      });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
-    items.forEach(function (el) { io.observe(el); });
-  }
+  const doc = document;
+  const root = doc.documentElement;
+  const mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const mqFine = matchMedia('(hover: hover) and (pointer: fine)');
+  const saveData = navigator.connection && navigator.connection.saveData;
 
-  /* --------------------------------------------- stagger delay assignment */
-  function initStagger() {
-    $$('[data-stagger-children]').forEach(function (el) {
-      var step = parseFloat(el.getAttribute('data-stagger-children')) || 0.08;
-      $$(':scope > *', el).forEach(function (c, i) {
-        c.style.setProperty('--d', (i * step).toFixed(3) + 's');
-      });
-    });
-  }
+  const reduced = () => mqReduce.matches;
+  const $ = (sel, ctx = doc) => ctx.querySelector(sel);
+  const $$ = (sel, ctx = doc) => Array.from(ctx.querySelectorAll(sel));
+  const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
 
-  /* ----------------------------------------------------- scroll engine */
-  var scrubbers = [], parallaxers = [], stickies = [], ticking = false;
-  function collect() {
-    scrubbers = $$('[data-scrub]');
-    parallaxers = $$('[data-parallax]');
-    stickies = $$('[data-sticky]');
+  /* ---- rAF scheduler: one loop, many subscribers ----------------------- */
+  const frameJobs = new Set();
+  let ticking = false;
+  function onFrame(fn) {
+    frameJobs.add(fn);
+    return () => frameJobs.delete(fn);
   }
-  function frame() {
+  function tick() {
+    for (const fn of frameJobs) fn();
     ticking = false;
-    var vh = window.innerHeight;
-
-    scrubbers.forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      // 0 when the element's top hits the bottom of the viewport, 1 when its bottom leaves the top
-      var total = r.height + vh;
-      var p = total > 0 ? (vh - r.top) / total : 0;
-      p = p < 0 ? 0 : p > 1 ? 1 : p;
-      el.style.setProperty('--p', p.toFixed(4));
-    });
-
-    parallaxers.forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      if (r.bottom < -200 || r.top > vh + 200) return;
-      var amt = parseFloat(el.getAttribute('data-parallax')) || 0.12;
-      var centre = r.top + r.height / 2 - vh / 2;
-      // clamp so an unusually tall viewport (or zoom) can never shear the layout
-      var cap = r.height * 0.16;
-      var off = -centre * amt;
-      if (off > cap) off = cap; else if (off < -cap) off = -cap;
-      el.style.setProperty('--py', off.toFixed(2) + 'px');
-      el.style.transform = 'translate3d(0,' + off.toFixed(2) + 'px,0)';
-    });
-
-    stickies.forEach(function (el) {
-      var steps = $$('[data-step]', el);
-      if (!steps.length) return;
-      var active = 0, best = Infinity;
-      steps.forEach(function (s, i) {
-        var r = s.getBoundingClientRect();
-        var d = Math.abs(r.top + r.height / 2 - vh / 2);
-        if (d < best) { best = d; active = i; }
-      });
-      if (el.__active === active) return;
-      el.__active = active;
-      steps.forEach(function (s, i) { s.setAttribute('data-active', i === active ? 'true' : 'false'); });
-      $$('[data-stage]', el).forEach(function (s, i) {
-        s.setAttribute('data-active', i === active ? 'true' : 'false');
-      });
-      el.style.setProperty('--step', active);
-    });
-
-    // global reading progress on the ray indicator
-    if (rayArc) {
-      var h = document.documentElement.scrollHeight - vh;
-      var gp = h > 0 ? window.scrollY / h : 0;
-      gp = gp < 0 ? 0 : gp > 1 ? 1 : gp;
-      rayArc.style.strokeDashoffset = (RAY_C * (1 - gp)).toFixed(2);
-      rayWrap.setAttribute('data-on', window.scrollY > 400 ? 'true' : 'false');
+  }
+  function requestTick() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(tick);
     }
   }
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(frame);
+  addEventListener('scroll', requestTick, { passive: true });
+  addEventListener('resize', requestTick, { passive: true });
+
+  /* ---- Photographs: fade in once decoded ------------------------------- */
+  function initPhotos() {
+    $$('.ph img').forEach((img) => {
+      if (img.complete && img.naturalWidth) {
+        img.classList.add('is-loaded');
+      } else {
+        img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+        img.addEventListener('error', () => img.classList.add('is-loaded'), { once: true });
+      }
+    });
   }
 
-  var rayWrap = null, rayArc = null, RAY_C = 0;
-  function initRayProgress() {
-    if (reduce.matches) return;
-    rayWrap = $('.rayprog');
-    if (!rayWrap) return;
-    rayArc = $('.rayprog__arc', rayWrap);
-    if (!rayArc) return;
-    var r = parseFloat(rayArc.getAttribute('r'));
-    RAY_C = 2 * Math.PI * r;
-    rayArc.style.strokeDasharray = RAY_C;
-    rayArc.style.strokeDashoffset = RAY_C;
-  }
-
-  /* --------------------------------------------------------- counters */
-  function initCounters() {
-    var els = $$('[data-count]');
-    if (!els.length) return;
-    if (reduce.matches || !('IntersectionObserver' in window)) {
-      els.forEach(function (el) { el.textContent = el.getAttribute('data-count'); });
+  /* ---- Reveal on scroll ------------------------------------------------ */
+  function initReveal() {
+    const targets = $$('.reveal, .kinetic, .ladder__row, .split__side');
+    if (!targets.length) return;
+    if (reduced() || !('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-in'));
       return;
     }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target; io.unobserve(el);
-        var raw = el.getAttribute('data-count');
-        var target = parseFloat(raw.replace(/[^0-9.\-]/g, ''));
-        if (isNaN(target)) { el.textContent = raw; return; }
-        var prefix = raw.slice(0, raw.search(/[0-9.\-]/));
-        var suffix = raw.slice(raw.search(/[0-9.\-]/)).replace(/^[0-9.,\-]+/, '');
-        var dp = (raw.split('.')[1] || '').replace(/[^0-9]/g, '').length;
-        var t0 = null, dur = 1500;
-        function step(t) {
-          if (t0 === null) t0 = t;
-          var k = Math.min((t - t0) / dur, 1);
-          var eased = 1 - Math.pow(1 - k, 4);
-          var v = target * eased;
-          el.textContent = prefix + v.toFixed(dp).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + suffix;
-          if (k < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      });
-    }, { threshold: 0.5 });
-    els.forEach(function (el) { io.observe(el); });
-  }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-in');
+          io.unobserve(e.target);
+        });
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
+    );
+    targets.forEach((el) => io.observe(el));
 
-  /* ------------------------------------------------------- svg draw len */
-  function initDrawLengths() {
-    $$('.draw').forEach(function (el) {
-      if (typeof el.getTotalLength !== 'function') return;
-      try {
-        var len = el.getTotalLength();
-        if (len) el.style.setProperty('--len', Math.ceil(len));
-      } catch (e) { /* non-path */ }
+    // Stagger siblings inside a group without hand-writing delays.
+    $$('[data-stagger]').forEach((group) => {
+      const step = Number(group.dataset.stagger) || 80;
+      Array.from(group.children).forEach((child, i) => {
+        child.style.setProperty('--rd', `${Math.min(i, 8) * step}ms`);
+      });
     });
   }
 
-  /* --------------------------------------------------------------- nav */
+  /* ---- Navigation ------------------------------------------------------ */
   function initNav() {
-    var nav = $('.nav');
+    const nav = $('[data-nav]');
     if (!nav) return;
-    var last = window.scrollY, hero = $('.hero');
+    let last = scrollY;
+    let openMenu = false;
 
-    function navState() {
-      var y = window.scrollY;
-      var threshold = hero ? Math.max(hero.offsetHeight - 120, 120) : 80;
-      nav.classList.toggle('nav--solid', y > threshold);
-      if (y > last && y > threshold + 200 && !root.hasAttribute('data-menu')) {
-        nav.classList.add('nav--hidden');
-      } else {
-        nav.classList.remove('nav--hidden');
+    const update = () => {
+      const y = scrollY;
+      nav.classList.toggle('is-top', y < 12);
+      if (!openMenu) {
+        const goingDown = y > last && y > 260;
+        nav.classList.toggle('is-hidden', goingDown && y - last > 2);
       }
       last = y;
-    }
-    window.addEventListener('scroll', navState, { passive: true });
-    navState();
+    };
+    onFrame(update);
+    update();
 
-    // desktop mega menus
-    var items = $$('.nav__item', nav);
-    var closeTimer;
-    function closeAll(except) {
-      items.forEach(function (it) {
-        if (it === except) return;
-        it.setAttribute('data-open', 'false');
-        var b = $('.nav__link', it);
-        if (b && b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
-      });
-    }
-    items.forEach(function (it) {
-      var panel = $('.mega', it);
-      if (!panel) return;
-      var btn = $('.nav__link', it);
-      function open() {
-        clearTimeout(closeTimer);
-        closeAll(it);
-        it.setAttribute('data-open', 'true');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-      function close() { it.setAttribute('data-open', 'false'); btn.setAttribute('aria-expanded', 'false'); }
-      it.addEventListener('mouseenter', open);
-      it.addEventListener('mouseleave', function () { closeTimer = setTimeout(close, 140); });
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        it.getAttribute('data-open') === 'true' ? close() : open();
-      });
-      it.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); btn.focus(); } });
-    });
-    document.addEventListener('click', function (e) {
-      if (!nav.contains(e.target)) closeAll(null);
-    });
+    const toggle = $('[data-menu-toggle]');
+    const menu = $('[data-menu]');
+    if (!toggle || !menu) return;
 
-    // mobile drawer
-    var toggle = $('.nav__toggle');
-    if (toggle) {
-      toggle.addEventListener('click', function () {
-        var open = root.getAttribute('data-menu') === 'open';
-        if (open) { root.removeAttribute('data-menu'); document.body.style.overflow = ''; }
-        else { root.setAttribute('data-menu', 'open'); document.body.style.overflow = 'hidden'; }
-        toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
-      });
-    }
-    $$('.drawer__head').forEach(function (h) {
-      h.addEventListener('click', function () {
-        var g = h.closest('.drawer__group');
-        var open = g.getAttribute('data-open') === 'true';
-        g.setAttribute('data-open', open ? 'false' : 'true');
-        h.setAttribute('aria-expanded', open ? 'false' : 'true');
-      });
-    });
-    window.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && root.getAttribute('data-menu') === 'open') {
-        root.removeAttribute('data-menu'); document.body.style.overflow = '';
-        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    $$('.menu__big', menu).forEach((el, i) => el.style.setProperty('--mi', i));
+
+    const setMenu = (open) => {
+      openMenu = open;
+      menu.hidden = false;
+      // let `hidden` clear before the transition starts
+      requestAnimationFrame(() => menu.classList.toggle('is-open', open));
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      root.classList.toggle('is-menu-open', open);
+      nav.classList.remove('is-hidden');
+      if (open) {
+        const first = $('a, button', menu);
+        if (first) first.focus({ preventScroll: true });
+      } else {
+        setTimeout(() => {
+          if (!openMenu) menu.hidden = true;
+        }, 450);
+        toggle.focus({ preventScroll: true });
       }
+    };
+
+    toggle.addEventListener('click', () => setMenu(!openMenu));
+    menu.addEventListener('click', (e) => {
+      if (e.target.closest('a')) setMenu(false);
+    });
+    doc.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && openMenu) setMenu(false);
+      if (e.key === 'Tab' && openMenu) {
+        const items = $$('a[href], button:not([disabled])', menu);
+        if (!items.length) return;
+        const first = items[0];
+        const lastEl = items[items.length - 1];
+        if (e.shiftKey && doc.activeElement === first) {
+          e.preventDefault();
+          lastEl.focus();
+        } else if (!e.shiftKey && doc.activeElement === lastEl) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    matchMedia('(min-width: 1021px)').addEventListener('change', (e) => {
+      if (e.matches && openMenu) setMenu(false);
     });
   }
 
-  /* --------------------------------------------------------------- faq */
+  /* ---- Scroll progress (fallback where scroll-timeline is unsupported) -- */
+  function initProgress() {
+    const bar = $('.progress__bar');
+    if (!bar) return;
+    if (CSS.supports('animation-timeline: scroll()')) return;
+    onFrame(() => {
+      const max = doc.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = `scaleX(${max > 0 ? clamp(scrollY / max) : 0})`;
+    });
+  }
+
+  /* ---- Chapter rail ---------------------------------------------------- */
+  function initRail() {
+    const rail = $('[data-rail]');
+    if (!rail) return;
+    const chapters = $$('[data-chapter]');
+    if (chapters.length < 2) {
+      rail.remove();
+      return;
+    }
+    const dots = chapters.map((section, i) => {
+      const dot = doc.createElement('a');
+      dot.className = 'rail__dot';
+      dot.href = `#${section.id}`;
+      dot.innerHTML = `<i></i><span>${section.dataset.chapter}</span>`;
+      dot.addEventListener('click', () => {
+        // let the browser handle the smooth scroll; just pre-light the dot
+        dots.forEach((d) => d.classList.remove('is-active'));
+        dot.classList.add('is-active');
+      });
+      rail.appendChild(dot);
+      return dot;
+    });
+    rail.style.pointerEvents = 'auto';
+
+    onFrame(() => {
+      const mid = innerHeight * 0.42;
+      let active = 0;
+      chapters.forEach((s, i) => {
+        const r = s.getBoundingClientRect();
+        if (r.top <= mid) active = i;
+      });
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === active));
+      // keep the rail legible when it overlaps a bone section
+      const cur = chapters[active];
+      rail.classList.toggle('on-light', cur.classList.contains('on-bone'));
+    });
+  }
+
+  /* ---- Scrollytelling -------------------------------------------------- */
+  function initStory() {
+    $$('[data-story]').forEach((story) => {
+      const scenes = $$('.story__scene', story);
+      const layers = $$('.story__layer', story);
+      const fill = $('.story__spine i', story);
+      const count = $('.story__count', story);
+      const rays = $$('.story__dial .checks__ray', story);
+      if (!scenes.length) return;
+
+      const isPinned = () => !reduced() && innerWidth > 940;
+
+      const apply = (progress) => {
+        const n = scenes.length;
+        const idx = Math.min(n - 1, Math.floor(progress * n * 0.999));
+        scenes.forEach((s, i) => s.classList.toggle('is-on', i === idx));
+        layers.forEach((l, i) => l.classList.toggle('is-on', i === Math.min(layers.length - 1, idx)));
+        rays.forEach((r, i) => r.classList.toggle('is-lit', i <= idx));
+        if (fill) fill.style.height = `${clamp(progress) * 100}%`;
+        if (count) {
+          count.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`;
+        }
+      };
+
+      const measure = () => {
+        if (!isPinned()) {
+          story.style.height = '';
+          scenes.forEach((s) => s.classList.add('is-on'));
+          layers.forEach((l, i) => l.classList.toggle('is-on', i === 0));
+          rays.forEach((r) => r.classList.add('is-lit'));
+          return;
+        }
+        // One viewport of scroll per scene, plus one to read the last.
+        story.style.height = `${(scenes.length + 1) * 100}vh`;
+      };
+
+      measure();
+      addEventListener('resize', measure, { passive: true });
+
+      onFrame(() => {
+        if (!isPinned()) return;
+        const r = story.getBoundingClientRect();
+        const total = story.offsetHeight - innerHeight;
+        if (total <= 0) return;
+        apply(clamp(-r.top / total));
+      });
+      apply(0);
+    });
+  }
+
+  /* ---- The Five Checks: light up as the list is read ------------------- */
+  function initChecks() {
+    const block = $('[data-checks]');
+    if (!block) return;
+    const items = $$('.checks__item', block);
+    const rays = $$('.checks__ray', block);
+    const counter = $('[data-checks-count]', block);
+
+    if (reduced() || !('IntersectionObserver' in window)) {
+      items.forEach((i) => i.classList.add('is-lit'));
+      rays.forEach((r) => r.classList.add('is-lit'));
+      if (counter) counter.textContent = String(items.length);
+      return;
+    }
+
+    let lit = 0;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const i = items.indexOf(e.target);
+          e.target.classList.add('is-lit');
+          if (rays[i]) rays[i].classList.add('is-lit');
+          lit = Math.max(lit, i + 1);
+          if (counter) counter.textContent = String(lit);
+          io.unobserve(e.target);
+        });
+      },
+      { rootMargin: '0px 0px -34% 0px', threshold: 0.5 }
+    );
+    items.forEach((i) => io.observe(i));
+  }
+
+  /* ---- Count-up numbers ------------------------------------------------ */
+  function initCounters() {
+    const els = $$('[data-count]');
+    if (!els.length) return;
+    if (reduced() || !('IntersectionObserver' in window)) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          run(e.target);
+        });
+      },
+      { threshold: 0.6 }
+    );
+    els.forEach((el) => io.observe(el));
+
+    function run(el) {
+      const value = $('.fig__v', el) || el;
+      const finalText = value.textContent;
+      // Split the label into decoration + number + decoration, e.g.
+      // "$14.80" -> ["$", "14.80", ""] and "37,798" -> ["", "37,798", ""].
+      const parts = finalText.match(/^(\D*)([\d][\d,]*(?:\.\d+)?)(.*)$/s);
+      if (!parts) return;
+      const [, before, numText, after] = parts;
+      const target = parseFloat(numText.replace(/,/g, ''));
+      if (!Number.isFinite(target)) return;
+      const decimals = (numText.split('.')[1] || '').length;
+      // en-US so grouping stays "214,000" rather than the Indian "2,14,000"
+      // that the source copy does not use.
+      const fmt = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+        useGrouping: numText.includes(','),
+      });
+      const dur = 1100;
+      const start = performance.now();
+      const step = (now) => {
+        const p = clamp((now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        value.textContent = before + fmt.format(target * eased) + after;
+        if (p < 1) requestAnimationFrame(step);
+        else value.textContent = finalText;
+      };
+      requestAnimationFrame(step);
+    }
+  }
+
+  /* ---- Pointer glow + subtle 3D tilt (fine pointers only) -------------- */
+  function initPointer() {
+    if (!mqFine.matches || reduced() || saveData) return;
+
+    $$('.card').forEach((card) => {
+      card.addEventListener(
+        'pointermove',
+        (e) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+          card.style.setProperty('--my', `${e.clientY - r.top}px`);
+        },
+        { passive: true }
+      );
+    });
+
+    $$('.tilt').forEach((el) => {
+      let raf = 0;
+      const onMove = (e) => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          el.style.transform = `perspective(1100px) rotateX(${(-y * 4.5).toFixed(2)}deg) rotateY(${(x * 5.5).toFixed(2)}deg) translateZ(0)`;
+        });
+      };
+      el.addEventListener('pointerenter', () => el.classList.add('is-tilting'));
+      el.addEventListener('pointermove', onMove, { passive: true });
+      el.addEventListener('pointerleave', () => {
+        el.classList.remove('is-tilting');
+        cancelAnimationFrame(raf);
+        el.style.transform = '';
+      });
+    });
+
+    // Magnetic primary buttons.
+    $$('[data-magnetic]').forEach((btn) => {
+      const strength = 0.24;
+      btn.addEventListener(
+        'pointermove',
+        (e) => {
+          const r = btn.getBoundingClientRect();
+          const x = (e.clientX - r.left - r.width / 2) * strength;
+          const y = (e.clientY - r.top - r.height / 2) * strength;
+          btn.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+        },
+        { passive: true }
+      );
+      btn.addEventListener('pointerleave', () => {
+        btn.style.translate = '';
+      });
+    });
+  }
+
+  /* ---- Hero parallax --------------------------------------------------- */
+  function initParallax() {
+    if (reduced() || saveData) return;
+    const layers = $$('[data-parallax]');
+    if (!layers.length) return;
+    onFrame(() => {
+      layers.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > innerHeight + 200) return;
+        const depth = Number(el.dataset.parallax) || 0.12;
+        const centre = r.top + r.height / 2 - innerHeight / 2;
+        el.style.translate = `0 ${(-centre * depth).toFixed(1)}px`;
+      });
+    });
+  }
+
+  /* ---- FAQ ------------------------------------------------------------- */
   function initFaq() {
-    $$('.faq__q').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var item = btn.closest('.faq__item');
-        var open = item.getAttribute('data-open') === 'true';
-        item.setAttribute('data-open', open ? 'false' : 'true');
-        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    $$('.faq__item').forEach((item) => {
+      const btn = $('.faq__q', item);
+      const panel = $('.faq__a', item);
+      if (!btn || !panel) return;
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        item.classList.toggle('is-open', !open);
       });
     });
   }
 
-  /* -------------------------------------------------------------- form */
+  /* ---- Enquiry form ---------------------------------------------------- */
   function initForm() {
-    var form = $('[data-form]');
+    const form = $('[data-form]');
     if (!form) return;
-    var status = $('.form__status', form);
-    form.addEventListener('submit', function (e) {
-      var ok = true;
-      $$('.field', form).forEach(function (f) {
-        var input = $('input, textarea', f);
-        if (!input || !input.required) return;
-        var valid = input.value.trim() !== '' && (input.type !== 'email' || /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(input.value));
-        f.setAttribute('data-invalid', valid ? 'false' : 'true');
-        if (!valid) ok = false;
+    const status = $('[data-form-status]', form);
+    const submit = $('[type="submit"]', form);
+    const key = form.dataset.accessKey || '';
+
+    const say = (tone, msg) => {
+      status.hidden = false;
+      status.dataset.tone = tone;
+      status.textContent = msg;
+    };
+
+    const showFieldError = (input) => {
+      const wrap = input.closest('.field');
+      const err = wrap && $('.field__err', wrap);
+      if (!err) return;
+      err.textContent = input.validity.valid ? '' : input.validationMessage;
+    };
+
+    $$('input, select, textarea', form).forEach((input) => {
+      input.addEventListener('blur', () => showFieldError(input));
+      input.addEventListener('input', () => {
+        if (input.validity.valid) showFieldError(input);
       });
-      if (!ok) { e.preventDefault(); return; }
-      if (!form.getAttribute('action')) {
-        // no endpoint configured — hand off to the mail client, and say so
-        e.preventDefault();
-        var get = function (n) { var el = form.elements[n]; return el ? el.value.trim() : ''; };
-        var body = 'Name: ' + get('name') + '\nCompany: ' + get('company') +
-                   '\nWork email: ' + get('email') + '\n\n' + get('context');
-        window.location.href = 'mailto:' + (form.getAttribute('data-mailto') || 'info@offsetease.com') +
-          '?subject=' + encodeURIComponent('Briefing request — ' + (get('company') || get('name'))) +
-          '&body=' + encodeURIComponent(body);
-        if (status) { status.setAttribute('data-show', 'true'); }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.hidden = true;
+
+      if (!form.checkValidity()) {
+        $$('input, select, textarea', form).forEach(showFieldError);
+        const firstBad = $(':invalid', form);
+        if (firstBad) firstBad.focus();
+        say('err', 'Please check the highlighted fields.');
+        return;
+      }
+
+      // Honeypot: a real person never fills this.
+      if (form.elements.botcheck && form.elements.botcheck.value) return;
+
+      if (!key) {
+        say(
+          'err',
+          'This form is not connected yet. Please email info@offsetease.com — we reply within one business day.'
+        );
+        return;
+      }
+
+      submit.disabled = true;
+      const original = submit.textContent;
+      submit.textContent = 'Sending…';
+
+      try {
+        const body = new FormData(form);
+        body.append('access_key', key);
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body,
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success !== false) {
+          form.reset();
+          say('ok', 'Thank you — your enquiry is with us. A senior specialist replies within one business day.');
+          status.focus?.();
+        } else {
+          throw new Error(data.message || 'Request failed');
+        }
+      } catch (err) {
+        say(
+          'err',
+          'Something went wrong sending that. Please email info@offsetease.com and we will pick it up straight away.'
+        );
+      } finally {
+        submit.disabled = false;
+        submit.textContent = original;
       }
     });
-    $$('.field input, .field textarea', form).forEach(function (i) {
-      i.addEventListener('input', function () { i.closest('.field').setAttribute('data-invalid', 'false'); });
-    });
   }
 
-  /* ------------------------------------------------------------ images */
-  function initBlurUp() {
-    $$('img.blurup').forEach(function (img) {
-      if (img.complete && img.naturalWidth) { img.classList.add('is-loaded'); return; }
-      img.addEventListener('load', function () { img.classList.add('is-loaded'); }, { once: true });
-      img.addEventListener('error', function () { img.classList.add('is-loaded'); }, { once: true });
-    });
-  }
-
-  /* --------------------------------------------------------------- go */
-  function init() {
-    root.classList.add('js');
-    if (/[?&]motion=off\b/.test(location.search)) root.classList.add('motion-off');
-    initStagger();
-    initDrawLengths();
+  /* ---- Boot ------------------------------------------------------------ */
+  function boot() {
+    initPhotos();
     initReveal();
-    initCounters();
     initNav();
+    initProgress();
+    initRail();
+    initStory();
+    initChecks();
+    initCounters();
+    initPointer();
+    initParallax();
     initFaq();
     initForm();
-    initBlurUp();
-    initRayProgress();
-    collect();
-    if (!reduce.matches) {
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-    }
-    frame();
+    requestTick();
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+
+  if (doc.readyState === 'loading') {
+    doc.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
 })();

@@ -1,4 +1,4 @@
-import { site, nav, footerNav, footerFeature } from '../data/site.mjs';
+import { site, nav, footerNav, footerFeature, primaryCta } from '../data/site.mjs';
 import { groups, servicesInGroup } from '../data/services.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
@@ -166,8 +166,8 @@ function header(page) {
   // On the contact page the prominent CTA must not reload the page the visitor
   // is already on — send them to the form instead.
   const onContact = page.path === '/contact.html';
-  const ctaHref = onContact ? '#enquiry' : '/contact.html';
-  const ctaLabel = onContact ? 'Go to the form' : 'Talk to us';
+  const ctaHref = onContact ? '#enquiry' : primaryCta.href;
+  const ctaLabel = onContact ? 'Go to the form' : primaryCta.label;
 
   const mobileGroups = groups
     .map(
@@ -228,46 +228,75 @@ function stickyCta(page) {
   if (page.path === '/contact.html') return '';
   return (
     '<div class="sticky" data-sticky hidden>' +
-      `<a class="sticky__a" href="${url('/contact.html')}">Talk to us</a>` +
+      `<a class="sticky__a" href="${url(primaryCta.href)}">${esc(primaryCta.label)}</a>` +
       `<a class="sticky__e" href="mailto:${esc(site.email)}">or email</a>` +
     '</div>'
   );
 }
 
 function footer() {
+  const cols = footerNav
+    .map(
+      (col) =>
+        `<div class="fcol"><h2 class="fcol__t">${esc(col.title)}</h2><ul class="fcol__l">${col.links
+          .map((l) => `<li><a href="${url(l.href)}">${esc(l.label)}</a></li>`)
+          .join('')}</ul></div>`
+    )
+    .join('');
+
   return html`
     <footer class="footer">
-      <a class="footer__feature" href="${raw(url(footerFeature.href))}">
-        <span class="footer__feature-l">${footerFeature.label}</span>
-        <span class="footer__feature-b">${footerFeature.blurb}</span>
-      </a>
-      <div class="footer__top">
-        <div class="footer__brand">
-          ${lockup({ className: 'lockup--footer' })}
-          <p class="footer__line">${site.description}</p>
-          <div class="footer__contact">
-            <a href="mailto:${raw(site.email)}">${site.email}</a>
-            <a href="tel:${raw(site.phoneHref)}">${site.phone}</a>
-            <a href="${raw(site.linkedin)}" rel="noopener">LinkedIn</a>
+      <div class="footer__wrap">
+
+        <div class="fcta">
+          <div>
+            <p class="label">Start here</p>
+            <p class="fcta__h">Tell us what you need to stand behind.</p>
+          </div>
+          <div class="fcta__side">
+            <a class="btn btn--gold" href="${raw(url(primaryCta.href))}" data-magnetic>
+              ${primaryCta.label}
+              <span class="btn__arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                aria-hidden="true"><path d="M1 7h11M8 3l4 4-4 4" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </a>
+            <p class="fcta__n">${site.responsePromise}</p>
           </div>
         </div>
-        <div class="footer__nav">
-          ${join(
-            footerNav.map(
-              (col) =>
-                `<div class="footer__col"><h2 class="label">${esc(col.title)}</h2><ul>${col.links
-                  .map((l) => `<li><a href="${url(l.href)}">${esc(l.label)}</a></li>`)
-                  .join('')}</ul></div>`
-            )
-          )}
+
+        <div class="fmain">
+          <div class="fbrand">
+            ${lockup({ className: 'lockup--footer' })}
+            <p class="fbrand__l">${site.description}</p>
+            <ul class="fbrand__c">
+              <li><a href="mailto:${raw(site.email)}">${site.email}</a></li>
+              <li><a href="tel:${raw(site.phoneHref)}">${site.phone}</a></li>
+              <li><a href="${raw(site.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></li>
+            </ul>
+            <p class="fbrand__w">${site.locationLong}</p>
+          </div>
+          <nav class="fnav" aria-label="Footer">${raw(cols)}</nav>
         </div>
-      </div>
-      <div class="footer__bottom">
-        <p>© ${raw(YEAR)} ${site.legalName}. ${site.locationLong}.</p>
-        <p class="footer__meta">
-          Market figures reviewed ${site.lastReviewed} ·
-          <a href="${raw(url('/sources.html'))}">Sources &amp; data</a>
-        </p>
+
+        <a class="fsources" href="${raw(url(footerFeature.href))}">
+          <span class="fsources__k">${footerFeature.label}</span>
+          <span class="fsources__b">${footerFeature.blurb}</span>
+          <span class="fsources__a" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M1 7h11M8 3l4 4-4 4"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+
+        <div class="fbase">
+          <p>© ${raw(YEAR)} ${site.legalName}</p>
+          <p class="fbase__m">Market figures reviewed ${site.lastReviewed}</p>
+          <ul class="fbase__l">
+            <li><a href="${raw(url('/privacy.html'))}">Privacy</a></li>
+            <li><a href="${raw(url('/terms.html'))}">Terms</a></li>
+            <li><a href="${raw(url('/sources.html'))}">Sources</a></li>
+          </ul>
+        </div>
+
       </div>
     </footer>
   `;

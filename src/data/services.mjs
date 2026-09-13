@@ -276,8 +276,8 @@ export const services = [
     kicker: 'What matters — to the business, and to the world.',
     description:
       'A defensible double materiality assessment — financial and impact materiality scored against recognised methodology, producing a matrix that survives assurance.',
-    photo: 'fog-forest',
-    photoAlt: 'Forest ridge lines fading into layers of mist',
+    photo: 'lone-tree',
+    photoAlt: 'A single mature tree standing in open land',
     whatItIs:
       'A double materiality assessment answers two questions at once: which sustainability issues affect your business (**financial materiality**), and which impacts your business has on people and the planet (**impact materiality**). It’s the foundation CSRD, IFRS disclosure and a serious ESG strategy all stand on.',
     whyItMatters:
@@ -310,8 +310,8 @@ export const services = [
     kicker: 'The medal your customers gate procurement on.',
     description:
       'EcoVadis scorecard diagnosis, gap analysis and evidence building across all four themes — prioritised by scoring weight and managed through to a better medal.',
-    photo: 'factory-interior',
-    photoAlt: 'Interior of an industrial production hall',
+    photo: 'solar-farm',
+    photoAlt: 'Aerial view of a solar farm laid out in rows',
     whatItIs:
       'EcoVadis is a business sustainability rating across four themes — environment, labour and human rights, ethics, and sustainable procurement — resulting in a percentile score and a medal that large buyers use to assess and gate suppliers.',
     whyItMatters:
@@ -454,8 +454,8 @@ export const services = [
     kicker: 'Certified sustainability, traceable end to end.',
     description:
       'ISCC EU, ISCC PLUS and CORSIA certification — scheme selection, gap assessment, chain-of-custody and mass-balance set-up, and audit preparation.',
-    photo: 'container-port',
-    photoAlt: 'Stacked shipping containers at a working port',
+    photo: 'industrial-plant',
+    photoAlt: 'An industrial plant seen against a pale sky',
     whatItIs:
       'ISCC certifies that materials and fuels are produced sustainably and traceable along the chain, through the scheme that fits your market — **ISCC EU** (regulated markets and biofuels), **ISCC PLUS** (circular and bio-based materials), and **CORSIA** (sustainable aviation fuels) — using chain-of-custody and mass-balance accounting.',
     whyItMatters:
@@ -630,8 +630,8 @@ export const services = [
     kicker: 'Your ESG is only as strong as your value chain.',
     description:
       'Supplier segmentation, risk screening, primary Scope 3 data collection and improvement plans — building the traceable value-chain record buyers, regulators and rating agencies require.',
-    photo: 'container-port',
-    photoAlt: 'Stacked shipping containers at a working port',
+    photo: 'farmland-sunrise',
+    photoAlt: 'Farmland catching the first light of sunrise',
     whatItIs:
       'Assessment and engagement of your suppliers on environmental, social and governance criteria — building the Scope 3, due-diligence and disclosure evidence that buyers, regulators and rating agencies increasingly require.',
     whyItMatters:

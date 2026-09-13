@@ -4,32 +4,23 @@
 export const home = {
   id: 'home',
   path: '/',
-  title: 'Carbon projects that deliver impact, with confidence',
+  title: 'A Leading Developer of High-Integrity Carbon Projects',
   metaTitle: 'OffsetEase — High-Integrity Carbon Supply, Projects & ESG',
-  ogTitle: 'Carbon projects that deliver impact, with confidence',
+  ogTitle: 'A Leading Developer of High-Integrity Carbon Projects',
   description:
     'OffsetEase sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. Every credit passes The Five Checks.',
   preloadPhoto: 'earth-night',
 
   hero: {
     eyebrow: 'Science-led carbon & climate intelligence',
-    headline: 'Carbon projects that deliver impact, with confidence.',
-    accent: ['impact,'],
+    headline: 'A Leading Developer of High-Integrity Carbon Projects',
+    accent: ['High-Integrity'],
     standfirst:
       'We do the hard part — finding and screening carbon that genuinely delivers — so your goals rest on credits that hold.',
     photo: 'earth-night',
     photoAlt: 'The Earth at night, city lights tracing the continents',
-    primary: { label: 'Talk to us', href: '/contact.html' },
+    primary: { label: 'Contact us', href: '/contact.html' },
     secondary: { label: 'How we source', href: '/carbon-supply.html' },
-    // Our own figures only. Market statistics are never shown in the same row —
-    // they live in `marketStats` below, in a visibly different component.
-    statsNote: 'OffsetEase programme data',
-    stats: [
-      { value: '37,798', unit: ' tCO₂e', label: 'verified and issued' },
-      { value: '502', unit: ' ha', label: 'planted' },
-      { value: '468', label: 'farmers as partners' },
-      { value: '5 / 5', label: 'checks passed, or we don’t supply it' },
-    ],
     scrollCue: 'Scroll — the integrity story, in six chapters',
   },
 
@@ -134,7 +125,7 @@ export const home = {
         photoAlt: 'Rows of young trees in a nursery',
       },
       {
-        title: 'Renewable attributes (I-RECs)',
+        title: 'Renewable Energy (EACs)',
         body: 'I-RECs to cut your Scope 2 — verified, correctly matched, defensible.',
         href: '/energy-attribute-certificates.html',
         photo: 'wind-turbines',
@@ -256,6 +247,20 @@ export const supply = {
     proofFigure: { value: '86%', label: 'of durable CDR deliveries in 2024 were biochar' },
   },
 
+  // Folded in from the former standalone Carbon projects page. Everything else
+  // on that page duplicated the homepage impact section, so it was not carried
+  // across — this is the part that was not said anywhere else.
+  develop: {
+    eyebrow: 'Carbon projects',
+    headline: 'We develop the projects we supply from.',
+    body: [
+      'The half of the market that holds up is scarce. A buyer who only screens what already exists is competing for a shrinking pool against everyone else who screens well.',
+      'Developing at the source is how we keep supplying carbon that passes The Five Checks — and it is the only way the revenue reaches the people doing the work on the ground.',
+    ],
+    photo: 'tree-nursery',
+    photoAlt: 'Rows of young trees in a nursery',
+  },
+
   pipeline: {
     eyebrow: 'How it works — from origination to supply',
     headline: 'We take carbon projects end to end.',
@@ -337,7 +342,7 @@ export const eac = {
   path: '/energy-attribute-certificates.html',
   title: 'Cut your Scope 2 — credibly',
   metaTitle: 'Energy Attribute Certificates & I-RECs for Scope 2 | OffsetEase',
-  shortTitle: 'Certificates',
+  shortTitle: 'Renewable Energy (EACs)',
   description:
     'I-RECs and other Energy Attribute Certificates — verified, correctly matched and defensible under the GHG Protocol. Cut market-based Scope 2, back RE100 and strengthen your CDP score.',
   preloadPhoto: 'wind-turbines',
@@ -596,47 +601,6 @@ export const sources = {
   ],
 };
 
-
-export const projects = {
-  id: 'projects',
-  path: '/carbon-projects.html',
-  title: 'We develop carbon projects at the source',
-  metaTitle: 'Carbon Project Development — Origination to Issuance | OffsetEase',
-  shortTitle: 'Carbon projects',
-  description:
-    'End-to-end carbon project development: origination, feasibility, financing, PDD, validation, registration, MRV and issuance — with revenue shared with the communities who create it.',
-  preloadPhoto: 'tree-nursery',
-  service: { name: 'Carbon project development', type: 'Carbon project origination and development' },
-
-  hero: {
-    eyebrow: 'Carbon projects',
-    headline: 'We develop carbon projects at the source.',
-    accent: ['source.'],
-    standfirst:
-      'Nature-based and durable removal projects taken end to end — identified, financed, designed, validated, registered, monitored and verified. The credits trace back to the ground, and the value flows back to the communities who created them.',
-    photo: 'tree-nursery',
-    photoAlt: 'Rows of young trees in a nursery',
-    primary: { label: 'Discuss a project', href: '/contact.html' },
-    secondary: { label: 'Buy from our projects', href: '/carbon-supply.html' },
-  },
-
-  why: {
-    eyebrow: 'Why we develop, and do not only trade',
-    headline: 'Screening alone cannot create the supply that passes.',
-    body: [
-      'The half of the market that holds up is scarce. A buyer who only screens what already exists is competing for a shrinking pool against everyone else who screens well.',
-      'Developing at the source is how we keep supplying carbon that passes The Five Checks — and it is the only way the revenue reaches the people doing the work on the ground.',
-    ],
-  },
-
-  close: {
-    headline: 'Bring us a landscape, or a tonne you need in 2030.',
-    body:
-      'We originate where carbon finance creates real impact, and we structure offtake early so the project is funded from the start. A senior specialist replies within one business day.',
-    photo: 'farmland-sunrise',
-    photoAlt: 'Farmland catching the first light of sunrise',
-  },
-};
 
 export const privacy = {
   id: 'privacy',

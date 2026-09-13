@@ -6,7 +6,7 @@ export const site = {
   name: 'OffsetEase',            // prose spelling, used in sentences
   wordmark: 'OFFSETEASE',        // display spelling, used in the lockup / eyebrows
   legalName: 'OffsetEase',
-  tagline: 'Carbon projects that deliver impact, with confidence.',
+  tagline: 'A Leading Developer of High-Integrity Carbon Projects',
   description:
     'OffsetEase sources, screens and supplies high-integrity carbon, develops projects ' +
     'at the source, and turns ESG data into defensible disclosure. One partner, one ' +
@@ -63,14 +63,14 @@ export const site = {
 
 export const nav = [
   { label: 'Carbon supply', href: '/carbon-supply.html' },
-  { label: 'Carbon projects', href: '/carbon-projects.html' },
-  { label: 'Certificates (I-RECs)', href: '/energy-attribute-certificates.html' },
-  // `mega: true` makes the desktop header open the five ESG discipline groups
-  // rather than forcing a visitor to guess that CBAM lives under this label.
+  { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
+  // `mega` opens the five ESG discipline groups on desktop, so a visitor
+  // looking for CBAM does not have to guess which label hides it.
   { label: 'ESG & sustainability', href: '/esg-sustainability.html', mega: 'esg' },
-  { label: 'About', href: '/about.html' },
-  { label: 'Contact', href: '/contact.html' },
 ];
+
+// The one button in the header. Named here so it is never spelled two ways.
+export const primaryCta = { label: 'Contact us', href: '/contact.html' };
 
 export const footerNav = [
   {
@@ -78,8 +78,8 @@ export const footerNav = [
     links: [
       { label: 'Carbon supply', href: '/carbon-supply.html' },
       { label: 'The Five Checks', href: '/carbon-supply.html#five-checks' },
-      { label: 'Carbon project development', href: '/carbon-projects.html' },
-      { label: 'Energy Attribute Certificates (I-RECs)', href: '/energy-attribute-certificates.html' },
+      { label: 'Carbon project development', href: '/carbon-supply.html#pipeline' },
+      { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
     ],
   },
   {

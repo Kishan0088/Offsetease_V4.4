@@ -1,4 +1,5 @@
 import { esc, html, raw, join, md, kinetic, slug, str } from './html.mjs';
+import { primaryCta } from '../data/site.mjs';
 import { url } from './paths.mjs';
 import { picture } from './media.mjs';
 
@@ -143,7 +144,7 @@ export function hero(h, { variant = 'inner', crumbs = null, stats = null, statsN
   );
   const buttons =
     str(
-      btn(h.primary?.label || 'Talk to us', h.primary?.href || '/contact.html', {
+      btn(h.primary?.label || primaryCta.label, h.primary?.href || primaryCta.href, {
         variant: 'gold',
         magnetic: true,
       })
@@ -309,9 +310,19 @@ export function story(data, { id = 'story' } = {}) {
   );
 }
 
-export function band({ photo, photoAlt, eyebrow: e, headline, body, cta, tone = '' }) {
+/**
+ * Full-bleed band. Pass `video` for a cinematic moment: the still is the poster
+ * and the clip only ever loads on a wide, fine-pointer, non-data-saver screen —
+ * see initVideo() in app.js. Phones and metered connections get the photograph
+ * and pay nothing.
+ */
+export function band({ photo, photoAlt, eyebrow: e, headline, body, cta, tone = '', video = '' }) {
+  const videoEl = video
+    ? `<video class="band__video" data-video="${url(video)}" muted loop playsinline ` +
+      'preload="none" aria-hidden="true" tabindex="-1"></video>'
+    : '';
   return raw(
-    `<section class="band ${esc(tone)}">` +
+    `<section class="band ${esc(tone)}${video ? ' band--film' : ''}">` +
       `<div class="band__bg" data-parallax="0.08">${str(
         picture(photo, {
           alt: photoAlt || '',
@@ -319,7 +330,7 @@ export function band({ photo, photoAlt, eyebrow: e, headline, body, cta, tone = 
           sizes: '100vw',
           className: 'ph--free',
         })
-      )}</div>` +
+      )}${videoEl}</div>` +
       '<div class="scrim scrim--soft" aria-hidden="true"></div>' +
       '<div class="band__inner">' +
       (e ? `<p class="label">${esc(e)}</p>` : '') +
@@ -362,7 +373,7 @@ export function faq(items, { title = 'Common questions' } = {}) {
   return raw((title ? `<p class="label">${esc(title)}</p>` : '') + `<div class="faq">${body}</div>`);
 }
 
-export function closeCta(data, { label = 'Talk to us', secondary = { label: 'How we work', href: '/about.html' } } = {}) {
+export function closeCta(data, { label = primaryCta.label, secondary = { label: 'How we work', href: '/about.html' } } = {}) {
   return raw(
     '<section class="close">' +
       `<div class="close__bg" data-parallax="0.07">${str(
@@ -411,5 +422,32 @@ export function checksSummary(data, href = '/carbon-supply.html#five-checks') {
       `<p class="csum__n">${esc(names)}</p>` +
       `<a class="tlink" href="${url(href)}">How each check is applied ${ARROW}</a>` +
       '</div></div>'
+  );
+}
+
+/**
+ * The origination-to-supply pipeline as a scroll-drawn instrument: a rail
+ * fills across the four stages as the section is read, and each stage's badge
+ * ignites as the rail reaches it. Degrades to a plain card grid with the rail
+ * fully drawn when JavaScript or motion is unavailable.
+ */
+export function stages(list) {
+  const cards = list
+    .map(
+      (st, i) =>
+        `<div class="stage reveal" data-stage style="--si:${i}">` +
+        '<div class="stage__h">' +
+        `<span class="stage__n" aria-hidden="true">${esc(st.n)}</span>` +
+        `<h3 class="stage__t">${esc(st.title)}</h3></div>` +
+        `<ul class="stage__list">${st.steps
+          .map((t) => `<li><b>${esc(t.title)}</b><span>${esc(t.body)}</span></li>`)
+          .join('')}</ul></div>`
+    )
+    .join('');
+  return raw(
+    '<div class="stages" data-stages>' +
+      '<div class="stages__rail" aria-hidden="true"><i></i></div>' +
+      `<div class="stages__grid">${cards}</div>` +
+      '</div>'
   );
 }

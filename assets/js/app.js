@@ -208,6 +208,72 @@
     });
   }
 
+  /* ---- Pipeline: draw the rail, ignite each stage ---------------------- */
+  function initStages() {
+    const wrap = $('[data-stages]');
+    if (!wrap) return;
+    const rail = $('.stages__rail i', wrap);
+    const cards = $$('[data-stage]', wrap);
+    if (!rail || !cards.length) return;
+
+    if (reduced()) {
+      rail.style.width = '100%';
+      cards.forEach((c) => c.classList.add('is-lit'));
+      return;
+    }
+
+    onFrame(() => {
+      const r = wrap.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      // 0 when the block's top reaches three-quarters down the viewport,
+      // 1 once its bottom has passed the midpoint.
+      const start = innerHeight * 0.75;
+      const end = innerHeight * 0.35;
+      const p = clamp((start - r.top) / Math.max(1, r.height + start - end));
+      rail.style.width = `${(p * 100).toFixed(1)}%`;
+      cards.forEach((c, i) => {
+        c.classList.toggle('is-lit', p >= (i + 0.35) / cards.length);
+      });
+    });
+  }
+
+  /* ---- Cinematic video bands ------------------------------------------- */
+  function initVideo() {
+    const vids = $$('[data-video]');
+    if (!vids.length) return;
+    // A 6.6 MB clip is a desktop luxury, not a mobile tax.
+    if (reduced() || saveData || innerWidth < 1024 || !mqFine.matches) return;
+    if (!('IntersectionObserver' in window)) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const v = e.target;
+          if (!e.isIntersecting) {
+            if (!v.paused) v.pause();
+            return;
+          }
+          if (!v.src) {
+            v.src = v.dataset.video;
+            v.addEventListener(
+              'canplay',
+              () => {
+                v.classList.add('is-playing');
+                v.play().catch(() => {});
+              },
+              { once: true }
+            );
+            v.load();
+          } else {
+            v.play().catch(() => {});
+          }
+        });
+      },
+      { rootMargin: '200px 0px' }
+    );
+    vids.forEach((v) => io.observe(v));
+  }
+
   /* ---- Persistent mobile CTA ------------------------------------------- */
   function initSticky() {
     const bar = $('[data-sticky]');
@@ -265,9 +331,13 @@
         if (r.top <= mid) active = i;
       });
       dots.forEach((d, i) => d.classList.toggle('is-active', i === active));
-      // keep the rail legible when it overlaps a bone section
+      // Keep the rail legible: the page is light by default, so the rail
+      // inverts only over the dark punctuation sections.
       const cur = chapters[active];
-      rail.classList.toggle('on-light', cur.classList.contains('on-bone'));
+      rail.classList.toggle(
+        'is-dark',
+        /(^|\s)(on-ink|on-deep|on-abyss|story|hero)(\s|$)/.test(cur.className)
+      );
     });
   }
 
@@ -584,6 +654,8 @@
     initNav();
     initMega();
     initAccordions();
+    initStages();
+    initVideo();
     initSticky();
     initProgress();
     initRail();

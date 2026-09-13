@@ -1,8 +1,13 @@
 # OffsetEase — v4.4
 
-A 29-page, zero-dependency static site for OffsetEase: high-integrity carbon
-supply, carbon project development, Energy Attribute Certificates, and eighteen
-in-depth ESG & sustainability services.
+A 28-page, zero-dependency static site for OffsetEase: high-integrity carbon
+supply and project development, Renewable Energy (EACs), and eighteen in-depth
+ESG & sustainability services.
+
+The header carries three destinations — **Carbon supply**, **Renewable Energy
+(EACs)**, **ESG & sustainability** — and one button, **Contact us**. Carbon
+project development is not a separate page: it lives inside Carbon supply,
+where the full origination-to-issuance pipeline is set out in detail.
 
 **Preview:** https://kishan0088.github.io/Offsetease_V4.4/
 **Live site (untouched by this repository):** https://offsetease.com
@@ -30,7 +35,7 @@ To promote this build to production:
 No install step, no `node_modules`, no network access required.
 
 ```bash
-node src/build.mjs   # writes 29 .html files to the repository root
+node src/build.mjs   # writes 28 .html files to the repository root
 node src/check.mjs   # validates the result; exits non-zero on any error
 ```
 
@@ -117,6 +122,21 @@ supplied raster, inlined once per document and referenced by `<use>`.
 
 ---
 
+## Colour
+
+The page is **light by default**. `:root` carries the light token set (bone
+ground, deep-teal text) and dark is opt-in punctuation — `.on-ink`, `.on-deep`,
+`.on-abyss`, plus every surface that sits over photography (`.hero`, `.band`,
+`.close`, `.story`, `.footer`), which declare the dark set and apply `color`.
+
+A section never needs to know where it sits: it re-declares four tokens
+(`--bg`, `--fg`, `--fg-soft`, `--rule`) and everything inside inherits the right
+contrast. `--accent` is the display gold; `--accent-text` is a deeper tone
+reserved for mono labels at 11–12px, where the display gold misses AA.
+
+Every visible text node on the light surfaces was measured against its
+composited background — all pass WCAG AA.
+
 ## Motion
 
 Everything is progressive enhancement — the page is complete and readable with
@@ -138,8 +158,16 @@ JavaScript disabled, and every entrance animation is skipped under
 - Desktop mega-menu on ESG (hover **and** a real disclosure button for keyboard
   users), mobile menu accordions with 44px targets, and a persistent mobile CTA
   past a quarter of the page, because the header CTA retracts on scroll-down.
+- The origination-to-supply pipeline is a scroll-drawn instrument: a rail fills
+  across the four stages and each badge ignites as the rail reaches it.
+- One cinematic clip (`assets/video/aerial-river-1080.mp4`, 6.6 MB) backs two
+  bands. It is lazy, `preload="none"`, and only ever requested on a wide,
+  fine-pointer, non-data-saver screen — phones and metered connections get the
+  photograph and pay nothing. It pauses when scrolled out of view.
 - Scroll progress uses a CSS `scroll()` timeline where supported, with a rAF
   fallback. All scroll-linked work shares a single rAF loop.
+- The brand mark does not rotate or animate on hover. It is the one element on
+  the page that stays still.
 
 ---
 

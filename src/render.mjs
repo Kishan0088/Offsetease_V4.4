@@ -1,7 +1,7 @@
 // Page renderers. Each returns { page, body } for the document shell.
 
 import { site } from './data/site.mjs';
-import { home, supply, eac, esg, about, contact, sources, projects, privacy, terms } from './data/pages.mjs';
+import { home, supply, eac, esg, about, contact, sources, privacy, terms } from './data/pages.mjs';
 import { services, groups, byId, servicesInGroup } from './data/services.mjs';
 import { esc, raw, str, md, kinetic } from './lib/html.mjs';
 import { url } from './lib/paths.mjs';
@@ -9,7 +9,7 @@ import { picture } from './lib/media.mjs';
 import {
   hero, section, head, cards, ladder, fiveChecks, story, band, pills, steps,
   faq, closeCta, proof, statStrip, marketStrip, inlineCta, checksSummary,
-  btn, rail, sunburst, ARROW,
+  stages, btn, rail, sunburst, ARROW,
 } from './lib/components.mjs';
 
 /* ---------------------------------------------------------------- HOME -- */
@@ -58,7 +58,7 @@ export function renderHome() {
               marketStrip(d.divided.marketStats, { title: 'What the market is paying' })
             )}</div>`
         ),
-        { tone: 'on-bone', id: 'signal', chapter: d.divided.chapter }
+        { id: 'signal', chapter: d.divided.chapter }
       )
     ),
 
@@ -75,7 +75,7 @@ export function renderHome() {
             })
           ) + str(proof(d.story.proof))
         ),
-        { id: 'challenge', chapter: d.story.chapter, className: 'section--tight' }
+        { tone: 'on-bone', id: 'challenge', chapter: d.story.chapter, className: 'section--tight' }
       )
     ),
     str(story({ ...d.story, chapter: '' }, { id: 'challenge-film' })),
@@ -87,7 +87,7 @@ export function renderHome() {
           str(head({ eyebrow: d.why.eyebrow, headline: d.why.headline })) +
             str(cards(d.why.items, { stagger: 90 }))
         ),
-        { tone: 'on-deep', id: 'integrity', chapter: d.why.chapter }
+        { id: 'integrity', chapter: d.why.chapter }
       )
     ),
 
@@ -128,7 +128,7 @@ export function renderHome() {
         eyebrow: d.method.eyebrow,
         headline: d.method.headline,
         body: d.method.body,
-        tone: '',
+        video: '/assets/video/aerial-river-1080.mp4',
       })
     ),
 
@@ -169,7 +169,7 @@ export function renderHome() {
               )
             )
         ),
-        { tone: 'on-deep', id: 'impact', chapter: d.impact.chapter }
+        { tone: 'on-ink', id: 'impact', chapter: d.impact.chapter }
       )
     ),
 
@@ -183,20 +183,6 @@ export function renderHome() {
 
 export function renderSupply() {
   const d = supply;
-  const stageBlocks = d.pipeline.stages
-    .map(
-      (s) =>
-        `<div class="stage reveal"><div class="stage__h"><span class="stage__n">${esc(s.n)}</span>` +
-        `<h3 class="stage__t">${esc(s.title)}</h3></div>` +
-        `<ul class="stage__list">${s.steps
-          .map(
-            (t) =>
-              `<li><b>${esc(t.title)}</b><span>${esc(t.body)}</span></li>`
-          )
-          .join('')}</ul></div>`
-    )
-    .join('');
-
   const body = [
     str(rail()),
     str(hero(d.hero, { crumbs: [{ name: 'Carbon supply', href: d.path }] })),
@@ -210,7 +196,7 @@ export function renderSupply() {
               proof(d.ways.proof, d.ways.proofFigure)
             )}</div>`
         ),
-        { tone: 'on-bone', id: 'ways', chapter: 'Engage' }
+        { id: 'ways', chapter: 'Engage' }
       )
     ),
 
@@ -223,7 +209,7 @@ export function renderSupply() {
               proof(d.types.proof, d.types.proofFigure)
             )}</div>`
         ),
-        { id: 'supply-types', chapter: 'Supply' }
+        { tone: 'on-bone', id: 'supply-types', chapter: 'Supply' }
       )
     ),
 
@@ -232,31 +218,51 @@ export function renderSupply() {
         raw(
           str(
             head({
-              eyebrow: 'Where the supply comes from',
-              headline: 'We develop the projects we sell from.',
+              eyebrow: d.develop.eyebrow,
+              headline: d.develop.headline,
+              body: d.develop.body,
+              split: true,
+            })
+          ) +
+            '<div class="cols cols--2" style="align-items:center;gap:clamp(26px,4vw,64px)">' +
+            `<div class="frame reveal reveal--scale">${str(
+              picture(d.develop.photo, {
+                alt: d.develop.photoAlt,
+                sizes: '(max-width: 900px) 100vw, 48vw',
+                ratio: '4 / 3',
+                className: 'ph--zoom',
+              })
+            )}</div>` +
+            `<div class="reveal">${str(
+              pills('What we originate', [
+                'Afforestation & reforestation',
+                'Agroforestry',
+                'Soil carbon',
+                'Biochar',
+                'Enhanced weathering',
+              ])
+            )}</div>` +
+            '</div>'
+        ),
+        { id: 'develop', chapter: 'Develop' }
+      )
+    ),
+
+    str(
+      section(
+        raw(
+          str(
+            head({
+              eyebrow: d.pipeline.eyebrow,
+              headline: d.pipeline.headline,
               body: d.pipeline.standfirst,
               split: true,
             })
           ) +
-            `<div class="stages">${d.pipeline.stages
-              .map(
-                (st) =>
-                  `<div class="stage reveal"><div class="stage__h">` +
-                  `<span class="stage__n">${esc(st.n)}</span>` +
-                  `<h3 class="stage__t">${esc(st.title)}</h3></div>` +
-                  `<p class="stage__sum">${esc(st.steps.map((t) => t.title).join(' · '))}</p></div>`
-              )
-              .join('')}</div>` +
-            str(
-              inlineCta(
-                'The full pipeline — feasibility, PDD, validation, registration, MRV and benefit sharing — is set out on the projects page.',
-                'How we develop projects',
-                '/carbon-projects.html'
-              )
-            ) +
+            str(stages(d.pipeline.stages)) +
             `<div style="margin-top:clamp(28px,3.4vw,48px)">${str(proof(d.pipeline.proof))}</div>`
         ),
-        { tone: 'on-deep', id: 'pipeline', chapter: 'Pipeline' }
+        { tone: 'on-ink', id: 'pipeline', chapter: 'Pipeline' }
       )
     ),
 
@@ -266,6 +272,7 @@ export function renderSupply() {
         photoAlt: d.pipeline.photoAlt,
         eyebrow: 'Traceable to the ground',
         headline: 'The credits you buy trace back to the land and the people who made them.',
+        video: '/assets/video/aerial-river-1080.mp4',
       })
     ),
 
@@ -288,12 +295,12 @@ export function renderSupply() {
               .join('')}</dl>` +
             '</div></div>'
         ),
-        { tone: 'on-bone', id: 'standards', chapter: 'Standards' }
+        { id: 'standards', chapter: 'Standards' }
       )
     ),
 
     str(
-      section(raw(str(fiveChecksTeaser())), { id: 'five-checks', chapter: 'Checks' })
+      section(raw(str(fiveChecksTeaser())), { tone: 'on-bone', id: 'five-checks', chapter: 'Checks' })
     ),
 
     str(closeCta(d.close, { secondary: { label: 'Certificates', href: '/energy-attribute-certificates.html' } })),
@@ -330,7 +337,7 @@ export function renderEac() {
               proof(d.deliver.proof, d.deliver.proofFigure)
             )}</div>`
         ),
-        { tone: 'on-bone', id: 'deliver', chapter: 'Deliver' }
+        { id: 'deliver', chapter: 'Deliver' }
       )
     ),
 
@@ -363,7 +370,7 @@ export function renderEac() {
               proof(d.how.proof, d.how.proofFigure)
             )}</div>`
         ),
-        { id: 'how', chapter: 'Mechanics' }
+        { tone: 'on-bone', id: 'how', chapter: 'Mechanics' }
       )
     ),
 
@@ -427,7 +434,7 @@ export function renderEsg() {
             })
           ) + str(proof(d.overview.proof, d.overview.proofFigure))
         ),
-        { tone: 'on-deep', id: 'overview', chapter: 'Overview' }
+        { tone: 'on-ink', id: 'overview', chapter: 'Overview' }
       )
     ),
 
@@ -443,7 +450,7 @@ export function renderEsg() {
               )
             )
         ),
-        { tone: 'on-bone', id: 'services', chapter: 'Services' }
+        { id: 'services', chapter: 'Services' }
       )
     ),
 
@@ -478,7 +485,7 @@ export function renderAbout() {
             `<p class="label">${esc(d.team.intro)}</p>` +
             str(ladder(d.team.items.map((i, n) => ({ n: `0${n + 1}`, title: i.title, body: i.body }))))
         ),
-        { tone: 'on-bone', id: 'team', chapter: 'Team' }
+        { id: 'team', chapter: 'Team' }
       )
     ),
 
@@ -489,7 +496,7 @@ export function renderAbout() {
             str(cards(d.stand.items, { stagger: 80 })) +
             `<div style="margin-top:clamp(28px,3.4vw,48px)">${str(proof(d.stand.proof))}</div>`
         ),
-        { id: 'values', chapter: 'Standard' }
+        { tone: 'on-bone', id: 'values', chapter: 'Standard' }
       )
     ),
 
@@ -500,7 +507,7 @@ export function renderAbout() {
             str(marketStrip(d.where.marketStats, { title: 'India, as a market' })) +
             `<div style="margin-top:clamp(28px,3.4vw,48px)">${str(proof(d.where.proof))}</div>`
         ),
-        { tone: 'on-deep', id: 'where', chapter: 'Reach' }
+        { id: 'where', chapter: 'Reach' }
       )
     ),
 
@@ -689,7 +696,7 @@ export function renderService(s) {
     standfirst: s.kicker,
     photo: s.photo,
     photoAlt: s.photoAlt,
-    primary: { label: 'Talk to us', href: '/contact.html' },
+    primary: { label: 'Contact us', href: '/contact.html' },
     secondary: { label: 'All ESG services', href: esg.path },
   };
 
@@ -719,7 +726,7 @@ export function renderService(s) {
                 )}</div>`
               : '')
         ),
-        { tone: 'on-bone', id: 'what', chapter: 'Definition' }
+        { id: 'what', chapter: 'Definition' }
       )
     ),
 
@@ -746,7 +753,7 @@ export function renderService(s) {
             )}</div></div>` +
             '</div>'
         ),
-        { tone: 'on-deep', id: 'approach', chapter: 'Method' }
+        { tone: 'on-bone', id: 'approach', chapter: 'Method' }
       )
     ),
 
@@ -768,7 +775,7 @@ export function renderService(s) {
               str(head({ eyebrow: 'Related services', headline: 'What usually comes with this.' })) +
                 str(cards(related, { stagger: 70 }))
             ),
-            { tone: 'on-bone', id: 'related', chapter: 'Related' }
+            { id: 'related', chapter: 'Related' }
           )
         )
       : '',
@@ -824,117 +831,6 @@ export function renderNotFound() {
 }
 
 
-/* -------------------------------------------------- CARBON PROJECTS -- */
-
-export function renderProjects() {
-  const d = projects;
-  const stageBlocks = supply.pipeline.stages
-    .map(
-      (st) =>
-        `<div class="stage reveal"><div class="stage__h"><span class="stage__n">${esc(st.n)}</span>` +
-        `<h3 class="stage__t">${esc(st.title)}</h3></div>` +
-        `<ul class="stage__list">${st.steps
-          .map((t) => `<li><b>${esc(t.title)}</b><span>${esc(t.body)}</span></li>`)
-          .join('')}</ul></div>`
-    )
-    .join('');
-
-  const impact = home.impact;
-
-  const body = [
-    str(rail()),
-    str(hero(d.hero, { crumbs: [{ name: 'Carbon projects', href: d.path }] })),
-
-    str(
-      section(
-        raw(
-          str(head({ eyebrow: d.why.eyebrow, headline: d.why.headline, body: d.why.body, split: true }))
-        ),
-        { tone: 'on-bone', id: 'why', chapter: 'Why' }
-      )
-    ),
-
-    str(
-      section(
-        raw(
-          str(
-            head({
-              eyebrow: supply.pipeline.eyebrow,
-              headline: supply.pipeline.headline,
-              body: supply.pipeline.standfirst,
-              split: true,
-            })
-          ) +
-            `<div class="stages">${stageBlocks}</div>` +
-            `<div style="margin-top:clamp(28px,3.4vw,48px)">${str(proof(supply.pipeline.proof))}</div>`
-        ),
-        { id: 'pipeline', chapter: 'Pipeline' }
-      )
-    ),
-
-    str(
-      band({
-        photo: supply.pipeline.photo,
-        photoAlt: supply.pipeline.photoAlt,
-        eyebrow: 'Traceable to the ground',
-        headline: 'The credits you buy trace back to the land and the people who made them.',
-      })
-    ),
-
-    str(
-      section(
-        raw(
-          str(
-            head({
-              eyebrow: impact.eyebrow,
-              headline: impact.headline,
-              body: impact.intro,
-              split: true,
-            })
-          ) +
-            str(statStrip(impact.stats, { note: 'OffsetEase programme data' })) +
-            `<div class="cols cols--2" style="margin-top:clamp(30px,4vw,58px);align-items:start">` +
-            `<div class="reveal"><p class="body-lg">${esc(impact.body)}</p>` +
-            '<p class="label" style="margin-top:26px">SDGs advanced</p>' +
-            `<ul class="pills">${impact.sdgs
-              .map((sd) => `<li>${sd.n} · ${esc(sd.label)}</li>`)
-              .join('')}</ul></div>` +
-            `<div class="frame reveal reveal--scale">${str(
-              picture(impact.photo, {
-                alt: impact.photoAlt,
-                sizes: '(max-width: 900px) 100vw, 48vw',
-                ratio: '4 / 3',
-                className: 'ph--zoom',
-              })
-            )}</div></div>` +
-            str(
-              inlineCta(
-                'Ask us for the standard, methodology, validating body and registry record behind this programme.',
-                'Request the project file',
-                '/contact.html'
-              )
-            )
-        ),
-        { tone: 'on-deep', id: 'programme', chapter: 'Programme' }
-      )
-    ),
-
-    str(
-      section(
-        raw(
-          str(head({ eyebrow: home.method.eyebrow, headline: home.method.headline })) +
-            `<p class="lede reveal">${esc(home.method.body)}</p>`
-        ),
-        { tone: 'on-bone', id: 'model', chapter: 'Model' }
-      )
-    ),
-
-    str(closeCta(d.close, { secondary: { label: 'Buy from our projects', href: '/carbon-supply.html' } })),
-  ].join('\n');
-
-  return { page: d, body };
-}
-
 /* ------------------------------------------------------ PROSE PAGES -- */
 
 function renderProse(d, crumbLabel) {
@@ -986,7 +882,6 @@ export function allPages() {
     renderEac(),
     renderEsg(),
     renderAbout(),
-    renderProjects(),
     renderContact(),
     renderSources(),
     renderPrivacy(),

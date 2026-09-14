@@ -601,7 +601,7 @@ export function renderContact() {
     `<input type="hidden" name="subject" value="${esc(site.form.subject)}">` +
     `<input type="hidden" name="from_name" value="${esc(site.name)} website">` +
     '<div class="hp" aria-hidden="true"><label for="botcheck">Leave this empty</label>' +
-    '<input id="botcheck" type="text" name="botcheck" tabindex="-1" autocomplete="off"></div>' +
+    '<input id="botcheck" type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true"></div>' +
     '<div class="field--pair">' +
     field(
       'f-name',

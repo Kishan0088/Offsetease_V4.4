@@ -239,8 +239,8 @@ export const services = [
     kicker: 'The global baseline for sustainability disclosure.',
     description:
       'ISSB IFRS S1 and S2 disclosure built on TCFD — governance, strategy, risk management, metrics and targets, with climate scenario analysis, mapped across BRSR, CSRD and CDP.',
-    photo: 'earth-orbit',
-    photoAlt: 'The curve of the Earth seen from orbit',
+    photo: 'market-screens',
+    photoAlt: 'Trading screens showing market data in a darkened room',
     whatItIs:
       'The ISSB’s IFRS S1 (general sustainability-related financial disclosures) and IFRS S2 (climate) are the global baseline investors are converging on — built on the TCFD framework and designed to sit alongside financial reporting.',
     whyItMatters:
@@ -276,8 +276,8 @@ export const services = [
     kicker: 'What matters — to the business, and to the world.',
     description:
       'A defensible double materiality assessment — financial and impact materiality scored against recognised methodology, producing a matrix that survives assurance.',
-    photo: 'paddy-works',
-    photoAlt: 'A farmer working a flooded paddy field, an industrial works on the horizon',
+    photo: 'forest-city',
+    photoAlt: 'Dense forest in the foreground with a city skyline beyond',
     whatItIs:
       'A double materiality assessment answers two questions at once: which sustainability issues affect your business (**financial materiality**), and which impacts your business has on people and the planet (**impact materiality**). It’s the foundation CSRD, IFRS disclosure and a serious ESG strategy all stand on.',
     whyItMatters:

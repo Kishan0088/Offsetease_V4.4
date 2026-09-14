@@ -2695,6 +2695,20 @@ a.card:hover .card__go svg {
 
 /* ---- Motion preferences ------------------------------------------------- */
 
+/* Safety net for the case where the inline head script has switched the page
+   into `.js` mode but app.js never arrives. Without this every `.reveal` stays
+   at opacity 0 and the page reads as blank below the hero. */
+.js-stalled .reveal,
+.js-stalled .kinetic .kw__i,
+.js-stalled .reveal--wipe,
+.js-stalled .reveal--scale,
+.js-stalled .ladder__row,
+.js-stalled .split__side {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -3483,7 +3497,10 @@ a.card:hover .card__go svg {
 }
 @media (max-width: 940px) {
   .story__track::before {
-    inset: -4% -6%;
+    /* Percentage insets scale with the track, so the bleed grew exactly as the
+       space for it ran out: at 768px the right edge landed on 771px and the
+       whole document scrolled 3px sideways. Pixels keep the bleed bounded. */
+    inset: -12px -14px;
     background: linear-gradient(180deg, rgb(4 26 30 / 0.86), rgb(4 26 30 / 0.92));
   }
 }
@@ -3726,6 +3743,36 @@ a.card:hover .card__go svg {
 }
 .sticky__x:hover {
   opacity: 1;
+}
+
+/* ---- Touch targets ------------------------------------------------------ */
+
+/* Measured at 375px: the footer contact links were 22px tall, the footer nav
+   links 32px, the base row 29px, and the sticky dismiss button 40px. WCAG 2.2
+   SC 2.5.8 puts the floor at 24px — only the 22px contact links actually
+   failed — but a thumb wants 44. Padding does the work, so the type scale and
+   the desktop rhythm are untouched.
+   The dense service columns get 40px rather than 44: eighteen links at 44
+   would add roughly 200px to an already long mobile footer, and 40 clears the
+   requirement with room to spare. */
+@media (pointer: coarse), (max-width: 860px) {
+  .fcta__list a,
+  .fbrand__c a,
+  .fbrand__nav a,
+  .fbase__l a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .fcol__l a {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  .sticky__x {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 /* ---- Breadcrumb landmark ------------------------------------------------ */

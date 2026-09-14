@@ -43,7 +43,6 @@ recorded so the credits can be completed — each resolves at
 
 | File | Unsplash photo ID |
 |---|---|
-| `earth-orbit` | `photo-1446776811953-b23d57bd21aa` |
 | `forest-water` | `photo-1497436072909-60f360e1d4b1` |
 | `forest-fog` | `photo-1509316975850-ff9c5deb0cd9` |
 | `lone-tree` | `photo-1502082553048-f009c37129b9` |
@@ -68,7 +67,8 @@ for blur-up loading. Source dimensions, byte sizes and placeholders are in
 | `building-frame` | Environmental Product Declaration | 13795569 | Kenneth Leguizamon |
 | `textile-floor` | BRSR & BRSR Core | 31199588 | EqualStock IN |
 | `works-dusk` | CSRD & ESRS | 19750125 | Batuhan Kocabaş |
-| `paddy-works` | Double materiality assessment | 29871971 | VŨ NGỌC CƯỜNG |
+| `forest-city` | Double materiality assessment | 18142043 | Nino Souza |
+| `market-screens` | IFRS S1 & S2 | 38412413 | Rafael Minguet Delgado |
 | `pallets-dock` | EcoVadis | 17229385 | Léster Lau |
 | `coffee-cherries` | EUDR | 36040333 | Irvin David |
 | `tank-farm` | ISCC certification | 6060191 | Tom Fisk |
@@ -77,7 +77,7 @@ for blur-up loading. Source dimensions, byte sizes and placeholders are in
 | `warehouse-aisle` | Supplier & value-chain ESG | 30824313 | GB The Green Brand |
 | `light-through-fog` | Home — story, *The correction* | 1287086 | eberhard grossgasteiger |
 | `sapling-rows` | Carbon Supply — *Nature-based* | 5335838 | Markus Winkler |
-| `kiln-embers` | Carbon Supply — *Durable removals* | 34584522 | Yetkin Ağaç |
+| `biochar-hands` | Carbon Supply — *Durable removals* | 17902853 | ZEUS THE CREATOR |
 | `cook-fire` | Carbon Supply — *Avoidance & reduction* | 17711232 | Matheus Alves |
 | `dial-gauges` | ESG — *Start with the data* | 12093440 | Jakob Schlothane |
 | `marigold-aerial` | About — closing | 20305884 | Dibakar Roy |

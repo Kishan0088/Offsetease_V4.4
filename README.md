@@ -190,7 +190,7 @@ JavaScript disabled, and every entrance animation is skipped under
   instead of cross-fading between two different pictures.
 - Photography is matched to what the copy says, not to its keywords. The
   *Durable removals* card cites "86% of durable CDR deliveries were biochar",
-  so it shows a pyrolysis kiln, not the basalt it names second; *Avoidance &
+  so it shows biochar being handled, not the basalt it names second; *Avoidance &
   reduction* says "clean cookstoves", so it shows the open fire one replaces;
   EUDR shows coffee, one of its seven covered commodities. Where the copy names
   a country the photograph is of that country; where it names an EU regulation

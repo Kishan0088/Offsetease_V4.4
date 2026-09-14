@@ -692,6 +692,9 @@
 
   /* ---- Boot ------------------------------------------------------------ */
   function boot() {
+    // Tells the head watchdog we are alive, so it does not fail the page open.
+    doc.documentElement.dataset.booted = '1';
+    doc.documentElement.classList.remove('js-stalled');
     initPhotos();
     initReveal();
     initNav();

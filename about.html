@@ -32,7 +32,7 @@
   href="/Offsetease_V4.4/assets/fonts/plexmono-latin-400.woff2">
 <link rel="preload" as="image" type="image/avif" href="/Offsetease_V4.4/assets/img/photos/river-delta-1440.avif" imagesrcset="/Offsetease_V4.4/assets/img/photos/river-delta-720.avif 720w, /Offsetease_V4.4/assets/img/photos/river-delta-1440.avif 1440w" imagesizes="100vw" fetchpriority="high">
 <link rel="stylesheet" href="/Offsetease_V4.4/assets/css/site.css">
-<script>document.documentElement.className=document.documentElement.className.replace('no-js','js')</script>
+<script>(function(d){d.className=d.className.replace('no-js','js');/* .js .reveal starts at opacity 0 and waits for app.js to add .is-in. If app.js never boots - blocked, dropped, parse error - every revealed block would stay invisible forever. Fail open instead. */setTimeout(function(){if(!d.dataset.booted)d.classList.add('js-stalled')},2500)})(document.documentElement)</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://kishan0088.github.io/Offsetease_V4.4/#organization","name":"Offsetease","alternateName":"OFFSETEASE","url":"https://kishan0088.github.io/Offsetease_V4.4/","logo":"https://kishan0088.github.io/Offsetease_V4.4/assets/brand/favicon-512.png","description":"Offsetease sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. One partner, one standard of integrity, across carbon and sustainability.","email":"info@offsetease.com","telephone":"+91 88661 42748","sameAs":["https://www.linkedin.com/company/offsetease"],"address":{"@type":"PostalAddress","addressCountry":"IN"},"areaServed":["IN","EU","Global"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SiteNavigationElement","name":["Carbon Supply","Renewable Energy (EACs)","ESG & Sustainability"],"url":["https://kishan0088.github.io/Offsetease_V4.4/carbon-supply.html","https://kishan0088.github.io/Offsetease_V4.4/energy-attribute-certificates.html","https://kishan0088.github.io/Offsetease_V4.4/esg-sustainability.html"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://kishan0088.github.io/Offsetease_V4.4/"},{"@type":"ListItem","position":2,"name":"About","item":"https://kishan0088.github.io/Offsetease_V4.4/about.html"}]}</script>
@@ -112,9 +112,10 @@
     <use href="#oe-word" class="lockup__word"/>
   </svg>
             <p class="fbrand__l">Offsetease sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. One partner, one standard of integrity, across carbon and sustainability.</p>
+            <!-- Email and phone live once, in the "Speak to a specialist" block
+                 above. Repeating them here made the footer read as two separate
+                 contact routes when there is only one. -->
             <ul class="fbrand__c">
-              <li><a href="mailto:info@offsetease.com">info@offsetease.com</a></li>
-              <li><a href="tel:+918866142748">+91 88661 42748</a></li>
               <li><a href="https://www.linkedin.com/company/offsetease" target="_blank" rel="noopener">LinkedIn</a></li>
             </ul>
             <p class="fbrand__w">Based in India · serving India and global markets</p>

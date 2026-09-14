@@ -226,8 +226,8 @@ export const supply = {
       {
         title: 'Durable removals',
         body: 'Biochar and enhanced weathering — permanent removal for the emissions you can’t yet cut.',
-        photo: 'kiln-embers',
-        photoAlt: 'Embers glowing through the openings of a kiln',
+        photo: 'biochar-hands',
+        photoAlt: 'Hands working finished biochar in a wheelbarrow',
       },
       {
         title: 'Avoidance & reduction',

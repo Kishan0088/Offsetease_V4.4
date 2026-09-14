@@ -269,9 +269,10 @@ function footer() {
           <div class="fbrand">
             ${lockup({ className: 'lockup--footer' })}
             <p class="fbrand__l">${site.description}</p>
+            <!-- Email and phone live once, in the "Speak to a specialist" block
+                 above. Repeating them here made the footer read as two separate
+                 contact routes when there is only one. -->
             <ul class="fbrand__c">
-              <li><a href="mailto:${raw(site.email)}">${site.email}</a></li>
-              <li><a href="tel:${raw(site.phoneHref)}">${site.phone}</a></li>
               <li><a href="${raw(site.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></li>
             </ul>
             <p class="fbrand__w">${site.locationLong}</p>
@@ -350,7 +351,7 @@ ${site.indexable ? '' : '<meta name="robots" content="noindex, nofollow">\n'}<me
 <link rel="preload" as="font" type="font/woff2" crossorigin
   href="${url('/assets/fonts/plexmono-latin-400.woff2')}">
 ${preload ? `<link rel="preload" as="image" type="${preload.type}" href="${preload.href}" imagesrcset="${preload.imagesrcset}" imagesizes="100vw" fetchpriority="high">\n` : ''}<link rel="stylesheet" href="${url('/assets/css/site.css')}">
-<script>document.documentElement.className=document.documentElement.className.replace('no-js','js')</script>
+<script>(function(d){d.className=d.className.replace('no-js','js');/* .js .reveal starts at opacity 0 and waits for app.js to add .is-in. If app.js never boots - blocked, dropped, parse error - every revealed block would stay invisible forever. Fail open instead. */setTimeout(function(){if(!d.dataset.booted)d.classList.add('js-stalled')},2500)})(document.documentElement)</script>
 ${graphs
   .map((g) => `<script type="application/ld+json">${JSON.stringify(g)}</script>`)
   .join('\n')}

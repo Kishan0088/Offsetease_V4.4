@@ -1,5 +1,5 @@
 import { site, nav, footerNav, companyNav, primaryCta, megaMenus } from '../data/site.mjs';
-import { groups, servicesInGroup } from '../data/services.mjs';
+import { groups, servicesInGroup, services } from '../data/services.mjs';
 import { hubs } from '../data/hubs.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
@@ -43,18 +43,74 @@ export function lockupDefs(wordPath) {
 function organisationJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    // ProfessionalService is a subtype of Organization and of LocalBusiness:
+    // it says what kind of entity this is, which a bare Organization does not.
+    '@type': ['Organization', 'ProfessionalService'],
     '@id': `${absolute('/')}#organization`,
     name: site.name,
     alternateName: site.wordmark,
+    legalName: site.legalName,
     url: absolute('/'),
-    logo: absolute('/assets/brand/favicon-512.png'),
+    logo: {
+      '@type': 'ImageObject',
+      url: absolute('/assets/brand/favicon-512.png'),
+      width: 512,
+      height: 512,
+    },
+    image: absolute('/assets/brand/social-card.png'),
     description: site.description,
+    slogan: site.tagline,
     email: site.email,
     telephone: site.phone,
     sameAs: [site.linkedin],
     address: { '@type': 'PostalAddress', addressCountry: 'IN' },
     areaServed: ['IN', 'EU', 'Global'],
+    // An enquiry route a machine can read, not just a mailto in the markup.
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      email: site.email,
+      telephone: site.phone,
+      areaServed: ['IN', 'EU'],
+      availableLanguage: ['en'],
+    },
+    // What this organisation is an authority on. Generated from the service
+    // list rather than asserted, so it can never drift from the pages that
+    // have to back it up — this is the property an answer engine reads when
+    // deciding whether an entity is relevant to a question.
+    knowsAbout: [
+      'Carbon credits',
+      'Carbon project development',
+      'Voluntary carbon market',
+      'Energy attribute certificates',
+      ...services.map((sv) => sv.shortTitle || sv.title),
+    ],
+    makesOffer: services.slice(0, 18).map((sv) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: sv.shortTitle || sv.title,
+        url: absolute(sv.path),
+      },
+    })),
+  };
+}
+
+/**
+ * WebSite, so the site itself is an addressable node rather than a loose set
+ * of pages. Search and answer engines use it to attach the whole domain to the
+ * organisation behind it.
+ */
+function webSiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${absolute('/')}#website`,
+    url: absolute('/'),
+    name: site.name,
+    description: site.description,
+    inLanguage: 'en',
+    publisher: { '@id': `${absolute('/')}#organization` },
   };
 }
 
@@ -420,6 +476,7 @@ export function renderDocument({ page, body, wordPath }) {
 
   const graphs = [
     organisationJsonLd(),
+    webSiteJsonLd(),
     siteNavJsonLd(),
     breadcrumbJsonLd(page),
     faqJsonLd(page),
@@ -455,6 +512,7 @@ ${site.indexable ? '' : '<meta name="robots" content="noindex, nofollow">\n'}<me
 <link rel="icon" href="${url('/assets/brand/favicon.svg')}" type="image/svg+xml">
 <link rel="icon" href="${url('/assets/brand/favicon-32.png')}" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="${url('/assets/brand/apple-touch-icon.png')}">
+<link rel="alternate" type="application/rss+xml" title="${esc(site.name)} — Insights" href="${url('/feed.xml')}">
 <link rel="manifest" href="${url('/site.webmanifest')}">
 <link rel="preload" as="font" type="font/woff2" crossorigin
   href="${url('/assets/fonts/schibsted-latin-400700.woff2')}">

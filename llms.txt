@@ -1,0 +1,78 @@
+# Offsetease
+
+> Offsetease sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. One partner, one standard of integrity, across carbon and sustainability.
+
+Offsetease works across two connected areas: sourcing, screening and
+developing high-integrity carbon supply, and turning ESG data into
+disclosure that survives assurance. Based in India, serving India, the EU
+and global markets.
+
+## Start here
+
+- [Home](https://kishan0088.github.io/Offsetease_V4.4/): What we do, and the integrity standard we hold supply to.
+- [About](https://kishan0088.github.io/Offsetease_V4.4/about): How we work and what we stand for.
+- [Sources & data](https://kishan0088.github.io/Offsetease_V4.4/sources): Every statistic on this site with its named, dated source. Verify figures here.
+- [Contact](https://kishan0088.github.io/Offsetease_V4.4/contact): Enquiries — info@offsetease.com, +91 88661 42748.
+
+## Carbon
+
+- [Carbon Supply](https://kishan0088.github.io/Offsetease_V4.4/carbon-supply): Spot, managed portfolio and offtake supply, screened against The Five Checks.
+- [Energy Attribute Certificates](https://kishan0088.github.io/Offsetease_V4.4/energy-attribute-certificates): I-RECs and EACs for Scope 2 reduction.
+
+## ESG & sustainability
+
+- [ESG & Sustainability](https://kishan0088.github.io/Offsetease_V4.4/esg-sustainability): The full service index — eighteen services across five groups.
+- [Measure](https://kishan0088.github.io/Offsetease_V4.4/esg-measurement): GHG inventories, product carbon footprints, life cycle assessments and Environmental Product Declarations — the measured evidence every target, disclosure and carbon claim is built on.
+- [Report](https://kishan0088.github.io/Offsetease_V4.4/esg-reporting): BRSR and BRSR Core, CSRD and ESRS, IFRS S1 and S2, and the double materiality assessment underneath them — sustainability disclosure built to survive assurance.
+- [Certify & score](https://kishan0088.github.io/Offsetease_V4.4/esg-certification): EcoVadis ratings, CDP scores, CBAM and EUDR compliance and ISCC certification — the assessments and regulations that decide whether you can bid, sell or export.
+- [Target & reduce](https://kishan0088.github.io/Offsetease_V4.4/net-zero-targets): Science-based target setting and validation, and costed net-zero and decarbonization pathways — targets grounded in an inventory that holds up.
+- [Strategise & manage risk](https://kishan0088.github.io/Offsetease_V4.4/esg-strategy-risk): ESG and CSR strategy, climate risk and TCFD assessment, and supplier and value-chain ESG — the work that connects disclosure to decisions.
+
+### Services
+
+- [GHG accounting](https://kishan0088.github.io/Offsetease_V4.4/ghg-accounting): The audited emissions baseline every target, disclosure and carbon claim is built on.
+- [Product carbon footprint](https://kishan0088.github.io/Offsetease_V4.4/product-carbon-footprint): The SKU-level carbon data your buyers now require.
+- [Life cycle assessment](https://kishan0088.github.io/Offsetease_V4.4/life-cycle-assessment): The evidence base behind footprints, EPDs and credible claims.
+- [EPD](https://kishan0088.github.io/Offsetease_V4.4/environmental-product-declaration): Verified declarations that qualify you to bid.
+- [BRSR & BRSR Core](https://kishan0088.github.io/Offsetease_V4.4/brsr-reporting): India’s assured sustainability disclosure.
+- [CSRD & ESRS](https://kishan0088.github.io/Offsetease_V4.4/csrd-esrs): Europe’s sustainability disclosure — after the Omnibus.
+- [IFRS S1 & S2](https://kishan0088.github.io/Offsetease_V4.4/ifrs-s1-s2): The global baseline for sustainability disclosure.
+- [Double materiality assessment](https://kishan0088.github.io/Offsetease_V4.4/double-materiality-assessment): What matters — to the business, and to the world.
+- [EcoVadis](https://kishan0088.github.io/Offsetease_V4.4/ecovadis-rating): The medal your customers gate procurement on.
+- [CDP](https://kishan0088.github.io/Offsetease_V4.4/cdp-disclosure): Environmental disclosure, scored in public.
+- [CBAM](https://kishan0088.github.io/Offsetease_V4.4/cbam-compliance): Verified data beats default values.
+- [EUDR](https://kishan0088.github.io/Offsetease_V4.4/eudr-compliance): Deforestation-free, proven to the plot.
+- [ISCC certification](https://kishan0088.github.io/Offsetease_V4.4/iscc-certification): Certified sustainability, traceable end to end.
+- [SBTi target setting](https://kishan0088.github.io/Offsetease_V4.4/sbti-target-setting): Targets validated to science.
+- [Net zero & decarbonization](https://kishan0088.github.io/Offsetease_V4.4/net-zero-decarbonization): A pathway your CFO will finance.
+- [ESG & CSR strategy](https://kishan0088.github.io/Offsetease_V4.4/esg-csr-strategy): Purpose tied to the business, not bolted on.
+- [Climate risk & TCFD](https://kishan0088.github.io/Offsetease_V4.4/climate-risk-tcfd): Physical and transition risk, quantified.
+- [Supplier & value-chain ESG](https://kishan0088.github.io/Offsetease_V4.4/supplier-value-chain-esg): Your ESG is only as strong as your value chain.
+
+## Insights
+
+- [All insights](https://kishan0088.github.io/Offsetease_V4.4/insights): Referenced analysis on the rules reshaping carbon and ESG.
+- [CBAM strategy for iron & steel: what exporters must decide in 2026](https://kishan0088.github.io/Offsetease_V4.4/cbam-iron-steel-strategy): CBAM is now a carbon price at the EU border for steel — the widest scope, the highest emissions. Verified data vs default values, and how to turn it into an edge.
+- [CBAM in 2026: the definitive period, the Omnibus simplification, and what exporters must do now](https://kishan0088.github.io/Offsetease_V4.4/cbam-definitive-period-2026): From 1 January 2026 the EU Carbon Border Adjustment Mechanism stops being a reporting exercise and becomes a cost. What changed, who is now exempt, and the moves that protect your margin.
+- [SBTi's Corporate Net-Zero Standard V2: what the draft changes — and how to prepare](https://kishan0088.github.io/Offsetease_V4.4/sbti-net-zero-standard-v2): The Science Based Targets initiative opened a draft of Version 2 of its Corporate Net-Zero Standard. It is not final — but the direction is clear, and target-setting companies should prepare now.
+- [CDP after the overhaul: one questionnaire, IFRS-aligned, and how to score well](https://kishan0088.github.io/Offsetease_V4.4/cdp-disclosure-2026): CDP consolidated its separate questionnaires into a single, IFRS-aligned disclosure on a new platform. How the system now works, how scoring is decided, and what actually moves your grade.
+- [BRSR Core explained: India's assured sustainability disclosure and the value-chain ripple](https://kishan0088.github.io/Offsetease_V4.4/brsr-core-assurance-india): India's BRSR has moved from narrative to assured data. BRSR Core requires reasonable assurance on a defined set of KPIs — and pushes ESG requirements down to unlisted suppliers.
+- [LCA, PCF and EPD: which one your buyers are actually asking for](https://kishan0088.github.io/Offsetease_V4.4/lca-pcf-epd-difference): As carbon requirements move from the company to the product, three acronyms dominate procurement conversations. They are related but not interchangeable — and choosing wrong wastes months.
+- [EUDR explained: deforestation-free supply chains, plot-level geolocation, and the deadline](https://kishan0088.github.io/Offsetease_V4.4/eudr-deforestation-regulation-explained): Seven commodities banned from the EU market unless proven deforestation-free and traceable to the plot. What EUDR demands — and how to prepare.
+- [How EcoVadis scoring really works — and how to move from Bronze to Gold](https://kishan0088.github.io/Offsetease_V4.4/ecovadis-scoring-bronze-to-gold): EcoVadis scores suppliers on four themes, with medals on a percentile curve. What the score really rewards — and how to move from Bronze to Gold.
+- [ISCC EU vs ISCC PLUS vs CORSIA: which certification your business needs](https://kishan0088.github.io/Offsetease_V4.4/iscc-eu-plus-corsia-which-certification): ISCC EU, PLUS, CORSIA and Carbon Footprint serve different markets. How to choose the right certification — or the right combination.
+- [Scope 3 emissions: why they are most of your footprint and how to actually measure them](https://kishan0088.github.io/Offsetease_V4.4/scope-3-emissions-measurement): Scope 3 is typically 70–90% of your footprint and the hardest to measure. The 15 categories, the methods that work, and where to start.
+- [IFRS S1 and S2 explained: the global baseline for sustainability disclosure](https://kishan0088.github.io/Offsetease_V4.4/ifrs-s1-s2-issb-explained): IFRS S1 and S2 are the global baseline for sustainability and climate disclosure. What they require, who must comply, and how to prepare.
+- [High-integrity carbon credits: ICVCM, VCMI, and how to avoid the headline risk](https://kishan0088.github.io/Offsetease_V4.4/carbon-credit-integrity-icvcm-vcmi): The carbon market has split on integrity — ICVCM defines the credit, VCMI the claim. What separates a quality carbon asset from a liability.
+- [Funding the net-zero transition: building a pathway your CFO will actually finance](https://kishan0088.github.io/Offsetease_V4.4/net-zero-pathway-funding): The gap between a net-zero pledge and a funded plan is a cost curve, a capital plan and financing. How to build a business case the board approves.
+- [I-RECs explained: how energy attribute certificates cut your Scope 2 — credibly](https://kishan0088.github.io/Offsetease_V4.4/i-rec-renewable-energy-certificates): I-RECs let companies claim renewable electricity and cut market-based Scope 2 worldwide. How they work — and what makes a claim hold up.
+
+## Notes for machine readers
+
+- Figures on this site are dated and attributed; the source for each is
+  listed on the Sources & data page. Cite the primary source where one is
+  named, and check the review date — these numbers move quarterly.
+- Regulatory detail (CBAM, EUDR, BRSR, CSRD, IFRS S1/S2, SBTi) reflects the
+  position as at 2026-09. Verify against the
+  primary regulator before relying on it.
+- This site does not provide legal or financial advice.

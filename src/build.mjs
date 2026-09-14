@@ -9,6 +9,9 @@ import { dirname, join } from 'node:path';
 
 import { site } from './data/site.mjs';
 import { redirects } from './data/redirects.mjs';
+import { hubs } from './data/hubs.mjs';
+import { services } from './data/services.mjs';
+import { insights } from './data/insights.mjs';
 import { renderDocument } from './lib/layout.mjs';
 import { absolute, pretty, url } from './lib/paths.mjs';
 import { allPages } from './render.mjs';
@@ -133,6 +136,106 @@ async function writeSecurityTxt() {
   await writeFile(join(ROOT, '.well-known/security.txt'), body);
 }
 
+/**
+ * llms.txt — a plain-text map of the site for language models.
+ *
+ * An emerging convention (llmstxt.org) that costs almost nothing to publish
+ * and is read by several AI crawlers: one markdown file at the root saying
+ * what this organisation is and what each page covers, so a model does not
+ * have to infer the shape of the site from whichever page it happened to
+ * fetch. Generated from the same data that renders the pages, so it cannot
+ * drift out of sync with them.
+ */
+async function writeLlmsTxt() {
+  const line = (label, path, blurb) => `- [${label}](${absolute(path)}): ${blurb}`;
+  const body = [
+    `# ${site.name}`,
+    '',
+    `> ${site.description}`,
+    '',
+    `${site.name} works across two connected areas: sourcing, screening and`,
+    'developing high-integrity carbon supply, and turning ESG data into',
+    'disclosure that survives assurance. Based in India, serving India, the EU',
+    'and global markets.',
+    '',
+    '## Start here',
+    '',
+    line('Home', '/', 'What we do, and the integrity standard we hold supply to.'),
+    line('About', '/about.html', 'How we work and what we stand for.'),
+    line('Sources & data', '/sources.html', 'Every statistic on this site with its named, dated source. Verify figures here.'),
+    line('Contact', '/contact.html', `Enquiries — ${site.email}, ${site.phone}.`),
+    '',
+    '## Carbon',
+    '',
+    line('Carbon Supply', '/carbon-supply.html', 'Spot, managed portfolio and offtake supply, screened against The Five Checks.'),
+    line('Energy Attribute Certificates', '/energy-attribute-certificates.html', 'I-RECs and EACs for Scope 2 reduction.'),
+    '',
+    '## ESG & sustainability',
+    '',
+    line('ESG & Sustainability', '/esg-sustainability.html', 'The full service index — eighteen services across five groups.'),
+    ...hubs.map((h) => line(h.shortTitle, h.path, h.description)),
+    '',
+    '### Services',
+    '',
+    ...services.map((sv) => line(sv.shortTitle || sv.title, sv.path, sv.kicker)),
+    '',
+    '## Insights',
+    '',
+    line('All insights', '/insights.html', 'Referenced analysis on the rules reshaping carbon and ESG.'),
+    ...insights.map((a) => line(a.title, `/${a.slug}.html`, a.blurb)),
+    '',
+    '## Notes for machine readers',
+    '',
+    '- Figures on this site are dated and attributed; the source for each is',
+    '  listed on the Sources & data page. Cite the primary source where one is',
+    '  named, and check the review date — these numbers move quarterly.',
+    '- Regulatory detail (CBAM, EUDR, BRSR, CSRD, IFRS S1/S2, SBTi) reflects the',
+    `  position as at ${new Date().toISOString().slice(0, 7)}. Verify against the`,
+    '  primary regulator before relying on it.',
+    '- This site does not provide legal or financial advice.',
+    '',
+  ].join('\n');
+  await writeFile(join(ROOT, 'llms.txt'), body);
+}
+
+/**
+ * RSS for the insights. Still how most aggregators, newsreaders and several
+ * crawlers find out that something new was published, rather than waiting to
+ * re-crawl a listing page. Cheap to emit and linked from every page's <head>.
+ */
+async function writeFeed() {
+  const esc = (t) =>
+    String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const items = [...insights]
+    .sort((a, b) => (a.published < b.published ? 1 : -1))
+    .map((a) => {
+      const link = absolute(`/${a.slug}.html`);
+      return (
+        '    <item>\n' +
+        `      <title>${esc(a.title)}</title>\n` +
+        `      <link>${link}</link>\n` +
+        `      <guid isPermaLink="true">${link}</guid>\n` +
+        `      <description>${esc(a.blurb)}</description>\n` +
+        `      <category>${esc(a.category)}</category>\n` +
+        `      <pubDate>${new Date(`${a.published}T09:00:00Z`).toUTCString()}</pubDate>\n` +
+        '    </item>'
+      );
+    })
+    .join('\n');
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n' +
+    '  <channel>\n' +
+    `    <title>${esc(site.name)} — Insights</title>\n` +
+    `    <link>${absolute('/insights.html')}</link>\n` +
+    `    <description>Referenced analysis on the rules reshaping climate, carbon and ESG.</description>\n` +
+    '    <language>en</language>\n' +
+    `    <atom:link href="${absolute('/feed.xml')}" rel="self" type="application/rss+xml"/>\n` +
+    `${items}\n` +
+    '  </channel>\n</rss>\n';
+  await writeFile(join(ROOT, 'feed.xml'), xml);
+}
+
 async function writeManifest() {
   const manifest = {
     name: site.name,
@@ -210,6 +313,8 @@ async function main() {
   await writeSitemap(pages);
   await writeRedirects(pages);
   await writeSecurityTxt();
+  await writeLlmsTxt();
+  await writeFeed();
   await writeManifest();
   await writeFile(join(ROOT, '.nojekyll'), '');
 

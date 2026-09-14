@@ -1,4 +1,4 @@
 Contact: mailto:info@offsetease.com
-Expires: 2027-09-14T13:30:43.825Z
+Expires: 2027-09-14T15:44:53.496Z
 Preferred-Languages: en
 Canonical: https://kishan0088.github.io/Offsetease_V4.4/.well-known/security.txt

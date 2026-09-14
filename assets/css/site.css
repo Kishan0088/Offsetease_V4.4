@@ -2573,66 +2573,19 @@ a.card:hover .card__go svg {
   border-left-color: var(--mist);
 }
 
-/* Wide content scrolls inside its own container; the page never does. */
-.ftable__wrap {
-  overflow-x: auto;
-  margin: clamp(24px, 3vw, 36px) 0 0;
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  background: var(--panel);
-}
-.ftable {
-  width: 100%;
-  min-width: 420px;
-  border-collapse: collapse;
-  font-size: 15.5px;
-}
-.ftable caption {
-  caption-side: top;
-  text-align: left;
-  padding: 16px 18px 0;
-  font-family: var(--mono);
-  font-size: 12.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--teal);
-}
-.ftable th,
-.ftable td {
-  text-align: left;
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--rule);
-  vertical-align: top;
-}
-.ftable thead th {
-  font-family: var(--mono);
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fg-mute);
-}
-.ftable thead tr th:empty {
-  /* The row-header column needs no heading of its own. */
-  padding-block: 10px;
-}
-.ftable tbody th {
-  font-weight: 500;
-  color: var(--fg);
-  width: 38%;
-}
-.ftable tbody tr:last-child th,
-.ftable tbody tr:last-child td {
-  border-bottom: 0;
-}
-.ftable td {
-  font-variant-numeric: tabular-nums;
-}
-.ftable__src {
+/* Service-page fact tables reuse .table-wrap/.cmp-table above, so the site has
+   one table format rather than two that merely resemble each other. Only the
+   source line under a value is particular to them. */
+.cmp-table .src {
   display: block;
-  margin-top: 3px;
-  font-size: 12.5px;
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--fg-mute);
+}
+.cmp-table tbody th {
+  width: 34%;
 }
 
 .tl {
@@ -2704,28 +2657,49 @@ a.card:hover .card__go svg {
 
 /* ---- Closing enquiry form ----------------------------------------------- */
 /* A service page ends with the form rather than a button to a generic contact
-   page. Two columns on a desk, stacked on a phone, over the same photograph
-   and scrim the plain closing section uses. */
+   page. The constraint that shapes everything here: a form is a working
+   control, not decoration, so legibility beats atmosphere at every point where
+   the two disagree. */
+
+.close--form {
+  /* The plain closing section is cinematic and can afford 170px of air. This
+     one has to hold a six-field form above the fold on a laptop. */
+  --close-pad: clamp(56px, 7vw, 104px);
+}
 .close--form .close__inner--split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
   gap: clamp(32px, 5vw, 72px);
   align-items: start;
   justify-items: stretch;
+  padding-block: var(--close-pad);
 }
 @media (max-width: 900px) {
   .close--form .close__inner--split {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* The hero scrim is left-weighted, which leaves the right-hand half — exactly
+   where the form sits — with almost no cover. This one darkens the whole
+   section so the panel is never asked to carry the contrast on its own. */
+.close--form::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(4 26 30 / 0.62) 0%, rgb(4 26 30 / 0.78) 100%);
+  pointer-events: none;
+}
 .close--form .close__h {
-  font-size: clamp(28px, 3.6vw, 50px);
+  font-size: clamp(28px, 3.4vw, 46px);
   max-width: 15ch;
 }
+
 .close__say {
   display: grid;
   gap: clamp(18px, 2.4vw, 26px);
   align-content: start;
+  padding-top: clamp(0px, 1vw, 10px);
 }
 .close__facts {
   list-style: none;
@@ -2733,15 +2707,17 @@ a.card:hover .card__go svg {
   padding: 0;
   display: grid;
   gap: 1px;
-  border-top: 1px solid rgb(245 243 238 / 0.16);
+  border-top: 1px solid rgb(245 243 238 / 0.18);
 }
 .close__facts li {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-  padding: 11px 0;
-  border-bottom: 1px solid rgb(245 243 238 / 0.16);
-  font-size: 15px;
+  align-items: baseline;
+  gap: 4px 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgb(245 243 238 / 0.18);
+  font-size: 15.5px;
+  color: var(--bone);
 }
 .close__facts li > span:first-child {
   font-family: var(--mono);
@@ -2749,71 +2725,117 @@ a.card:hover .card__go svg {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mist);
-  min-width: 68px;
+  min-width: 72px;
 }
 .close__facts a {
   color: var(--bone);
   text-decoration: none;
-  border-bottom: 1px solid rgb(245 243 238 / 0.3);
+  border-bottom: 1px solid rgb(245 243 238 / 0.35);
 }
 .close__facts a:hover {
   border-bottom-color: var(--gold);
 }
 
-/* The form sits on a panel of its own so the fields keep a reliable ground
-   whatever the photograph behind the section is doing. */
+/* The panel is nearly opaque on purpose. At 0.72 the photograph read straight
+   through the input boxes and the field labels sat on whatever happened to be
+   behind them, which is the difference between a form and a picture of one. */
 .close__form {
-  background: rgb(4 26 30 / 0.72);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgb(245 243 238 / 0.14);
-  border-radius: 14px;
-  padding: clamp(22px, 3vw, 34px);
+  background: rgb(4 22 26 / 0.94);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+  backdrop-filter: blur(18px) saturate(115%);
+  border: 1px solid rgb(245 243 238 / 0.16);
+  border-radius: 16px;
+  padding: clamp(24px, 3vw, 38px);
+  box-shadow: 0 30px 70px -40px rgb(0 0 0 / 0.85);
 }
 .form--compact {
-  gap: clamp(14px, 1.6vw, 18px);
+  gap: clamp(15px, 1.7vw, 19px);
+}
+.form--compact .field {
+  gap: 7px;
 }
 .form--compact .field__lab {
-  color: rgb(245 243 238 / 0.92);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(245 243 238 / 0.95);
+}
+.form--compact .field__lab em {
+  color: rgb(245 243 238 / 0.55);
 }
 .form--compact .field input,
 .form--compact .field textarea {
-  background: rgb(4 26 30 / 0.55);
-  border-color: rgb(245 243 238 / 0.34);
+  background: rgb(245 243 238 / 0.06);
+  /* 0.34 read as a hairline against the panel. A control needs an edge you can
+     find without hunting for it. */
+  border: 1px solid rgb(245 243 238 / 0.42);
+  border-radius: 10px;
+  padding: 14px 15px;
   color: var(--bone);
+  font-size: 16px; /* 16px stops iOS zooming the page on focus */
 }
 .form--compact .field input::placeholder,
 .form--compact .field textarea::placeholder {
   color: rgb(245 243 238 / 0.45);
 }
+.form--compact .field input:hover,
+.form--compact .field textarea:hover {
+  border-color: rgb(245 243 238 / 0.6);
+}
 .form--compact .field input:focus,
 .form--compact .field textarea:focus {
   border-color: var(--gold);
-  background: rgb(200 161 106 / 0.1);
+  background: rgb(200 161 106 / 0.12);
+  outline: 2px solid rgb(200 161 106 / 0.35);
+  outline-offset: 1px;
 }
 .form--compact .field textarea {
-  min-height: 84px;
+  min-height: 96px;
 }
 .form--compact .field__err {
-  /* #a8402a is tuned for the bone ground and disappears against ink. */
-  color: #f0a08e;
+  /* #a8402a is tuned for the bone ground and vanishes against ink. */
+  color: #f4a795;
+  font-size: 13px;
+}
+.form--compact .consent {
+  align-items: start;
+  gap: 12px;
+}
+.form--compact .consent input[type='checkbox'] {
+  /* 16px was a hard target to hit and easy to miss entirely on a dark panel. */
+  width: 22px;
+  height: 22px;
+  flex: none;
+  accent-color: var(--gold);
+  border-color: rgb(245 243 238 / 0.5);
 }
 .form--compact .consent label,
 .form--compact .form__note {
-  color: rgb(245 243 238 / 0.78);
+  color: rgb(245 243 238 / 0.8);
+  font-size: 14px;
+  line-height: 1.5;
 }
 .form--compact .consent a {
   color: var(--bone);
+}
+.form--compact .btns {
+  margin-top: 4px;
 }
 .form--compact .form__status[data-tone='ok'] {
   color: var(--mist);
 }
 .form--compact .form__status[data-tone='err'] {
-  color: #f0a08e;
+  color: #f4a795;
 }
 @media (max-width: 560px) {
   .close__form {
-    padding: 20px 16px;
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+  /* A primary action should not be a small pill on a phone. */
+  .form--compact .btns,
+  .form--compact .btns .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -4655,18 +4677,21 @@ a.card:hover .card__go svg {
 }
 
 /* Wide content must scroll in its own container, never the page. */
+.table-wrap,
 .art__body .table-wrap {
   overflow-x: auto;
   margin: clamp(24px, 3vw, 34px) 0;
   border: 1px solid var(--rule);
   border-radius: 8px;
 }
+.cmp-table,
 .art__body .cmp-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14.5px;
   min-width: 520px;
 }
+.cmp-table caption,
 .art__body .cmp-table caption {
   padding: 12px 14px;
   text-align: left;
@@ -4677,6 +4702,8 @@ a.card:hover .card__go svg {
   color: var(--fg-mute);
   border-bottom: 1px solid var(--rule);
 }
+.cmp-table th,
+.cmp-table td,
 .art__body .cmp-table th,
 .art__body .cmp-table td {
   padding: 11px 14px;
@@ -4685,6 +4712,7 @@ a.card:hover .card__go svg {
   border-bottom: 1px solid var(--rule-soft);
   line-height: 1.5;
 }
+.cmp-table thead th,
 .art__body .cmp-table thead th {
   font-family: var(--mono);
   font-size: 12.5px;
@@ -4693,10 +4721,12 @@ a.card:hover .card__go svg {
   color: var(--fg-mute);
   font-weight: 500;
 }
+.cmp-table tbody th,
 .art__body .cmp-table tbody th {
   font-weight: 600;
   color: var(--fg);
 }
+.cmp-table td,
 .art__body .cmp-table td {
   color: var(--fg-soft);
 }

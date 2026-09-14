@@ -2,7 +2,8 @@
 // Builds the whole site into flat .html files at the repository root.
 // Zero dependencies: `node src/build.mjs`.
 
-import { writeFile, readFile, mkdir } from 'node:fs/promises';
+import { writeFile, readFile, mkdir, copyFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -11,6 +12,7 @@ import { redirects } from './data/redirects.mjs';
 import { renderDocument } from './lib/layout.mjs';
 import { absolute, pretty, url } from './lib/paths.mjs';
 import { allPages } from './render.mjs';
+import { assetUrls } from './lib/assets.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 // OUT_DIR lets a second target be built without overwriting the committed
@@ -150,7 +152,42 @@ async function writeManifest() {
   await writeFile(join(ROOT, 'site.webmanifest'), JSON.stringify(manifest, null, 2));
 }
 
+/**
+ * Fingerprint the stylesheet and the script.
+ *
+ * Both shipped under fixed names on a one-hour cache while the HTML revalidates
+ * every time, so a returning visitor could load new markup against an old
+ * stylesheet and see an unstyled page the server had never served. Hashing the
+ * name makes that impossible and lets both files go immutable.
+ *
+ * The original name is left in place too, so any link that predates this — a
+ * bookmark, a cached reference — still resolves rather than 404ing.
+ */
+async function fingerprintAssets() {
+  // Only for a dist build. The GitHub Pages target publishes the repository
+  // itself, so hashed copies there would accumulate in git on every build —
+  // and that preview has no stale-cache problem to solve.
+  if (ROOT === REPO) return;
+  for (const [key, rel] of [
+    ['css', 'assets/css/site.css'],
+    ['js', 'assets/js/app.js'],
+  ]) {
+    const src = join(REPO, rel);
+    const body = await readFile(src);
+    const hash = createHash('sha256').update(body).digest('hex').slice(0, 10);
+    const hashed = rel.replace(/(\.[^.]+)$/, `.${hash}$1`);
+    await mkdir(dirname(join(ROOT, hashed)), { recursive: true });
+    await copyFile(src, join(ROOT, hashed));
+    // Keep the unhashed original too, so any link that predates this — a
+    // bookmark, a cached reference — still resolves rather than 404ing.
+    await copyFile(src, join(ROOT, rel));
+    assetUrls[key] = `/${hashed}`;
+  }
+}
+
 async function main() {
+  // Before any page is rendered: the markup has to carry the hashed names.
+  await fingerprintAssets();
   const wordPath = await wordmarkPath();
   const pages = allPages();
 

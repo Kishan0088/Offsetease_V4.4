@@ -538,13 +538,15 @@ export function factTable({ caption, cols = ['', ''], rows = [] } = {}) {
         '<tr>' +
         `<th scope="row">${esc(r.k)}</th>` +
         `<td>${str(md(r.v))}` +
-        (r.src ? `<span class="ftable__src">${esc(r.src)}</span>` : '') +
+        (r.src ? `<span class="src">${esc(r.src)}</span>` : '') +
         '</td></tr>'
     )
     .join('');
+  // Same classes the article tables use, so this is the site's one table
+  // format rather than a second one that merely resembles it.
   return raw(
-    '<div class="ftable__wrap reveal">' +
-      '<table class="ftable">' +
+    '<div class="table-wrap">' +
+      '<table class="cmp-table">' +
       (caption ? `<caption>${esc(caption)}</caption>` : '') +
       `<thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`
   );
@@ -661,7 +663,11 @@ export function closeForm(data, { topic, note = '' } = {}) {
       `<li><span>Phone</span><a href="tel:${esc(site.phoneHref)}">${esc(site.phone)}</a></li>` +
       '<li><span>Reply</span><span>Within one business day</span></li>' +
       '</ul></div>' +
-      `<div class="close__form reveal">${str(compactForm({ topic, note }))}</div>` +
+      // No reveal on the form. A heading can afford to fade in; a control the
+      // visitor might be reaching for cannot sit at opacity 0 waiting on an
+      // observer, and a mid-scroll screenshot of a half-faded form reads as a
+      // broken page.
+      `<div class="close__form">${str(compactForm({ topic, note }))}</div>` +
       '</div></section>'
   );
 }

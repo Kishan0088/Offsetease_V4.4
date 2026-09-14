@@ -375,12 +375,27 @@
         }
       });
     }
+    // The enquiry form is the thing the bar is trying to get you to, so while
+    // it is on screen the bar is only covering it — on a phone it sat directly
+    // over the consent checkbox, hiding the line you have to read to tick it.
+    let formOnScreen = false;
+    const enquire = $('#enquire');
+    if (enquire && 'IntersectionObserver' in window) {
+      new IntersectionObserver(
+        (entries) => {
+          formOnScreen = entries[0].isIntersecting;
+          if (formOnScreen) bar.classList.remove('is-up');
+        },
+        { rootMargin: '0px 0px -10% 0px' }
+      ).observe(enquire);
+    }
+
     onFrame(() => {
       const max = doc.documentElement.scrollHeight - innerHeight;
       if (max <= 0) return;
       const p = scrollY / max;
       // Show past a quarter of the page, hide again over the footer CTA.
-      bar.classList.toggle('is-up', p > 0.25 && p < 0.93);
+      bar.classList.toggle('is-up', !formOnScreen && p > 0.25 && p < 0.93);
     });
   }
 

@@ -6,10 +6,11 @@
   Cache-Control: public, max-age=31536000, immutable
 /assets/brand/*
   Cache-Control: public, max-age=604800
+# Fingerprinted by the build, so these can never go stale against new markup.
 /assets/css/*
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=31536000, immutable
 /assets/js/*
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=31536000, immutable
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

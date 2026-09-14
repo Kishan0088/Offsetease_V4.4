@@ -10,7 +10,10 @@
 
 [build]
   publish = "netlify-dist"
-  command = "rm -rf netlify-dist && mkdir -p netlify-dist && SITE_ORIGIN=$SITE_ORIGIN SITE_BASE= OUT_DIR=netlify-dist node src/build.mjs && cp -R assets netlify-dist/assets && cp _headers netlify-dist/ 2>/dev/null || true"
+  # Assets are copied BEFORE the build, not after: the build fingerprints
+  # site.css and app.js into assets/, and copying over the top of an existing
+  # directory would nest it as assets/assets and 404 every stylesheet.
+  command = "rm -rf netlify-dist && mkdir -p netlify-dist && cp -R assets netlify-dist/assets && cp _headers netlify-dist/ && SITE_ORIGIN=$SITE_ORIGIN SITE_BASE= OUT_DIR=netlify-dist node src/build.mjs"
 
 [build.environment]
   NODE_VERSION = "20"

@@ -3,6 +3,7 @@ import { groups, servicesInGroup } from '../data/services.mjs';
 import { hubs } from '../data/hubs.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
+import { assetUrls } from './assets.mjs';
 import { preloadFor } from './media.mjs';
 
 const YEAR = new Date().getFullYear();
@@ -459,7 +460,7 @@ ${site.indexable ? '' : '<meta name="robots" content="noindex, nofollow">\n'}<me
   href="${url('/assets/fonts/schibsted-latin-400700.woff2')}">
 <link rel="preload" as="font" type="font/woff2" crossorigin
   href="${url('/assets/fonts/plexmono-latin-400.woff2')}">
-${preload ? `<link rel="preload" as="image" type="${preload.type}" href="${preload.href}" imagesrcset="${preload.imagesrcset}" imagesizes="100vw" fetchpriority="high">\n` : ''}<link rel="stylesheet" href="${url('/assets/css/site.css')}">
+${preload ? `<link rel="preload" as="image" type="${preload.type}" href="${preload.href}" imagesrcset="${preload.imagesrcset}" imagesizes="100vw" fetchpriority="high">\n` : ''}<link rel="stylesheet" href="${url(assetUrls.css)}">
 <script>(function(d){d.className=d.className.replace('no-js','js');/* .js .reveal starts at opacity 0 and waits for app.js to add .is-in. If app.js never boots - blocked, dropped, parse error - every revealed block would stay invisible forever. Fail open instead. */setTimeout(function(){if(!d.dataset.booted)d.classList.add('js-stalled')},2500)})(document.documentElement)</script>
 ${graphs
   .map((g) => `<script type="application/ld+json">${JSON.stringify(g)}</script>`)
@@ -474,7 +475,7 @@ ${body}
 </main>
 ${stickyCta(page)}
 ${footer()}
-<script src="${url('/assets/js/app.js')}" defer></script>
+<script src="${url(assetUrls.js)}" defer></script>
 </body>
 </html>
 `;

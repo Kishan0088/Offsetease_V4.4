@@ -17,4 +17,9 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  SITE_ORIGIN = "https://offsetease-v1-2.netlify.app"
+  # offsetease.com now resolves to this site, so the production domain is what
+  # every canonical, sitemap entry, JSON-LD @id and llms.txt link must name.
+  SITE_ORIGIN = "https://offsetease.com"
+  # LIVE. This is the production domain, so it must be indexable — a live site
+  # serving noindex + Disallow tells Google to drop every page it has.
+  SITE_INDEXABLE = "true"

@@ -540,13 +540,6 @@ export const insights = {
     photoAlt: 'Large analogue measuring dials mounted in an industrial hall',
   },
 
-  intro: {
-    eyebrow: 'One library, both kinds of writing',
-    headline: 'The long analysis and the short commentary, in one place.',
-    body:
-      'Every piece states what a rule requires, who it applies to, what the deadline is, and what to do about it. Where a date or a threshold appears, it is the one in the regulation, and the primary source is linked. Where something is still a draft, we say so.',
-  },
-
   close: {
     eyebrow: 'Talk it through',
     headline: 'Want our perspective on your specific situation?',

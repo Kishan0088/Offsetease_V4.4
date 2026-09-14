@@ -678,26 +678,6 @@ export function renderInsights() {
     str(
       section(
         raw(
-          str(head({ eyebrow: d.intro.eyebrow, headline: d.intro.headline, body: d.intro.body, split: true })) +
-            str(
-              statStrip(
-                [
-                  { value: String(insightStats.articles), label: 'articles' },
-                  { value: String(insightStats.categories), label: 'topics covered' },
-                  { value: `${hours}h ${mins}m`, label: 'of reading' },
-                  { value: 'Aug 2026', label: 'most recent' },
-                ],
-                { note: 'Offsetease Insights library' }
-              )
-            )
-        ),
-        { tone: 'on-bone', id: 'about-insights', chapter: 'Insights' }
-      )
-    ),
-
-    str(
-      section(
-        raw(
           str(head({ eyebrow: 'The library', headline: `All ${insightStats.articles} articles` })) +
             str(insightList(list, cats))
         ),
@@ -944,8 +924,16 @@ export function renderSources() {
 
 // local alias so renderSources can use the breadcrumb component
 function breadcrumb_(items) {
+  // Only the final crumb is the current page. This used to mark every item
+  // aria-current, which was harmless while the trail was one level deep and
+  // wrong as soon as it was two — an article claimed both "Insights" and its
+  // own title were the page you are on.
   const li = items
-    .map((c) => `<li><span aria-current="page">${esc(c.name)}</span></li>`)
+    .map((c, i) =>
+      i === items.length - 1
+        ? `<li><span aria-current="page">${esc(c.name)}</span></li>`
+        : `<li><a href="${url(c.href)}">${esc(c.name)}</a></li>`
+    )
     .join('');
   return raw(
     '<nav class="crumb-nav" aria-label="Breadcrumb">' +

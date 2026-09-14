@@ -85,9 +85,14 @@
     let last = scrollY;
     let openMenu = false;
 
+    // `is-top` paints the bar bone-on-transparent, which only works while it
+    // is sitting over a dark hero. Pages without one — every insight article,
+    // privacy, terms, sources, 404 — were rendering an invisible header until
+    // the first scroll: no logo, no links, no button.
+    const overHero = !!$('.hero');
     const update = () => {
       const y = scrollY;
-      nav.classList.toggle('is-top', y < 12);
+      nav.classList.toggle('is-top', overHero && y < 12);
       if (!openMenu) {
         const goingDown = y > last && y > 260;
         nav.classList.toggle('is-hidden', goingDown && y - last > 2);

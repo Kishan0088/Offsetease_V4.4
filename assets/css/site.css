@@ -2202,6 +2202,21 @@ a.card:hover .card__go svg {
   list-style: none;
   padding: 0;
 }
+/* An insight title can run to 95 characters, which wrapped the trail onto a
+   second line and pushed the eyebrow and h1 down the page. Truncate the
+   current page only — the full text stays in the DOM for assistive tech and
+   in the BreadcrumbList schema. */
+.crumb li {
+  min-width: 0;
+  max-width: 100%;
+}
+.crumb li:last-child [aria-current] {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .crumb a {
   text-decoration: none;
   color: inherit;
@@ -4059,19 +4074,23 @@ a.card:hover .card__go svg {
 
 /* ---- Figures carried over with the articles ------------------------------ */
 
+/* All scoped to .art__body. `.fig` is already the number span inside
+   statStrip, so an unscoped panel rule here drew a bordered box around every
+   figure on the homepage's impact strip. */
+
 /* These components came with the migrated article HTML — a flow diagram, a
    pair of cost cards, a numbered step list and a phase-in bar chart. Restyled
    in this site's tokens rather than dropped, because the numbers in them are
    content, not decoration. */
 
-.fig {
+.art__body .fig {
   margin: clamp(28px, 3.6vw, 44px) 0;
   padding: clamp(18px, 2.4vw, 26px);
   background: var(--panel);
   border: 1px solid var(--rule);
   border-radius: 10px;
 }
-.fig__tag {
+.art__body .fig__tag {
   display: inline-block;
   font-family: var(--mono);
   font-size: 10.5px;
@@ -4080,36 +4099,36 @@ a.card:hover .card__go svg {
   color: var(--accent-text);
   margin-bottom: 8px;
 }
-.fig__title {
+.art__body .fig__title {
   margin: 0 0 6px;
   font-size: clamp(16px, 1.7vw, 19px);
   font-weight: 600;
   line-height: 1.3;
   color: var(--fg);
 }
-.fig__sub {
+.art__body .fig__sub {
   margin: 0 0 16px;
   font-size: 14.5px;
   line-height: 1.5;
   color: var(--fg-soft);
 }
-.fig__note {
+.art__body .fig__note {
   margin: 14px 0 0;
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--fg-mute);
 }
-.fig__note--accent {
+.art__body .fig__note--accent {
   color: var(--accent-text);
 }
 
-.cbam-flow {
+.art__body .cbam-flow {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   gap: 10px;
 }
-.cbam-flow__box {
+.art__body .cbam-flow__box {
   flex: 1 1 170px;
   min-width: 0;
   display: grid;
@@ -4120,44 +4139,44 @@ a.card:hover .card__go svg {
   border: 1px solid var(--rule);
   border-radius: 8px;
 }
-.cbam-flow__box--hl {
+.art__body .cbam-flow__box--hl {
   border-color: var(--gold);
   box-shadow: inset 0 0 0 1px var(--gold);
 }
-.cbam-flow__eyebrow {
+.art__body .cbam-flow__eyebrow {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fg-mute);
 }
-.cbam-flow__name {
+.art__body .cbam-flow__name {
   font-weight: 600;
   font-size: 15px;
   color: var(--fg);
 }
-.cbam-flow__desc {
+.art__body .cbam-flow__desc {
   font-size: 13px;
   line-height: 1.45;
   color: var(--fg-soft);
 }
-.cbam-flow__arrow {
+.art__body .cbam-flow__arrow {
   align-self: center;
   color: var(--fg-mute);
 }
 
-.cost-cards {
+.art__body .cost-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 14px;
 }
-.cost-card {
+.art__body .cost-card {
   background: var(--bg);
   border: 1px solid var(--rule);
   border-radius: 8px;
   overflow: hidden;
 }
-.cost-card__head {
+.art__body .cost-card__head {
   padding: 11px 14px;
   font-family: var(--mono);
   font-size: 11px;
@@ -4166,11 +4185,11 @@ a.card:hover .card__go svg {
   color: var(--deep);
   background: var(--gold);
 }
-.cost-card__head--dark {
+.art__body .cost-card__head--dark {
   color: var(--bone);
   background: var(--deep);
 }
-.cost-card__row {
+.art__body .cost-card__row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -4179,29 +4198,29 @@ a.card:hover .card__go svg {
   border-top: 1px solid var(--rule-soft);
   font-size: 14px;
 }
-.cost-card__row span {
+.art__body .cost-card__row span {
   color: var(--fg-soft);
 }
-.cost-card__row b {
+.art__body .cost-card__row b {
   color: var(--fg);
   font-variant-numeric: tabular-nums;
 }
-.cost-card__total {
+.art__body .cost-card__total {
   font-size: 16px;
   color: var(--accent-text) !important;
 }
 
-.cbam-steps {
+.art__body .cbam-steps {
   display: grid;
   gap: 10px;
 }
-.cbam-steps__item {
+.art__body .cbam-steps__item {
   display: grid;
   grid-template-columns: 30px minmax(0, 1fr);
   gap: 12px;
   align-items: start;
 }
-.cbam-steps__num {
+.art__body .cbam-steps__num {
   display: grid;
   place-items: center;
   width: 28px;
@@ -4212,12 +4231,12 @@ a.card:hover .card__go svg {
   color: var(--deep);
   background: var(--gold);
 }
-.cbam-steps__b {
+.art__body .cbam-steps__b {
   display: block;
   font-size: 15px;
   color: var(--fg);
 }
-.cbam-steps__d {
+.art__body .cbam-steps__d {
   display: block;
   margin-top: 2px;
   font-size: 14px;
@@ -4225,45 +4244,45 @@ a.card:hover .card__go svg {
   color: var(--fg-soft);
 }
 
-.ramp {
+.art__body .ramp {
   display: grid;
   gap: 14px;
 }
-.ramp__bar {
+.art__body .ramp__bar {
   height: 9px;
   border-radius: 999px;
   background: var(--rule);
   overflow: hidden;
 }
-.ramp__fill {
+.art__body .ramp__fill {
   display: block;
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--teal), var(--gold));
 }
-.ramp__year {
+.art__body .ramp__year {
   margin-top: 7px;
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--fg);
 }
-.ramp__pct {
+.art__body .ramp__pct {
   font-size: 14px;
   color: var(--accent-text);
   font-variant-numeric: tabular-nums;
 }
-.ramp__d {
+.art__body .ramp__d {
   font-size: 13.5px;
   color: var(--fg-soft);
 }
-.ramp__chips {
+.art__body .ramp__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 4px;
 }
-.ramp__chip {
+.art__body .ramp__chip {
   padding: 5px 11px;
   font-family: var(--mono);
   font-size: 11px;
@@ -4274,19 +4293,19 @@ a.card:hover .card__go svg {
 }
 
 /* Wide content must scroll in its own container, never the page. */
-.table-wrap {
+.art__body .table-wrap {
   overflow-x: auto;
   margin: clamp(24px, 3vw, 34px) 0;
   border: 1px solid var(--rule);
   border-radius: 8px;
 }
-.cmp-table {
+.art__body .cmp-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14.5px;
   min-width: 520px;
 }
-.cmp-table caption {
+.art__body .cmp-table caption {
   padding: 12px 14px;
   text-align: left;
   font-family: var(--mono);
@@ -4296,15 +4315,15 @@ a.card:hover .card__go svg {
   color: var(--fg-mute);
   border-bottom: 1px solid var(--rule);
 }
-.cmp-table th,
-.cmp-table td {
+.art__body .cmp-table th,
+.art__body .cmp-table td {
   padding: 11px 14px;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--rule-soft);
   line-height: 1.5;
 }
-.cmp-table thead th {
+.art__body .cmp-table thead th {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -4312,11 +4331,11 @@ a.card:hover .card__go svg {
   color: var(--fg-mute);
   font-weight: 500;
 }
-.cmp-table tbody th {
+.art__body .cmp-table tbody th {
   font-weight: 600;
   color: var(--fg);
 }
-.cmp-table td {
+.art__body .cmp-table td {
   color: var(--fg-soft);
 }
 

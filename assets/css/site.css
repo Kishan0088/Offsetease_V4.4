@@ -320,9 +320,11 @@ p:last-child {
 
 .label {
   font-family: var(--mono);
-  font-size: 11.5px;
+  /* Uppercase mono at 11.5px with 0.18em tracking read as texture rather than
+     text. The size carries the label now, so the tracking can ease off. */
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--teal);
   margin: 0 0 clamp(18px, 2.4vw, 30px);
@@ -716,6 +718,11 @@ code {
 }
 .nav__link {
   position: relative;
+  /* 48px of touch height. The underline still sits on the text, so the larger
+     target is felt on a phone and invisible on a desktop. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
   padding: 8px 1px;
   font-size: 14px;
   color: currentColor;
@@ -1338,11 +1345,15 @@ a:hover > .ph--zoom img,
 /* ---- Reveal ------------------------------------------------------------- */
 
 .js .reveal {
+  /* 0.85s of fade plus up to 640ms of stagger meant a block could sit
+     half-legible for a second and a half. Anyone scrolling at reading speed
+     met grey text, which reads as a slow site rather than a considered one.
+     The move survives at less than half the duration; only the waiting goes. */
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(14px);
   transition:
-    opacity 0.85s var(--ease-out) var(--rd, 0ms),
-    transform 0.95s var(--ease-out) var(--rd, 0ms);
+    opacity 0.4s var(--ease-out) var(--rd, 0ms),
+    transform 0.55s var(--ease-out) var(--rd, 0ms);
   will-change: opacity, transform;
 }
 .js .reveal.is-in {
@@ -1362,7 +1373,7 @@ a:hover > .ph--zoom img,
   opacity: 0;
   transform: scale(1.06);
   transition:
-    opacity 1s var(--ease-out) var(--rd, 0ms),
+    opacity 0.45s var(--ease-out) var(--rd, 0ms),
     transform 1.4s var(--ease) var(--rd, 0ms);
 }
 .js .reveal--scale.is-in {
@@ -2195,7 +2206,7 @@ a.card:hover .card__go svg {
   align-items: center;
   gap: 8px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
   letter-spacing: 0.1em;
   color: var(--fg-mute);
   margin-bottom: 20px;
@@ -2372,7 +2383,7 @@ a.card:hover .card__go svg {
 .contacts dt,
 .contacts .k {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -2417,7 +2428,7 @@ a.card:hover .card__go svg {
 }
 .sources__v {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--fg-mute);
   margin: 8px 0 0;
   word-break: break-word;
@@ -2593,7 +2604,7 @@ a.card:hover .card__go svg {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--rule-soft);
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -2695,7 +2706,7 @@ a.card:hover .card__go svg {
 }
 .fbase__m {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.06em;
 }
 .fbase__l {
@@ -3195,7 +3206,7 @@ a.card:hover .card__go svg {
 }
 .mega__t {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 13px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--teal);
@@ -3209,7 +3220,11 @@ a.card:hover .card__go svg {
   gap: 3px;
 }
 .mega__col a {
-  display: block;
+  /* 44px rather than 48: this column holds up to seven links and the taller
+     target would push the panel past the fold on a short laptop screen. */
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   padding: 7px 8px;
   margin-left: -8px;
   border-radius: 7px;
@@ -3671,7 +3686,7 @@ a.card:hover .card__go svg {
 }
 .fcta__list li > span:first-child {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -3783,7 +3798,7 @@ a.card:hover .card__go svg {
   min-height: 40px;
   padding: 0 15px;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   color: var(--fg-soft);
   background: none;
@@ -3796,7 +3811,7 @@ a.card:hover .card__go svg {
     background 0.25s ease;
 }
 .chip span {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-mute);
   font-variant-numeric: tabular-nums;
 }
@@ -3815,7 +3830,7 @@ a.card:hover .card__go svg {
 .ilist__status {
   margin: 0 0 18px;
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -3843,7 +3858,7 @@ a.card:hover .card__go svg {
   align-items: baseline;
   gap: 8px 14px;
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -3894,7 +3909,7 @@ a.card:hover .card__go svg {
   gap: 7px;
   min-height: 34px;
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-text);
@@ -3925,7 +3940,7 @@ a.card:hover .card__go svg {
   gap: 6px 16px;
   margin-top: 20px;
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -3971,7 +3986,7 @@ a.card:hover .card__go svg {
 }
 .art__refs h2 {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -4020,7 +4035,7 @@ a.card:hover .card__go svg {
 }
 .mrc__cat {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent-text);
@@ -4035,7 +4050,7 @@ a.card:hover .card__go svg {
 }
 .mrc__r {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-mute);
 }
 
@@ -4101,7 +4116,7 @@ a.card:hover .card__go svg {
 .art__body .fig__tag {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent-text);
@@ -4187,7 +4202,7 @@ a.card:hover .card__go svg {
 .art__body .cost-card__head {
   padding: 11px 14px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--deep);
@@ -4293,7 +4308,7 @@ a.card:hover .card__go svg {
 .art__body .ramp__chip {
   padding: 5px 11px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   color: var(--fg-soft);
   border: 1px solid var(--rule);
@@ -4317,7 +4332,7 @@ a.card:hover .card__go svg {
   padding: 12px 14px;
   text-align: left;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -4333,7 +4348,7 @@ a.card:hover .card__go svg {
 }
 .art__body .cmp-table thead th {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fg-mute);
@@ -4369,7 +4384,9 @@ a.card:hover .card__go svg {
   .fcol__l a {
     display: flex;
     align-items: center;
-    min-height: 40px;
+    /* 40px left this column a few pixels short of every other touch target in
+       the footer, and it is the densest list on the page. */
+    min-height: 44px;
   }
   .sticky__x {
     width: 44px;
@@ -4394,7 +4411,7 @@ a.card:hover .card__go svg {
   border: 1px solid rgb(245 243 238 / 0.3);
   border-radius: 999px;
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--bone);
@@ -4477,4 +4494,34 @@ a.card:hover .card__go svg {
 }
 .form__pending a {
   color: var(--accent-text);
+}
+
+
+/* ---- Forced colours (Windows High Contrast) ----------------------------- */
+/* The system palette replaces every colour here, which silently removes the
+   scrims, the gradient rules and the focus ring the rest of this sheet draws.
+   Put back the things that carry meaning rather than decoration. */
+@media (forced-colors: active) {
+  .scrim {
+    display: none;
+  }
+  .btn,
+  .chip,
+  .card,
+  .mega,
+  .menu {
+    border: 1px solid CanvasText;
+  }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+  .lockup__ray,
+  .checks__ray {
+    forced-color-adjust: none;
+  }
 }

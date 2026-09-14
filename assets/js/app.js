@@ -73,7 +73,10 @@
     $$('[data-stagger]').forEach((group) => {
       const step = Number(group.dataset.stagger) || 80;
       Array.from(group.children).forEach((child, i) => {
-        child.style.setProperty('--rd', `${Math.min(i, 8) * step}ms`);
+        // Capped at four, not eight: past that the last card in a row was
+        // still waiting 640ms to become readable, long after the reader
+        // had arrived at it.
+        child.style.setProperty('--rd', `${Math.min(i, 4) * step}ms`);
       });
     });
   }

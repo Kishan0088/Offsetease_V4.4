@@ -523,35 +523,35 @@ export const about = {
 export const insights = {
   id: 'insights',
   path: '/insights.html',
-  title: 'Insights on carbon, compliance and disclosure',
-  metaTitle: 'Insights — CBAM, EUDR, BRSR, CDP & Carbon Markets | Offsetease',
+  title: 'Clear thinking on a fast-moving field',
+  metaTitle: 'Insights & Blog — CBAM, EUDR, BRSR, CDP, Carbon | Offsetease',
   shortTitle: 'Insights',
   description:
-    'Plain-language analysis of the rules and markets our clients actually face: CBAM, EUDR, BRSR Core, CSRD, IFRS S1/S2, CDP, EcoVadis, ISCC, Scope 3, SBTi and high-integrity carbon.',
+    'Referenced analysis and commentary on the rules reshaping climate, carbon and ESG: CBAM, EUDR, BRSR Core, IFRS S1/S2, CDP, EcoVadis, ISCC, Scope 3 and SBTi.',
   preloadPhoto: 'dial-gauges',
 
   hero: {
-    eyebrow: 'Insights',
-    headline: 'The rules, explained before they bite.',
-    accent: ['explained'],
+    eyebrow: 'Insights & blog',
+    headline: 'Clear thinking on a fast-moving field.',
+    accent: ['Clear thinking'],
     standfirst:
-      'Fourteen pieces on the regulations, ratings and market mechanisms our clients are asked about most — written to be useful to the person who has to act on them, not to rank for a keyword.',
+      'In-depth, referenced analysis on the regulations and standards reshaping climate, carbon and ESG, alongside shorter commentary on what actually moves business decisions. Written for the person who has to act on it, grounded in primary sources.',
     photo: 'dial-gauges',
     photoAlt: 'Large analogue measuring dials mounted in an industrial hall',
   },
 
   intro: {
-    eyebrow: 'What you will find here',
-    headline: 'Nine topics, one standard: say the thing that is actually true.',
+    eyebrow: 'One library, both kinds of writing',
+    headline: 'The long analysis and the short commentary, in one place.',
     body:
-      'Each piece sets out what a rule requires, who it applies to, what the deadline is, and what a company should do about it. Where a date or a threshold is stated, it is the one in the regulation. Where something is still a draft, we say so.',
+      'Every piece states what a rule requires, who it applies to, what the deadline is, and what to do about it. Where a date or a threshold appears, it is the one in the regulation, and the primary source is linked. Where something is still a draft, we say so.',
   },
 
   close: {
     eyebrow: 'Talk it through',
-    headline: 'Reading about it is not the same as being ready for it.',
+    headline: 'Want our perspective on your specific situation?',
     body:
-      'If one of these applies to you and the deadline is closer than the plan, tell us where you are and we will tell you what the next step actually costs.',
+      'Reading about a rule is not the same as being ready for it. Tell us where you are and we will tell you what the next step actually involves.',
     photo: 'valley-dawn',
     photoAlt: 'A wide valley at dawn under low cloud',
   },

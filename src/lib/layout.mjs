@@ -103,11 +103,38 @@ function serviceJsonLd(page) {
   };
 }
 
+function articleJsonLd(page) {
+  const a = page.article;
+  if (!a) return null;
+  const u = absolute(page.path);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${u}#article`,
+    headline: a.title,
+    description: a.metaDescription || a.blurb,
+    url: u,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': u },
+    datePublished: a.published,
+    dateModified: a.modified || a.published,
+    articleSection: a.category,
+    timeRequired: `PT${a.minutes}M`,
+    wordCount: a.body.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length,
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+    author: { '@id': `${absolute('/')}#organization` },
+    publisher: { '@id': `${absolute('/')}#organization` },
+    isPartOf: { '@id': `${absolute('/insights.html')}#blog` },
+    // The primary sources the piece actually cites, so a reader — or a model
+    // summarising it — can see what it rests on.
+    citation: a.refs.map((r) => ({ '@type': 'CreativeWork', name: r.label, url: r.url })),
+  };
+}
+
 function blogJsonLd(page) {
   const list = page.insights || [];
   if (!list.length) return null;
-  const base = site.articleBase || '';
-  const at = (a) => (base ? `${base}/${a.slug}` : absolute(`/${a.slug}.html`));
+  const at = (a) => absolute(`/${a.slug}.html`);
   // Blog + the posts it contains. An answer engine asking "what has Offsetease
   // written about CBAM" can resolve it from this alone, without the HTML.
   return {
@@ -141,7 +168,6 @@ function blogJsonLd(page) {
 function insightListJsonLd(page) {
   const list = page.insights || [];
   if (!list.length) return null;
-  const base = site.articleBase || '';
   // The reading order, stated explicitly, so the ranking is ours and not a
   // guess made from DOM position.
   return {
@@ -154,7 +180,7 @@ function insightListJsonLd(page) {
       '@type': 'ListItem',
       position: i + 1,
       name: a.title,
-      url: base ? `${base}/${a.slug}` : absolute(`/${a.slug}.html`),
+      url: absolute(`/${a.slug}.html`),
     })),
   };
 }
@@ -373,6 +399,7 @@ export function renderDocument({ page, body, wordPath }) {
     breadcrumbJsonLd(page),
     faqJsonLd(page),
     serviceJsonLd(page),
+    articleJsonLd(page),
     blogJsonLd(page),
     insightListJsonLd(page),
   ].filter(Boolean);

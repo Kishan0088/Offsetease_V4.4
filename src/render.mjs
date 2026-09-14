@@ -2,7 +2,9 @@
 
 import { site } from './data/site.mjs';
 import { home, supply, eac, esg, about, insights as insightsPage, contact, sources, privacy, terms } from './data/pages.mjs';
-import { insights, insightCategories, insightsByDate, insightStats } from './data/insights.mjs';
+import {
+  insights, insightCategories, insightsByDate, insightStats, relatedInsights,
+} from './data/insights.mjs';
 import { services, groups, byId, servicesInGroup } from './data/services.mjs';
 import { esc, raw, str, md, kinetic } from './lib/html.mjs';
 import { url } from './lib/paths.mjs';
@@ -517,6 +519,120 @@ export function renderEsg() {
   return { page: d, body };
 }
 
+/* ------------------------------------------------------- INSIGHT ARTICLE -- */
+
+/**
+ * Article bodies are migrated HTML, so their hrefs are plain site paths.
+ * Route them through url() or they break under the GitHub Pages sub-path —
+ * check.mjs fails the build on exactly this. Also strips HTML comments: the
+ * source of one article carried an internal "TODO: HUMAN" editorial note that
+ * would otherwise ship into the published page.
+ */
+function localiseBody(htmlStr) {
+  return htmlStr
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/href="(\/[^"]*)"/g, (_, path) => `href="${url(path)}"`);
+}
+
+
+
+export function renderInsightArticle(a) {
+  const page = {
+    id: `insight-${a.slug}`,
+    path: `/${a.slug}.html`,
+    title: a.title,
+    metaTitle: `${a.metaTitle} | ${site.name}`,
+    shortTitle: a.category,
+    description: a.metaDescription || a.blurb,
+    article: a,
+  };
+
+  const when = new Date(`${a.published}T00:00:00Z`).toLocaleDateString('en-GB', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
+  const meta =
+    '<div class="art__meta">' +
+    `<span class="art__cat">${esc(a.category)}</span>` +
+    `<time datetime="${esc(a.published)}">${esc(when)}</time>` +
+    `<span>${a.minutes} min read</span>` +
+    `<span>By ${esc(site.name)} Advisory</span>` +
+    (a.lastUpdatedLabel ? `<span>Last updated ${esc(a.lastUpdatedLabel)}</span>` : '') +
+    '</div>';
+
+  const refs = a.refs.length
+    ? '<section class="art__refs" aria-labelledby="sources-h">' +
+      '<h2 id="sources-h">Sources &amp; further reading</h2><ol>' +
+      a.refs
+        .map(
+          (r) =>
+            `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a></li>`
+        )
+        .join('') +
+      '</ol></section>'
+    : '';
+
+  const more = relatedInsights(a)
+    .map(
+      (r) =>
+        `<li><a href="${url(`/${r.slug}.html`)}">` +
+        `<span class="mrc__cat">${esc(r.category)}</span>` +
+        `<span class="mrc__t">${esc(r.title)}</span>` +
+        `<span class="mrc__r">${r.minutes} min read</span></a></li>`
+    )
+    .join('');
+
+  const body = [
+    str(rail()),
+    str(
+      section(
+        raw(
+          str(breadcrumb_([{ name: 'Insights', href: '/insights.html' }, { name: a.title, href: page.path }])) +
+            `<p class="label">${esc(a.category)}</p>` +
+            `<h1 class="h1 kinetic">${str(kinetic(a.title))}</h1>` +
+            meta
+        ),
+        { id: 'intro', className: 'section--tight section--top', wrap: 'wrap wrap--narrow' }
+      )
+    ),
+    str(
+      section(
+        raw(
+          `<div class="prose art__body">${localiseBody(a.body)}</div>` +
+            refs +
+            (a.disclaimer ? `<p class="prose__notice">${esc(a.disclaimer)}</p>` : '') +
+            '<div class="art__foot">' +
+            `<a class="btn btn--gold" href="${url(a.related)}">The service behind this ${ARROW}</a>` +
+            `<a class="btn" href="${url('/insights.html')}">All insights ${ARROW}</a>` +
+            '</div>' +
+            (more
+              ? `<nav class="mrc" aria-label="More insights"><p class="label">More insights</p><ul>${more}</ul></nav>`
+              : '')
+        ),
+        { tone: 'on-bone', wrap: 'wrap wrap--narrow' }
+      )
+    ),
+
+    str(
+      closeCta(
+        {
+          eyebrow: 'Talk it through',
+          headline: 'Want our perspective on your specific situation?',
+          body:
+            'Reading about a rule is not the same as being ready for it. Tell us where you are and we will tell you what the next step actually involves.',
+          photo: 'valley-dawn',
+          photoAlt: 'A wide valley at dawn under low cloud',
+        },
+        { label: 'Start a conversation', secondary: { label: 'All insights', href: '/insights.html' } }
+      )
+    ),
+  ].join('\n');
+
+  return { page, body };
+}
+
 /* ------------------------------------------------------------ INSIGHTS -- */
 
 export function renderInsights() {
@@ -551,7 +667,7 @@ export function renderInsights() {
     ),
 
     str(
-      section(raw(str(insightList(list, cats, { base: site.articleBase }))), {
+      section(raw(str(insightList(list, cats))), {
         id: 'library',
         chapter: 'Library',
       })
@@ -1031,6 +1147,7 @@ export function allPages() {
     renderEsg(),
     renderAbout(),
     renderInsights(),
+    ...insights.map(renderInsightArticle),
     renderContact(),
     renderSources(),
     renderPrivacy(),

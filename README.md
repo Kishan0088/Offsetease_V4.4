@@ -187,17 +187,29 @@ JavaScript disabled, and every entrance animation is skipped under
   fine-pointer, non-data-saver screen — phones and metered connections get the
   poster and pay nothing. They pause when scrolled out of view, and no page
   loads more than two.
-- **Insights** (`/insights.html`, beside About in the footer) is a catalogue of
-  the 14 published articles, newest first, with a progressive-enhancement topic
-  filter: every article is in the DOM and visible before any script runs, so a
-  crawler, reader mode and a no-JS visitor all get the full list. Each entry
-  also cross-links to the service page that sells the work it describes.
-  It emits `Blog` (with all 14 `BlogPosting` nodes) and an ordered `ItemList` —
-  neither of which the current production Insights page has, which only carries
-  `ProfessionalService`. `datePublished` and `dateModified` were read from each
-  live article's own markup rather than inferred from its month label.
-  Article bodies still live on offsetease.com; `site.articleBase` controls
-  whether the links point out or stay local.
+- **Insights** (`/insights.html`, beside About in the footer) hosts the full
+  14-article library — bodies included, on this site. The old `/insights` and
+  `/blog` rendered the same 14 articles with only a different H1 and lead, so
+  they are merged into this one page and both framings are kept in the copy.
+  Nothing links back to the old domain.
+  - Index: newest first, with a progressive-enhancement topic filter. Every
+    article is in the DOM and visible before any script runs, so a crawler,
+    reader mode and a no-JS visitor all get the full list; the script only
+    hides. Chip counts are rendered server-side.
+  - Articles: `/<slug>.html`, with meta, prose, a sources list, the
+    disclaimer, the related service and three further reads.
+  - Interlinking: article prose links to 16 distinct service pages on this
+    site. Those links came with the content as bare slugs and were remapped;
+    four old industry pages that have no equivalent here were unlinked rather
+    than pointed somewhere approximate.
+  - Schema: `Blog` + ordered `ItemList` on the index, and a per-article
+    `BlogPosting` carrying `wordCount`, `timeRequired`, `articleSection` and a
+    `citation` list of the primary sources it cites. The production site
+    carries only `ProfessionalService`.
+  - Figure components that came with the CBAM steel piece (flow diagram, cost
+    cards, step list, phase-in bar chart) and the ISCC comparison table were
+    restyled in this site's tokens rather than dropped — the numbers in them
+    are content.
 - Each clip's poster is its own first frame, so the band dissolves into motion
   instead of cross-fading between two different pictures.
 - Photography is matched to what the copy says, not to its keywords. The

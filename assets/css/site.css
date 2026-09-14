@@ -3886,6 +3886,391 @@ a.card:hover .card__go svg {
   }
 }
 
+/* ---- Insight article ----------------------------------------------------- */
+
+.art__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.art__cat {
+  color: var(--accent-text);
+}
+.art__body > p:first-child,
+.art__body .article-lead {
+  font-size: clamp(17.5px, 1.7vw, 20px);
+  line-height: 1.62;
+  color: var(--fg);
+}
+.art__body h2 {
+  margin: clamp(34px, 4vw, 52px) 0 14px;
+  font-size: clamp(21px, 2.3vw, 28px);
+  line-height: 1.24;
+  letter-spacing: -0.012em;
+}
+.art__body h3 {
+  margin: clamp(24px, 3vw, 34px) 0 10px;
+  font-size: clamp(17px, 1.8vw, 20px);
+}
+.art__body p {
+  margin: 0 0 16px;
+}
+.art__body ul,
+.art__body ol {
+  margin: 0 0 18px;
+  padding-left: 1.25em;
+}
+.art__body li {
+  margin-bottom: 8px;
+}
+.art__body a {
+  color: var(--accent-text);
+  text-underline-offset: 3px;
+}
+.art__refs {
+  margin-top: clamp(38px, 5vw, 60px);
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.art__refs h2 {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  margin: 0 0 14px;
+}
+.art__refs ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.art__refs li {
+  margin-bottom: 8px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.art__refs a {
+  color: var(--accent-text);
+  word-break: break-word;
+}
+.art__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(30px, 4vw, 44px);
+}
+
+/* More insights */
+.mrc {
+  margin-top: clamp(38px, 5vw, 58px);
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.mrc ul {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.mrc a {
+  display: grid;
+  gap: 5px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  text-decoration: none;
+}
+.mrc__cat {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.mrc__t {
+  font-size: 16.5px;
+  line-height: 1.35;
+  color: var(--fg);
+}
+.mrc a:hover .mrc__t {
+  color: var(--accent-text);
+}
+.mrc__r {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fg-mute);
+}
+
+/* ---- Figures carried over with the articles ------------------------------ */
+
+/* These components came with the migrated article HTML — a flow diagram, a
+   pair of cost cards, a numbered step list and a phase-in bar chart. Restyled
+   in this site's tokens rather than dropped, because the numbers in them are
+   content, not decoration. */
+
+.fig {
+  margin: clamp(28px, 3.6vw, 44px) 0;
+  padding: clamp(18px, 2.4vw, 26px);
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+.fig__tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: 8px;
+}
+.fig__title {
+  margin: 0 0 6px;
+  font-size: clamp(16px, 1.7vw, 19px);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--fg);
+}
+.fig__sub {
+  margin: 0 0 16px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--fg-soft);
+}
+.fig__note {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--fg-mute);
+}
+.fig__note--accent {
+  color: var(--accent-text);
+}
+
+.cbam-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+}
+.cbam-flow__box {
+  flex: 1 1 170px;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: 14px;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.cbam-flow__box--hl {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.cbam-flow__eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.cbam-flow__name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--fg);
+}
+.cbam-flow__desc {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--fg-soft);
+}
+.cbam-flow__arrow {
+  align-self: center;
+  color: var(--fg-mute);
+}
+
+.cost-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+.cost-card {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.cost-card__head {
+  padding: 11px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--deep);
+  background: var(--gold);
+}
+.cost-card__head--dark {
+  color: var(--bone);
+  background: var(--deep);
+}
+.cost-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 14px;
+}
+.cost-card__row span {
+  color: var(--fg-soft);
+}
+.cost-card__row b {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.cost-card__total {
+  font-size: 16px;
+  color: var(--accent-text) !important;
+}
+
+.cbam-steps {
+  display: grid;
+  gap: 10px;
+}
+.cbam-steps__item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+.cbam-steps__num {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--deep);
+  background: var(--gold);
+}
+.cbam-steps__b {
+  display: block;
+  font-size: 15px;
+  color: var(--fg);
+}
+.cbam-steps__d {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg-soft);
+}
+
+.ramp {
+  display: grid;
+  gap: 14px;
+}
+.ramp__bar {
+  height: 9px;
+  border-radius: 999px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.ramp__fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+}
+.ramp__year {
+  margin-top: 7px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+}
+.ramp__pct {
+  font-size: 14px;
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.ramp__d {
+  font-size: 13.5px;
+  color: var(--fg-soft);
+}
+.ramp__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.ramp__chip {
+  padding: 5px 11px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--fg-soft);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+
+/* Wide content must scroll in its own container, never the page. */
+.table-wrap {
+  overflow-x: auto;
+  margin: clamp(24px, 3vw, 34px) 0;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  min-width: 520px;
+}
+.cmp-table caption {
+  padding: 12px 14px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  border-bottom: 1px solid var(--rule);
+}
+.cmp-table th,
+.cmp-table td {
+  padding: 11px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule-soft);
+  line-height: 1.5;
+}
+.cmp-table thead th {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  font-weight: 500;
+}
+.cmp-table tbody th {
+  font-weight: 600;
+  color: var(--fg);
+}
+.cmp-table td {
+  color: var(--fg-soft);
+}
+
 /* ---- Touch targets ------------------------------------------------------ */
 
 /* Measured at 375px: the footer contact links were 22px tall, the footer nav

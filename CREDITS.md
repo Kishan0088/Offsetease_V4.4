@@ -124,13 +124,17 @@ gets the poster still, which is the clip's own first frame.
 
 ## Insights
 
-The Insights library catalogues 14 articles published on
-[offsetease.com](https://offsetease.com). Titles, topics, reading times and
-standfirsts come from the client's own Insights export; `datePublished` and
-`dateModified` were read from each live article's BlogPosting markup so the
-structured data this page emits is accurate rather than inferred from the
-month labels. The article bodies are not reproduced here — each entry links to
-the published piece.
+The Insights library is the client's own 14 articles, migrated in full — text,
+figures, comparison table and source lists. Titles, topics, reading times and
+standfirsts come from the client's Insights export; `datePublished` and
+`dateModified` were read from each article's own BlogPosting markup, so the
+structured data is accurate rather than inferred from the month labels.
+
+Every internal link inside the articles was remapped to this build's pages,
+and an internal `TODO` comment left in one article's published HTML was
+stripped. External links are unchanged and point only to primary sources —
+the European Commission, EUR-Lex, SEBI, ISO, the GHG Protocol, SBTi, CDP,
+ICVCM, VCMI, EcoVadis, ISCC, ICAO and the IFRS Foundation.
 
 ## Typefaces
 

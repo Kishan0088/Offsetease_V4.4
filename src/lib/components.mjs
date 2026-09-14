@@ -471,7 +471,7 @@ export function stages(list) {
  * no-JS visitor all get the complete list. `data-topic` is what the script
  * filters on; the counts are rendered server-side so they are never wrong.
  */
-export function insightList(articles, categories, { base = '' } = {}) {
+export function insightList(articles, categories) {
   const chips =
     '<div class="ilist__filter" data-insight-filter role="group" aria-label="Filter by topic">' +
     `<button type="button" class="chip is-on" data-topic="all" aria-pressed="true">All<span>${articles.length}</span></button>` +
@@ -487,10 +487,7 @@ export function insightList(articles, categories, { base = '' } = {}) {
   const items = articles
     .map((a) => {
       const id = a.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      const href = base ? `${base}/${a.slug}` : url(`/${a.slug}.html`);
-      const ext = base
-        ? ' target="_blank" rel="noopener"'
-        : '';
+      const href = url(`/${a.slug}.html`);
       const when = new Date(a.published + 'T00:00:00Z').toLocaleDateString('en-GB', {
         month: 'long',
         year: 'numeric',
@@ -504,9 +501,7 @@ export function insightList(articles, categories, { base = '' } = {}) {
         `<span class="ins__read">${a.minutes} min read</span>` +
         '</div>' +
         '<h3 class="ins__t">' +
-        `<a href="${esc(href)}"${ext}>${esc(a.title)}` +
-        (base ? '<span class="ins__ext" aria-hidden="true">↗</span>' : '') +
-        '</a></h3>' +
+        `<a href="${href}">${esc(a.title)}</a></h3>` +
         `<p class="ins__b">${esc(a.blurb)}</p>` +
         `<a class="ins__rel" href="${url(a.related)}">The service behind it ${ARROW}</a>` +
         '</li>'

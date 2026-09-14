@@ -5,7 +5,7 @@ export const home = {
   id: 'home',
   path: '/',
   title: 'A Leading Developer of High-Integrity Carbon Projects',
-  metaTitle: 'Offsetease — High-Integrity Carbon Supply, Projects & ESG',
+  metaTitle: 'Offsetease | High-Integrity Carbon Solutions & ESG',
   ogTitle: 'A Leading Developer of High-Integrity Carbon Projects',
   description:
     'Offsetease sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. Every credit passes The Five Checks.',

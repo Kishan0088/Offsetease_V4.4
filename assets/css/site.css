@@ -2478,6 +2478,30 @@ a.card:hover .card__go svg {
   font-size: clamp(16px, 1.3vw, 19px);
 }
 
+/* Contextual links inside body copy. Underlined rather than coloured: these
+   sit mid-sentence in long paragraphs, where a colour change alone is both
+   easy to miss and, for anyone who cannot distinguish it, no signal at all. */
+.clink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--teal);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.25s ease, color 0.25s ease;
+}
+.clink:hover {
+  color: var(--teal);
+  text-decoration-color: currentColor;
+}
+.on-ink .clink,
+.on-deep .clink {
+  text-decoration-color: var(--mist);
+}
+.on-ink .clink:hover,
+.on-deep .clink:hover {
+  color: var(--mist);
+}
+
 /* ---- Direct answer, fact table, timeline -------------------------------- */
 
 .answer {

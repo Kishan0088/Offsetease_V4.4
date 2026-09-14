@@ -1,4 +1,4 @@
-import { esc, html, raw, join, md, kinetic, slug, str } from './html.mjs';
+import { esc, html, raw, join, md, kinetic, slug, str, isRaw } from './html.mjs';
 import { primaryCta, site } from '../data/site.mjs';
 import { url } from './paths.mjs';
 import { picture } from './media.mjs';
@@ -375,16 +375,21 @@ export function steps(items) {
   return raw(`<ul class="steps">${items.map((i) => `<li>${str(md(i))}</li>`).join('')}</ul>`);
 }
 
-export function faq(items, { title = 'Common questions' } = {}) {
+export function faq(items, { title = 'Common questions', self = '', used } = {}) {
   if (!items || !items.length) return raw('');
   const body = items
     .map((f, i) => {
       const id = `faq-${slug(f.q).slice(0, 40)}-${i}`;
+      // Answers are where one service most naturally names another — "a
+      // rigorous product carbon footprint is what replaces the default value"
+      // — so this is the copy most worth linking out of.
       return (
         '<div class="faq__item"><h3 class="faq__hd">' +
         `<button class="faq__q" type="button" aria-expanded="false" aria-controls="${id}">` +
         `<span>${esc(f.q)}</span><span class="faq__icon" aria-hidden="true"></span></button></h3>` +
-        `<div class="faq__a" id="${id}"><div><p>${esc(f.a)}</p></div></div></div>`
+        `<div class="faq__a" id="${id}"><div><p>${str(
+          autolink(md(f.a), { self, max: 2, used })
+        )}</p></div></div></div>`
       );
     })
     .join('');
@@ -421,6 +426,82 @@ export function closeCta(
 }
 
 /**
+ * Terms worth linking when they appear in body copy, most specific first.
+ *
+ * Each page carried the same ~23 internal links — the nav and the footer,
+ * repeated — and between 0 and 4 links inside its actual prose. A reader
+ * meeting "CBAM" in the middle of the GHG accounting page had no way through
+ * to the CBAM page except back up to the menu.
+ *
+ * Order matters: longer phrases are tried first so "IFRS S2" is not consumed
+ * by a shorter match, and `word: false` marks terms that should not be
+ * wrapped in word boundaries.
+ */
+const LINK_TERMS = [
+  ['product carbon footprint', '/product-carbon-footprint.html'],
+  ['life cycle assessment', '/life-cycle-assessment.html'],
+  ['double materiality', '/double-materiality-assessment.html'],
+  ['Environmental Product Declaration', '/environmental-product-declaration.html'],
+  ['IFRS S1', '/ifrs-s1-s2.html'],
+  ['IFRS S2', '/ifrs-s1-s2.html'],
+  ['GHG Protocol', '/ghg-accounting.html'],
+  ['Scope 3', '/ghg-accounting.html'],
+  ['EcoVadis', '/ecovadis-rating.html'],
+  ['CBAM', '/cbam-compliance.html'],
+  ['EUDR', '/eudr-compliance.html'],
+  ['BRSR', '/brsr-reporting.html'],
+  ['CSRD', '/csrd-esrs.html'],
+  ['SBTi', '/sbti-target-setting.html'],
+  ['ISCC', '/iscc-certification.html'],
+  ['TCFD', '/climate-risk-tcfd.html'],
+  ['I-REC', '/energy-attribute-certificates.html'],
+];
+
+/**
+ * Link the first mention of each known term in a block of already-rendered
+ * copy.
+ *
+ * Runs after md(), so it has to work on HTML rather than source text: content
+ * inside an existing <a>...</a> and anything inside a tag is left alone, which
+ * is what keeps it from nesting anchors or rewriting an attribute. One link
+ * per term, never a link to the page you are already on, and capped — a
+ * paragraph seeded with links every few words reads as spam and dilutes every
+ * one of them.
+ *
+ * Pass one `used` Set through every call on a page to make that "once" mean
+ * once per page rather than once per paragraph. Without it the IFRS page
+ * linked TCFD five separate times, which is exactly the pattern the cap
+ * exists to avoid.
+ */
+export function autolink(input, { self = '', max = 3, used = new Set() } = {}) {
+  let rest = max;
+  // Whole anchors and bare tags are protected; the gaps between them are text.
+  // str() escapes a bare string, which would mangle HTML handed in directly.
+  const source = isRaw(input) ? str(input) : String(input ?? '');
+  const parts = source.split(/(<a\b[^>]*>[\s\S]*?<\/a>|<[^>]+>)/);
+  const out = parts.map((seg, i) => {
+    if (i % 2 === 1 || !seg.trim()) return seg; // protected token
+    let text = seg;
+    for (const [term, href] of LINK_TERMS) {
+      if (rest <= 0) break;
+      if (used.has(href) || href === self) continue;
+      const re = new RegExp(`(^|[^\\w-])(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\w-])`);
+      const m = re.exec(text);
+      if (!m) continue;
+      text =
+        text.slice(0, m.index) +
+        m[1] +
+        `<a class="clink" href="${url(href)}">${m[2]}</a>` +
+        text.slice(m.index + m[0].length);
+      used.add(href);
+      rest -= 1;
+    }
+    return text;
+  });
+  return raw(out.join(''));
+}
+
+/**
  * The one-paragraph answer to the question the page's title implies, set
  * directly under the hero.
  *
@@ -429,12 +510,12 @@ export function closeCta(
  * skimming five consultancy sites wants the same thing. Kept to roughly 50
  * words so it stays quotable whole.
  */
-export function answerBlock(text, { label = 'In short' } = {}) {
+export function answerBlock(text, { label = 'In short', self = '', used } = {}) {
   if (!text) return raw('');
   return raw(
     '<div class="answer reveal">' +
       `<p class="label">${esc(label)}</p>` +
-      `<p class="answer__t">${str(md(text))}</p>` +
+      `<p class="answer__t">${str(autolink(md(text), { self, max: 2, used }))}</p>` +
       '</div>'
   );
 }

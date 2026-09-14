@@ -18,9 +18,30 @@ import {
   answerBlock,
   factTable,
   timeline,
+  autolink,
 } from './lib/components.mjs';
 
 /* ---------------------------------------------------------------- HOME -- */
+
+/**
+ * The articles that name this page as their service.
+ *
+ * Every insight already carries a `related` service path, so the link graph
+ * ran one way: articles pointed down at the services, and no service pointed
+ * back at the writing that demonstrates depth on its own subject. This
+ * inverts the mapping that already exists rather than inventing a new one.
+ */
+function readingFor(path) {
+  return insights
+    .filter((a) => a.related === path)
+    .map((a) => ({
+      n: a.category,
+      title: a.title,
+      body: a.blurb,
+      href: `/${a.slug}.html`,
+      cta: `${a.minutes} min read`,
+    }));
+}
 
 export function renderHome() {
   const d = home;
@@ -329,6 +350,22 @@ export function renderSupply() {
       section(raw(str(fiveChecksTeaser())), { tone: 'on-bone', id: 'five-checks', chapter: 'Checks' })
     ),
 
+    readingFor('/carbon-supply.html').length
+      ? str(
+          section(
+            raw(
+              str(
+                head({
+                  eyebrow: 'Related reading',
+                  headline: 'What we have written on this.',
+                })
+              ) + str(cards(readingFor('/carbon-supply.html'), { stagger: 70 }))
+            ),
+            { tone: 'on-bone', id: 'reading', chapter: 'Reading' }
+          )
+        )
+      : '',
+
     str(
       closeForm(d.close, { topic: 'Carbon Supply', note: site.responsePromise })
     ),
@@ -408,13 +445,29 @@ export function renderEac() {
     ),
 
     str(
-      section(raw(str(faq(d.faqs))), {
+      section(raw(str(faq(d.faqs, { self: eac.path }))), {
         tone: 'on-bone',
         id: 'faq',
         chapter: 'Questions',
         wrap: 'wrap wrap--mid',
       })
     ),
+
+    readingFor('/energy-attribute-certificates.html').length
+      ? str(
+          section(
+            raw(
+              str(
+                head({
+                  eyebrow: 'Related reading',
+                  headline: 'What we have written on this.',
+                })
+              ) + str(cards(readingFor('/energy-attribute-certificates.html'), { stagger: 70 }))
+            ),
+            { tone: 'on-bone', id: 'reading', chapter: 'Reading' }
+          )
+        )
+      : '',
 
     str(
       closeForm(d.close, {
@@ -506,6 +559,22 @@ export function renderEsg() {
         body: 'A GHG inventory built properly serves IFRS S2, BRSR, CDP and SBTi at once. That is the whole economics of doing it well the first time.',
       })
     ),
+
+    readingFor('/esg-sustainability.html').length
+      ? str(
+          section(
+            raw(
+              str(
+                head({
+                  eyebrow: 'Related reading',
+                  headline: 'What we have written on this.',
+                })
+              ) + str(cards(readingFor('/esg-sustainability.html'), { stagger: 70 }))
+            ),
+            { tone: 'on-bone', id: 'reading', chapter: 'Reading' }
+          )
+        )
+      : '',
 
     str(
       closeForm(d.close, { topic: 'ESG & Sustainability', note: site.responsePromise })
@@ -978,12 +1047,17 @@ function breadcrumb_(items) {
 
 /* ------------------------------------------------------ SERVICE DETAIL -- */
 
+
 export function renderService(s) {
   const group = groups.find((g) => g.id === s.group);
   // Sourced depth, where the research companion covers this service. Absent
   // for the ten it does not, rather than invented — see service-depth.mjs.
   const d = depth[s.id] || {};
   const faqs = d.faqs || s.faqs;
+  const reading = readingFor(s.path);
+  // One set for the whole page, so a term is linked once here rather than
+  // once in every block that happens to mention it.
+  const linked = new Set();
   const related = (s.related || [])
     .map((id) => byId[id])
     .filter(Boolean)
@@ -1033,12 +1107,14 @@ export function renderService(s) {
     str(
       section(
         raw(
-          (d.answer ? str(answerBlock(d.answer)) : '') +
+          (d.answer ? str(answerBlock(d.answer, { self: s.path, used: linked })) : '') +
             '<div class="cols cols--2" style="align-items:start;gap:clamp(30px,4.4vw,72px)' +
             (d.answer ? ';margin-top:clamp(28px,3.4vw,48px)' : '') + '">' +
-            `<div><p class="label">What it is</p><p class="body-lg reveal">${str(md(s.whatItIs))}</p></div>` +
+            `<div><p class="label">What it is</p><p class="body-lg reveal">${str(
+              autolink(md(s.whatItIs), { self: s.path, max: 2, used: linked })
+            )}</p></div>` +
             `<div><p class="label">Why it matters</p><p class="body-lg reveal">${str(
-              md(s.whyItMatters)
+              autolink(md(s.whyItMatters), { self: s.path, max: 2, used: linked })
             )}</p></div>` +
             '</div>' +
             (s.proof
@@ -1098,7 +1174,7 @@ export function renderService(s) {
 
     faqs && faqs.length
       ? str(
-          section(raw(str(faq(faqs))), {
+          section(raw(str(faq(faqs, { self: s.path, used: linked }))), {
             id: 'faq',
             chapter: 'Questions',
             wrap: 'wrap wrap--mid',
@@ -1115,6 +1191,22 @@ export function renderService(s) {
                 str(cards(related, { stagger: 70 }))
             ),
             { id: 'related', chapter: 'Related' }
+          )
+        )
+      : '',
+
+    reading.length
+      ? str(
+          section(
+            raw(
+              str(
+                head({
+                  eyebrow: 'Related reading',
+                  headline: 'What we have written on this.',
+                })
+              ) + str(cards(reading, { stagger: 70 }))
+            ),
+            { tone: 'on-bone', id: 'reading', chapter: 'Reading' }
           )
         )
       : '',

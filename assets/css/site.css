@@ -3745,6 +3745,147 @@ a.card:hover .card__go svg {
   opacity: 1;
 }
 
+/* ---- Insights library --------------------------------------------------- */
+
+.ilist__filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(26px, 3.4vw, 42px);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 15px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg-soft);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+.chip span {
+  font-size: 11px;
+  color: var(--fg-mute);
+  font-variant-numeric: tabular-nums;
+}
+.chip:hover {
+  border-color: var(--fg-soft);
+}
+.chip.is-on {
+  color: var(--deep);
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.chip.is-on span {
+  color: rgb(10 61 68 / 0.7);
+}
+
+.ilist__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  counter-reset: ins;
+}
+.ins {
+  padding: clamp(22px, 2.8vw, 32px) 0;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 10px;
+}
+.ins:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.ins__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.ins__cat {
+  color: var(--accent-text);
+}
+.ins__read {
+  margin-left: auto;
+}
+.ins__t {
+  font-size: clamp(19px, 2.1vw, 25px);
+  line-height: 1.28;
+  letter-spacing: -0.011em;
+  margin: 0;
+  text-wrap: balance;
+}
+.ins__t a {
+  color: var(--fg);
+  text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.4s var(--ease);
+}
+.ins__t a:hover,
+.ins__t a:focus-visible {
+  background-size: 100% 1px;
+}
+.ins__ext {
+  display: inline-block;
+  margin-left: 7px;
+  font-size: 0.7em;
+  vertical-align: 2px;
+  color: var(--fg-mute);
+}
+.ins__b {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--fg-soft);
+  font-size: 16px;
+  line-height: 1.62;
+}
+.ins__rel {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+.ins__rel svg {
+  transition: transform 0.3s var(--ease);
+}
+.ins__rel:hover svg {
+  transform: translateX(4px);
+}
+.ilist__none {
+  padding: 34px 0;
+  color: var(--fg-mute);
+  font-size: 15px;
+}
+@media (max-width: 700px) {
+  .ins__read {
+    margin-left: 0;
+  }
+}
+
 /* ---- Touch targets ------------------------------------------------------ */
 
 /* Measured at 375px: the footer contact links were 22px tall, the footer nav

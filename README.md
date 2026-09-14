@@ -62,7 +62,8 @@ and — once `indexable` is true — a missing enquiry-form access key.
 src/
   data/
     site.mjs       deployment, contact, brand tokens, form key   ← edit this first
-    pages.mjs      copy for the seven core pages
+    pages.mjs      copy for the eight core pages
+    insights.mjs   the 14-article Insights catalogue + topic helpers
     services.mjs   copy for the eighteen ESG service pages
   lib/
     html.mjs       escaping, the `html` tagged template, kinetic-text helper
@@ -186,6 +187,17 @@ JavaScript disabled, and every entrance animation is skipped under
   fine-pointer, non-data-saver screen — phones and metered connections get the
   poster and pay nothing. They pause when scrolled out of view, and no page
   loads more than two.
+- **Insights** (`/insights.html`, beside About in the footer) is a catalogue of
+  the 14 published articles, newest first, with a progressive-enhancement topic
+  filter: every article is in the DOM and visible before any script runs, so a
+  crawler, reader mode and a no-JS visitor all get the full list. Each entry
+  also cross-links to the service page that sells the work it describes.
+  It emits `Blog` (with all 14 `BlogPosting` nodes) and an ordered `ItemList` —
+  neither of which the current production Insights page has, which only carries
+  `ProfessionalService`. `datePublished` and `dateModified` were read from each
+  live article's own markup rather than inferred from its month label.
+  Article bodies still live on offsetease.com; `site.articleBase` controls
+  whether the links point out or stay local.
 - Each clip's poster is its own first frame, so the band dissolves into motion
   instead of cross-fading between two different pictures.
 - Photography is matched to what the copy says, not to its keywords. The

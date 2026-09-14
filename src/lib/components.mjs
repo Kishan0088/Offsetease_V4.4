@@ -462,3 +462,62 @@ export function stages(list) {
       '</div>'
   );
 }
+
+/**
+ * The Insights library: a filter row over a reverse-chronological list.
+ *
+ * The filter is progressive enhancement — every article is in the DOM and
+ * visible before any script runs, so a crawler, a reader-mode view and a
+ * no-JS visitor all get the complete list. `data-topic` is what the script
+ * filters on; the counts are rendered server-side so they are never wrong.
+ */
+export function insightList(articles, categories, { base = '' } = {}) {
+  const chips =
+    '<div class="ilist__filter" data-insight-filter role="group" aria-label="Filter by topic">' +
+    `<button type="button" class="chip is-on" data-topic="all" aria-pressed="true">All<span>${articles.length}</span></button>` +
+    categories
+      .map(
+        (c) =>
+          `<button type="button" class="chip" data-topic="${esc(c.id)}" aria-pressed="false">` +
+          `${esc(c.name)}<span>${c.count}</span></button>`
+      )
+      .join('') +
+    '</div>';
+
+  const items = articles
+    .map((a) => {
+      const id = a.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const href = base ? `${base}/${a.slug}` : url(`/${a.slug}.html`);
+      const ext = base
+        ? ' target="_blank" rel="noopener"'
+        : '';
+      const when = new Date(a.published + 'T00:00:00Z').toLocaleDateString('en-GB', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      });
+      return (
+        `<li class="ins reveal" data-topic="${esc(id)}">` +
+        '<div class="ins__meta">' +
+        `<span class="ins__cat">${esc(a.category)}</span>` +
+        `<time datetime="${esc(a.published)}">${esc(when)}</time>` +
+        `<span class="ins__read">${a.minutes} min read</span>` +
+        '</div>' +
+        '<h3 class="ins__t">' +
+        `<a href="${esc(href)}"${ext}>${esc(a.title)}` +
+        (base ? '<span class="ins__ext" aria-hidden="true">↗</span>' : '') +
+        '</a></h3>' +
+        `<p class="ins__b">${esc(a.blurb)}</p>` +
+        `<a class="ins__rel" href="${url(a.related)}">The service behind it ${ARROW}</a>` +
+        '</li>'
+      );
+    })
+    .join('');
+
+  return raw(
+    `<div class="ilist">${chips}` +
+      `<ol class="ilist__items" data-insight-items>${items}</ol>` +
+      '<p class="ilist__none" data-insight-empty hidden>No articles in that topic.</p>' +
+      '</div>'
+  );
+}

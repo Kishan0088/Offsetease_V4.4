@@ -58,6 +58,11 @@ export const site = {
   },
 
   // Data shown in the site chrome. Every figure here is cited on /sources.
+  // Insight article bodies are published on the production site, so the
+  // library links out to them. Setting this to '' switches every article link
+  // to a local /<slug>.html — do that only once the 14 article pages have
+  // actually been migrated into this build, or the links will 404.
+  articleBase: 'https://offsetease.com',
   lastReviewed: 'September 2026',
 };
 
@@ -159,6 +164,7 @@ export const footerNav = [
 // Sits with the brand block, not as a fifth column in a four-column grid.
 export const companyNav = [
   { label: 'About', href: '/about.html' },
+  { label: 'Insights', href: '/insights.html' },
   { label: 'Contact', href: '/contact.html' },
   { label: 'Sources & data', href: '/sources.html' },
 ];

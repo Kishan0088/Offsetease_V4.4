@@ -283,6 +283,33 @@
     vids.forEach((v) => io.observe(v));
   }
 
+  /* ---- Insights topic filter ------------------------------------------- */
+  function initInsights() {
+    const bar = $('[data-insight-filter]');
+    const listEl = $('[data-insight-items]');
+    if (!bar || !listEl) return;
+    const empty = $('[data-insight-empty]');
+    const items = $$('[data-topic]', listEl);
+
+    bar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chip');
+      if (!btn) return;
+      const topic = btn.dataset.topic;
+      $$('.chip', bar).forEach((c) => {
+        const on = c === btn;
+        c.classList.toggle('is-on', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      let shown = 0;
+      items.forEach((li) => {
+        const match = topic === 'all' || li.dataset.topic === topic;
+        li.hidden = !match;
+        if (match) shown += 1;
+      });
+      if (empty) empty.hidden = shown !== 0;
+    });
+  }
+
   /* ---- Persistent mobile CTA ------------------------------------------- */
   function initSticky() {
     const bar = $('[data-sticky]');
@@ -702,6 +729,7 @@
     initAccordions();
     initStages();
     initVideo();
+    initInsights();
     initSticky();
     initProgress();
     initRail();

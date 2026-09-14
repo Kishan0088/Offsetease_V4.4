@@ -1,7 +1,8 @@
 // Page renderers. Each returns { page, body } for the document shell.
 
 import { site } from './data/site.mjs';
-import { home, supply, eac, esg, about, contact, sources, privacy, terms } from './data/pages.mjs';
+import { home, supply, eac, esg, about, insights as insightsPage, contact, sources, privacy, terms } from './data/pages.mjs';
+import { insights, insightCategories, insightsByDate, insightStats } from './data/insights.mjs';
 import { services, groups, byId, servicesInGroup } from './data/services.mjs';
 import { esc, raw, str, md, kinetic } from './lib/html.mjs';
 import { url } from './lib/paths.mjs';
@@ -9,7 +10,7 @@ import { picture } from './lib/media.mjs';
 import {
   hero, section, head, cards, ladder, fiveChecks, story, band, pills, steps,
   faq, closeCta, proof, statStrip, marketStrip, inlineCta,
-  stages, btn, rail, sunburst, ARROW,
+  stages, btn, rail, sunburst, ARROW, insightList,
 } from './lib/components.mjs';
 
 /* ---------------------------------------------------------------- HOME -- */
@@ -516,6 +517,57 @@ export function renderEsg() {
   return { page: d, body };
 }
 
+/* ------------------------------------------------------------ INSIGHTS -- */
+
+export function renderInsights() {
+  const d = insightsPage;
+  const cats = insightCategories();
+  const list = insightsByDate();
+  const hours = Math.floor(insightStats.minutes / 60);
+  const mins = insightStats.minutes % 60;
+
+  const body = [
+    str(rail()),
+    str(hero(d.hero, { crumbs: [{ name: 'Insights', href: d.path }] })),
+
+    str(
+      section(
+        raw(
+          str(head({ eyebrow: d.intro.eyebrow, headline: d.intro.headline, body: d.intro.body, split: true })) +
+            str(
+              statStrip(
+                [
+                  { value: String(insightStats.articles), label: 'articles' },
+                  { value: String(insightStats.categories), label: 'topics covered' },
+                  { value: `${hours}h ${mins}m`, label: 'of reading' },
+                  { value: 'Aug 2026', label: 'most recent' },
+                ],
+                { note: 'Offsetease Insights library' }
+              )
+            )
+        ),
+        { tone: 'on-bone', id: 'about-insights', chapter: 'Insights' }
+      )
+    ),
+
+    str(
+      section(raw(str(insightList(list, cats, { base: site.articleBase }))), {
+        id: 'library',
+        chapter: 'Library',
+      })
+    ),
+
+    str(
+      closeCta(d.close, {
+        label: 'Start a conversation',
+        secondary: { label: 'ESG & Sustainability', href: '/esg-sustainability.html' },
+      })
+    ),
+  ].join('\n');
+
+  return { page: { ...d, insights: list }, body };
+}
+
 /* --------------------------------------------------------------- ABOUT -- */
 
 export function renderAbout() {
@@ -978,6 +1030,7 @@ export function allPages() {
     renderEac(),
     renderEsg(),
     renderAbout(),
+    renderInsights(),
     renderContact(),
     renderSources(),
     renderPrivacy(),

@@ -520,6 +520,43 @@ export const about = {
   },
 };
 
+export const insights = {
+  id: 'insights',
+  path: '/insights.html',
+  title: 'Insights on carbon, compliance and disclosure',
+  metaTitle: 'Insights — CBAM, EUDR, BRSR, CDP & Carbon Markets | Offsetease',
+  shortTitle: 'Insights',
+  description:
+    'Plain-language analysis of the rules and markets our clients actually face: CBAM, EUDR, BRSR Core, CSRD, IFRS S1/S2, CDP, EcoVadis, ISCC, Scope 3, SBTi and high-integrity carbon.',
+  preloadPhoto: 'dial-gauges',
+
+  hero: {
+    eyebrow: 'Insights',
+    headline: 'The rules, explained before they bite.',
+    accent: ['explained'],
+    standfirst:
+      'Fourteen pieces on the regulations, ratings and market mechanisms our clients are asked about most — written to be useful to the person who has to act on them, not to rank for a keyword.',
+    photo: 'dial-gauges',
+    photoAlt: 'Large analogue measuring dials mounted in an industrial hall',
+  },
+
+  intro: {
+    eyebrow: 'What you will find here',
+    headline: 'Nine topics, one standard: say the thing that is actually true.',
+    body:
+      'Each piece sets out what a rule requires, who it applies to, what the deadline is, and what a company should do about it. Where a date or a threshold is stated, it is the one in the regulation. Where something is still a draft, we say so.',
+  },
+
+  close: {
+    eyebrow: 'Talk it through',
+    headline: 'Reading about it is not the same as being ready for it.',
+    body:
+      'If one of these applies to you and the deadline is closer than the plan, tell us where you are and we will tell you what the next step actually costs.',
+    photo: 'valley-dawn',
+    photoAlt: 'A wide valley at dawn under low cloud',
+  },
+};
+
 export const contact = {
   id: 'contact',
   path: '/contact.html',

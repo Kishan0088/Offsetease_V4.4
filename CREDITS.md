@@ -122,6 +122,16 @@ They are lazy: `preload="none"`, fetched by IntersectionObserver, and only on
 a viewport ≥1024px with a fine pointer and no Save-Data header. Everyone else
 gets the poster still, which is the clip's own first frame.
 
+## Insights
+
+The Insights library catalogues 14 articles published on
+[offsetease.com](https://offsetease.com). Titles, topics, reading times and
+standfirsts come from the client's own Insights export; `datePublished` and
+`dateModified` were read from each live article's BlogPosting markup so the
+structured data this page emits is accurate rather than inferred from the
+month labels. The article bodies are not reproduced here — each entry links to
+the published piece.
+
 ## Typefaces
 
 - **Schibsted Grotesk** — Schibsted / Bakken & Bæck.

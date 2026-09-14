@@ -103,6 +103,62 @@ function serviceJsonLd(page) {
   };
 }
 
+function blogJsonLd(page) {
+  const list = page.insights || [];
+  if (!list.length) return null;
+  const base = site.articleBase || '';
+  const at = (a) => (base ? `${base}/${a.slug}` : absolute(`/${a.slug}.html`));
+  // Blog + the posts it contains. An answer engine asking "what has Offsetease
+  // written about CBAM" can resolve it from this alone, without the HTML.
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    '@id': `${absolute(page.path)}#blog`,
+    name: `${site.name} Insights`,
+    description: page.description,
+    url: absolute(page.path),
+    inLanguage: 'en',
+    publisher: { '@id': `${absolute('/')}#organization` },
+    blogPost: list.map((a) => ({
+      '@type': 'BlogPosting',
+      '@id': `${at(a)}#article`,
+      headline: a.title,
+      description: a.blurb,
+      url: at(a),
+      mainEntityOfPage: at(a),
+      datePublished: a.published,
+      dateModified: a.modified || a.published,
+      articleSection: a.category,
+      timeRequired: `PT${a.minutes}M`,
+      inLanguage: 'en',
+      isAccessibleForFree: true,
+      author: { '@id': `${absolute('/')}#organization` },
+      publisher: { '@id': `${absolute('/')}#organization` },
+    })),
+  };
+}
+
+function insightListJsonLd(page) {
+  const list = page.insights || [];
+  if (!list.length) return null;
+  const base = site.articleBase || '';
+  // The reading order, stated explicitly, so the ranking is ours and not a
+  // guess made from DOM position.
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `${site.name} Insights — newest first`,
+    numberOfItems: list.length,
+    itemListOrder: 'https://schema.org/ItemListOrderDescending',
+    itemListElement: list.map((a, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: a.title,
+      url: base ? `${base}/${a.slug}` : absolute(`/${a.slug}.html`),
+    })),
+  };
+}
+
 function siteNavJsonLd() {
   return {
     '@context': 'https://schema.org',
@@ -317,6 +373,8 @@ export function renderDocument({ page, body, wordPath }) {
     breadcrumbJsonLd(page),
     faqJsonLd(page),
     serviceJsonLd(page),
+    blogJsonLd(page),
+    insightListJsonLd(page),
   ].filter(Boolean);
 
   return `<!doctype html>

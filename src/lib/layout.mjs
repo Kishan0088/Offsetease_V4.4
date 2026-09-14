@@ -1,5 +1,6 @@
 import { site, nav, footerNav, companyNav, primaryCta, megaMenus } from '../data/site.mjs';
 import { groups, servicesInGroup } from '../data/services.mjs';
+import { hubs } from '../data/hubs.mjs';
 import { esc, html, raw, join } from './html.mjs';
 import { url, absolute } from './paths.mjs';
 import { preloadFor } from './media.mjs';
@@ -199,6 +200,9 @@ function megaPanel(kind) {
     kind === 'esg'
       ? groups.map((g) => ({
           title: g.title,
+          // The heading is the hub page for that group, so the column groups
+          // the services and offers the page that introduces them.
+          href: (hubs.find((h) => h.group === g.id) || {}).path,
           links: servicesInGroup(g.id).map((sv) => ({
             label: sv.shortTitle || sv.title,
             href: sv.path,
@@ -209,7 +213,11 @@ function megaPanel(kind) {
   const cols = columns
     .map(
       (c) =>
-        `<div class="mega__col"><p class="mega__t">${esc(c.title)}</p><ul>` +
+        '<div class="mega__col">' +
+        (c.href
+          ? `<p class="mega__t"><a href="${url(c.href)}">${esc(c.title)}</a></p>`
+          : `<p class="mega__t">${esc(c.title)}</p>`) +
+        '<ul>' +
         c.links.map((l) => `<li><a href="${url(l.href)}">${esc(l.label)}</a></li>`).join('') +
         '</ul></div>'
     )
@@ -260,6 +268,14 @@ function header(page) {
         `aria-expanded="false" aria-controls="mg-${i}">${esc(g.title)}` +
         '<span class="menu__gi" aria-hidden="true"></span></button>' +
         `<div class="menu__gp" id="mg-${i}"><ul>` +
+        // The accordion toggle has to stay a button for the keyboard and for
+        // screen readers, so the hub goes at the top of the panel it opens
+        // rather than on the heading itself — otherwise these five pages are
+        // unreachable from a phone.
+        ((h) =>
+          h ? `<li><a class="menu__ov" href="${url(h.path)}">${esc(g.title)} overview</a></li>` : '')(
+          hubs.find((x) => x.group === g.id)
+        ) +
         servicesInGroup(g.id)
           .map((sv) => `<li><a href="${url(sv.path)}">${esc(sv.shortTitle || sv.title)}</a></li>`)
           .join('') +
@@ -388,7 +404,15 @@ function footer() {
  * `page` carries metadata; `body` is the already-rendered main content.
  */
 export function renderDocument({ page, body, wordPath }) {
-  const title = page.metaTitle || `${page.title} | ${site.name}`;
+  // Google truncates a SERP title around 60 characters, and the brand suffix
+  // is the least useful part to lose — it is already in the domain and the
+  // breadcrumb. So the suffix is added only when the title has room for it;
+  // ten article titles were being pushed to 61-69 characters by it alone.
+  const title = (() => {
+    if (page.metaTitle) return page.metaTitle;
+    const suffixed = `${page.title} | ${site.name}`;
+    return suffixed.length <= 60 ? suffixed : page.title;
+  })();
   const canonical = absolute(page.path);
   const social = absolute('/assets/brand/social-card.png');
   const preload = page.preloadPhoto ? preloadFor(page.preloadPhoto) : null;

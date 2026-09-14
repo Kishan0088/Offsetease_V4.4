@@ -113,6 +113,24 @@ async function writeRedirects(pages) {
   await writeFile(join(ROOT, '_redirects'), lines.join('\n'));
 }
 
+/**
+ * RFC 9116 security.txt, so anyone finding a problem has a stated route in
+ * rather than guessing at an inbox. `Expires` is mandatory and the file is
+ * meant to be reissued before it lapses, so it is generated a year out from
+ * each build rather than hard-coded and forgotten.
+ */
+async function writeSecurityTxt() {
+  const expires = new Date();
+  expires.setUTCFullYear(expires.getUTCFullYear() + 1);
+  const body =
+    `Contact: mailto:${site.email}\n` +
+    `Expires: ${expires.toISOString()}\n` +
+    'Preferred-Languages: en\n' +
+    `Canonical: ${absolute('/.well-known/security.txt')}\n`;
+  await mkdir(join(ROOT, '.well-known'), { recursive: true });
+  await writeFile(join(ROOT, '.well-known/security.txt'), body);
+}
+
 async function writeManifest() {
   const manifest = {
     name: site.name,
@@ -154,6 +172,7 @@ async function main() {
 
   await writeSitemap(pages);
   await writeRedirects(pages);
+  await writeSecurityTxt();
   await writeManifest();
   await writeFile(join(ROOT, '.nojekyll'), '');
 

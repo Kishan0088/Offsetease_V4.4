@@ -259,11 +259,50 @@ export const depth = {
   },
 };
 
-// The remaining ten services have no section in the research companion, so
-// they carry no fact table, timeline or expanded FAQ here. Adding one would
-// mean inventing regulatory detail on pages whose entire proposition is
-// defensible disclosure. They need sourced copy from the client first.
-export const missingDepth = [
+/* ---------------------------------------------------------------------------
+   Direct answers only, for the ten services the research companion does not
+   cover.
+
+   Each one is a compression of that service's own approved `whatItIs` and
+   `kicker` — the same claims, tightened to roughly fifty words so the page
+   opens with something quotable whole. No figure, date or threshold appears
+   here that is not already on the page.
+
+   They get no fact table and no timeline, because those need sourced facts and
+   there are none to draw on. Inventing a deadline on a page selling defensible
+   disclosure is the one failure this site cannot afford.
+   ------------------------------------------------------------------------ */
+
+const answerOnly = {
+  'product-carbon-footprint':
+    'A product carbon footprint is the emissions of a single product across its life cycle, expressed as CO₂e per unit. It is measured cradle-to-gate or cradle-to-grave, to ISO 14067 and the GHG Protocol Product Standard — the SKU-level figure buyers and CBAM declarations now ask for.',
+  'life-cycle-assessment':
+    'A life cycle assessment quantifies the full environmental impact of a product or process — carbon, and where relevant water, energy, acidification and resource use. It runs to ISO 14040/44 across four phases: goal and scope, inventory, impact assessment and interpretation. It is the evidence base beneath footprints, EPDs and public claims.',
+  'environmental-product-declaration':
+    'An Environmental Product Declaration is a Type III, independently verified report of a product’s life-cycle environmental performance, to ISO 14025. It is built on an LCA and the relevant Product Category Rules, and in construction follows EN 15804 and is registered with a programme operator.',
+  'double-materiality-assessment':
+    'A double materiality assessment answers two questions at once: which sustainability issues affect your business financially, and which impacts your business has on people and the planet. It is the foundation CSRD reporting, IFRS disclosure and any serious ESG strategy are built on.',
+  'cdp-disclosure':
+    'CDP runs the most widely used environmental disclosure system, covering climate change, water security and forests. Responses are scored in public from A to D−, and the questionnaire is aligned to the IFRS climate baseline and TCFD — so the data behind it serves your mandatory reporting too.',
+  'iscc-certification':
+    'ISCC certifies that materials and fuels are produced sustainably and stay traceable along the chain, using chain-of-custody and mass-balance accounting. Three schemes cover different markets: ISCC EU for regulated markets and biofuels, ISCC PLUS for circular and bio-based materials, and CORSIA for sustainable aviation fuels.',
+  'net-zero-decarbonization':
+    'A net-zero pathway is a costed, sequenced plan to cut emissions to near zero across your operations and value chain, then neutralise the hard-to-abate remainder with high-integrity removals. Reductions lead and removals finish — which is also the order that makes the plan financeable.',
+  'esg-csr-strategy':
+    'An ESG and CSR strategy connects social and environmental investment to where your business actually creates and depends on value: focused, measurable and governed, rather than a portfolio of unrelated initiatives. In India it is aligned with statutory CSR obligations under Section 135 of the Companies Act.',
+  'climate-risk-tcfd':
+    'A climate risk assessment quantifies your physical and transition risk — structured to TCFD, ready for IFRS S2, scenario-tested, and expressed in financial terms a board and investors can act on rather than as a qualitative heat map.',
+  'supplier-value-chain-esg':
+    'Supplier and value-chain ESG assessment means assessing and engaging your suppliers against environmental, social and governance criteria, and building the Scope 3, due-diligence and disclosure evidence that buyers, regulators and rating agencies increasingly require of you.',
+};
+
+for (const [id, answer] of Object.entries(answerOnly)) {
+  depth[id] = { answer };
+}
+
+// Services carrying a direct answer but no sourced fact table or timeline.
+// These need sourced copy from the client before they can be extended.
+export const answerOnlyIds = [
   'product-carbon-footprint',
   'life-cycle-assessment',
   'environmental-product-declaration',

@@ -21,7 +21,9 @@ export const redirects = [
   { from: '/iscc', to: '/iscc-certification.html' },                    // "ISCC Certification Consulting — EU, PLUS, CORSIA"
   { from: '/net-zero', to: '/net-zero-decarbonization.html' },          // "Net Zero & Decarbonization Strategy Consulting"
   { from: '/sbti', to: '/sbti-target-setting.html' },                   // "SBTi Target Setting & Validation Consulting"
-  { from: '/esg-reporting', to: '/esg-sustainability.html' },           // "ESG & Sustainability Reporting — BRSR, CSRD, IFRS"
+  // /esg-reporting is not redirected: the Report hub now publishes at that
+  // exact path, so the live URL keeps working as itself and keeps whatever
+  // equity it has, rather than handing it to the pillar page.
   { from: '/renewable-energy', to: '/energy-attribute-certificates.html' }, // "Renewable Energy Procurement — PPAs, RECs, I-RECs"
   { from: '/carbon-credits', to: '/carbon-supply.html' },               // "High-Integrity Carbon Credit Advisory"
 

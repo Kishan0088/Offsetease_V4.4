@@ -659,6 +659,7 @@
   function initForm() {
     const form = $('[data-form]');
     if (!form) return;
+    const started = Date.now();
     const status = $('[data-form-status]', form);
     const submit = $('[type="submit"]', form);
     const key = (form.elements.access_key && form.elements.access_key.value) || '';
@@ -722,6 +723,14 @@
 
       // Honeypot: a real person never fills this.
       if (form.elements.botcheck && form.elements.botcheck.value) return;
+
+      // Timing trap. The access key is public by design — it ships in the page
+      // source because the browser has to read it — so the honeypot was the
+      // only thing standing between this endpoint and anyone who viewed source.
+      // A person cannot read four labels, type a company name and tick a
+      // consent box in under three seconds; a script does it in milliseconds.
+      // Silent, like the honeypot: telling a bot why it failed just teaches it.
+      if (Date.now() - started < 3000) return;
 
       if (!key) {
         say(

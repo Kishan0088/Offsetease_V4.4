@@ -2,6 +2,7 @@
 
 import { site } from './data/site.mjs';
 import { depth } from './data/service-depth.mjs';
+import { hubs } from './data/hubs.mjs';
 import { home, supply, eac, esg, about, insights as insightsPage, contact, sources, privacy, terms } from './data/pages.mjs';
 import {
   insights, insightCategories, insightsByDate, insightStats, relatedInsights,
@@ -487,11 +488,18 @@ export function renderEsg() {
   const index = groups
     .map((g) => {
       const list = servicesInGroup(g.id);
+      const hub = hubs.find((h) => h.group === g.id);
       return (
         `<div class="svc-group reveal" id="${esc(g.id)}">` +
         '<div class="svc-group__head">' +
-        `<h3 class="svc-group__t">${esc(g.title)}</h3>` +
-        `<p class="svc-group__b">${esc(g.blurb)}</p></div>` +
+        // The group heading is the hub page, so this index is a route into the
+        // five hubs as well as a flat list of eighteen services.
+        (hub
+          ? `<h3 class="svc-group__t"><a href="${url(hub.path)}">${esc(g.title)}</a></h3>`
+          : `<h3 class="svc-group__t">${esc(g.title)}</h3>`) +
+        `<p class="svc-group__b">${esc(g.blurb)}` +
+        (hub ? ` <a class="svc-group__go" href="${url(hub.path)}">Overview →</a>` : '') +
+        '</p></div>' +
         str(
           cards(
             list.map((s) => ({
@@ -659,7 +667,10 @@ export function renderInsightArticle(a) {
     id: `insight-${a.slug}`,
     path: `/${a.slug}.html`,
     title: a.title,
-    metaTitle: `${a.metaTitle} | ${site.name}`,
+    // Same rule as layout: keep the brand suffix only when it fits inside the
+    // ~60 characters a SERP shows. Ten of these ran to 61-69 with it.
+    metaTitle:
+      `${a.metaTitle} | ${site.name}`.length <= 60 ? `${a.metaTitle} | ${site.name}` : a.metaTitle,
     shortTitle: a.category,
     description: a.metaDescription || a.blurb,
     article: a,
@@ -1311,6 +1322,121 @@ export const renderTerms = () => renderProse(terms, 'Terms of use');
 
 /* --------------------------------------------------------------- INDEX -- */
 
+/**
+ * A group hub: the page between the ESG pillar and an individual service.
+ *
+ * Built entirely from components the service pages already use — hero,
+ * answerBlock, cards, related reading, closeForm — so a hub is visually a
+ * sibling of the pages it links to rather than a new page type with its own
+ * layout rules.
+ */
+export function renderHub(h) {
+  const group = groups.find((g) => g.id === h.group);
+  const members = services.filter((s) => s.group === h.group);
+  const reading = members.flatMap((s) => readingFor(s.path));
+  // One set across the answer and the intro, so a term is linked once on the
+  // page rather than once per block — the hubs were linking CBAM twice.
+  const linked = new Set();
+
+  const page = {
+    id: `hub-${h.group}`,
+    path: h.path,
+    title: h.title,
+    shortTitle: h.shortTitle,
+    metaTitle: h.metaTitle,
+    description: h.description,
+    parent: esg.path,
+    preloadPhoto: h.photo,
+    service: { name: h.shortTitle, type: 'ESG & Sustainability' },
+    breadcrumb: [{ name: 'ESG & Sustainability', href: esg.path }],
+  };
+
+  const body = [
+    str(rail()),
+    str(
+      hero(
+        {
+          eyebrow: `ESG & Sustainability · ${group.title}`,
+          headline: h.headline,
+          accent: h.accent,
+          standfirst: h.standfirst,
+          photo: h.photo,
+          photoAlt: h.photoAlt,
+          primary: { label: 'Contact us', href: '/contact.html' },
+          secondary: { label: 'All ESG services', href: esg.path },
+        },
+        {
+          crumbs: [
+            { name: 'ESG & Sustainability', href: esg.path },
+            { name: h.shortTitle, href: h.path },
+          ],
+        }
+      )
+    ),
+
+    str(
+      section(
+        raw(
+          str(answerBlock(h.answer, { self: h.path, used: linked })) +
+            `<p class="body-lg reveal" style="max-width:68ch;margin-top:clamp(28px,3.4vw,44px)">${str(
+              autolink(md(h.intro), { self: h.path, max: 3, used: linked })
+            )}</p>`
+        ),
+        { id: 'what', chapter: 'Overview' }
+      )
+    ),
+
+    str(
+      section(
+        raw(
+          str(
+            head({
+              eyebrow: `${members.length} services`,
+              headline: 'What sits inside this.',
+            })
+          ) +
+            str(
+              cards(
+                members.map((m) => ({
+                  n: m.number,
+                  title: m.shortTitle || m.title,
+                  body: m.kicker,
+                  href: m.path,
+                  cta: 'Read more',
+                })),
+                { stagger: 70 }
+              )
+            )
+        ),
+        { tone: 'on-bone', id: 'services', chapter: 'Services' }
+      )
+    ),
+
+    reading.length
+      ? str(
+          section(
+            raw(
+              str(head({ eyebrow: 'Related reading', headline: 'What we have written on this.' })) +
+                str(cards(reading, { stagger: 70 }))
+            ),
+            { id: 'reading', chapter: 'Reading' }
+          )
+        )
+      : '',
+
+    str(
+      closeForm(
+        { headline: h.cta, body: h.closeBody, photo: h.photo },
+        { topic: h.shortTitle, note: site.responsePromise }
+      )
+    ),
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return { page, body };
+}
+
 export function allPages() {
   return [
     renderHome(),
@@ -1325,6 +1451,7 @@ export function allPages() {
     renderPrivacy(),
     renderTerms(),
     ...services.map(renderService),
+    ...hubs.map(renderHub),
     renderNotFound(),
   ];
 }

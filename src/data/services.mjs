@@ -17,7 +17,7 @@ export const services = [
     number: '01',
     group: 'measure',
     title: 'GHG accounting',
-    metaTitle: 'GHG Accounting — Scope 1, 2 & 3 to the GHG Protocol | Offsetease',
+    metaTitle: 'GHG Accounting — Scope 1, 2 & 3 Inventories | Offsetease',
     kicker: 'The audited emissions baseline every target, disclosure and carbon claim is built on.',
     description:
       'Scope 1, 2 and 3 emissions inventories built to the GHG Protocol and ISO 14064-1 — assurance-ready, and aligned to IFRS S2, BRSR, CDP and SBTi.',
@@ -161,7 +161,7 @@ export const services = [
     number: '05',
     group: 'report',
     title: 'BRSR & BRSR Core',
-    metaTitle: 'BRSR & BRSR Core Reporting for SEBI-Listed Companies | Offsetease',
+    metaTitle: 'BRSR & BRSR Core for SEBI-Listed Companies | Offsetease',
     kicker: 'India’s assured sustainability disclosure.',
     description:
       'SEBI BRSR and BRSR Core reporting across the nine NGRBC principles — assurance-ready KPIs, value-chain data, and a filing-ready report interoperable with GRI and IFRS.',
@@ -378,7 +378,7 @@ export const services = [
     number: '11',
     group: 'certify',
     title: 'CBAM',
-    metaTitle: 'CBAM Compliance — Verified Embedded Emissions Data | Offsetease',
+    metaTitle: 'CBAM Compliance & Embedded Emissions Data | Offsetease',
     kicker: 'Verified data beats default values.',
     description:
       'Product-level embedded emissions calculated and verified for the EU Carbon Border Adjustment Mechanism — replacing punitive defaults, supporting declarants and modelling margin impact.',
@@ -588,7 +588,7 @@ export const services = [
     number: '17',
     group: 'strategise',
     title: 'Climate risk & TCFD',
-    metaTitle: 'Climate Risk Assessment & TCFD / IFRS S2 Disclosure | Offsetease',
+    metaTitle: 'Climate Risk Assessment & TCFD Disclosure | Offsetease',
     kicker: 'Physical and transition risk, quantified.',
     description:
       'Physical and transition climate risk identified, scenario-tested and quantified in financial terms — structured to TCFD and ready for IFRS S2.',

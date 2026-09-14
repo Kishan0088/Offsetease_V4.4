@@ -2502,6 +2502,53 @@ a.card:hover .card__go svg {
   color: var(--mist);
 }
 
+/* A mega-menu heading that is also a link. It has to stay visually a heading —
+   the column below it is the list of links — so it takes an underline on hover
+   rather than link colour at rest. */
+.mega__t a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.mega__t a:hover {
+  color: var(--teal);
+  border-bottom-color: currentColor;
+}
+
+/* Group heading on the ESG index, now a route into that group's hub. */
+.svc-group__t a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.svc-group__t a:hover {
+  color: var(--teal);
+  border-bottom-color: currentColor;
+}
+.svc-group__go {
+  display: inline-block;
+  margin-left: 4px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+}
+.svc-group__go:hover {
+  border-bottom-color: currentColor;
+}
+
+/* The hub link sits above the services it introduces, so it is marked as the
+   parent rather than reading as another sibling in the list. */
+.menu__ov {
+  font-weight: 500;
+  color: var(--mist) !important;
+}
+
 /* ---- Direct answer, fact table, timeline -------------------------------- */
 
 .answer {

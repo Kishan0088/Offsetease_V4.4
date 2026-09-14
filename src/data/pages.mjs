@@ -335,7 +335,7 @@ export const eac = {
   id: 'eac',
   path: '/energy-attribute-certificates.html',
   title: 'Cut your Scope 2 — credibly',
-  metaTitle: 'Energy Attribute Certificates & I-RECs for Scope 2 | Offsetease',
+  metaTitle: 'Energy Attribute Certificates & I-RECs | Offsetease',
   shortTitle: 'Renewable Energy (EACs)',
   description:
     'I-RECs and other Energy Attribute Certificates — verified, correctly matched and defensible under the GHG Protocol. Cut market-based Scope 2, back RE100 and strengthen your CDP score.',

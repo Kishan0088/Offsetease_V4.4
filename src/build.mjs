@@ -11,11 +11,14 @@ import { renderDocument } from './lib/layout.mjs';
 import { absolute, url } from './lib/paths.mjs';
 import { allPages } from './render.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
+// OUT_DIR lets a second target be built without overwriting the committed
+// GitHub Pages output at the repository root.
+const ROOT = process.env.OUT_DIR ? join(REPO, process.env.OUT_DIR) : REPO;
 
 /** Pull the traced wordmark path out of the brand SVG so it can be inlined. */
 async function wordmarkPath() {
-  const svg = await readFile(join(ROOT, 'assets/brand/offsetease-lockup.svg'), 'utf8');
+  const svg = await readFile(join(REPO, 'assets/brand/offsetease-lockup.svg'), 'utf8');
   const match = svg.match(/<g class="oe-word"><path d="([^"]+)"\/><\/g>/);
   if (!match) throw new Error('Could not read the wordmark path from offsetease-lockup.svg');
   return match[1];

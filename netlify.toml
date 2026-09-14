@@ -1,0 +1,17 @@
+# Netlify serves this site from a domain root, while the repository root holds
+# the GitHub Pages build, which is prefixed with /Offsetease_V4.4. The two
+# cannot share one set of files, so the Netlify target is built separately.
+#
+#   SITE_ORIGIN=https://offsetease-v1-2.netlify.app SITE_BASE= \
+#   OUT_DIR=netlify-dist node src/build.mjs
+#
+# The build command below reproduces that on Netlify's own builders, so a
+# git-linked deploy produces root-relative paths rather than sub-path ones.
+
+[build]
+  publish = "netlify-dist"
+  command = "rm -rf netlify-dist && mkdir -p netlify-dist && SITE_ORIGIN=$SITE_ORIGIN SITE_BASE= OUT_DIR=netlify-dist node src/build.mjs && cp -R assets netlify-dist/assets && cp _headers netlify-dist/ 2>/dev/null || true"
+
+[build.environment]
+  NODE_VERSION = "20"
+  SITE_ORIGIN = "https://offsetease-v1-2.netlify.app"

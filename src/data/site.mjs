@@ -15,8 +15,11 @@ export const site = {
   // ── Deployment ────────────────────────────────────────────────────────────
   // This build publishes to GitHub Pages under a repository sub-path.
   // `basePath` is prefixed to every internal URL the build emits.
-  origin: 'https://kishan0088.github.io',
-  basePath: '/Offsetease_V4.4',
+  // Deployment target is overridable, so one source tree builds for both the
+  // GitHub Pages sub-path and a host that serves from a domain root (Netlify).
+  //   SITE_ORIGIN=https://example.netlify.app SITE_BASE= node src/build.mjs
+  origin: process.env.SITE_ORIGIN || 'https://kishan0088.github.io',
+  basePath: process.env.SITE_BASE ?? '/Offsetease_V4.4',
 
   // PREVIEW MODE. The live site at offsetease.com is untouched and must keep its
   // search ranking, so this preview ships `noindex` + a disallow-all robots.txt.

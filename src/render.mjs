@@ -529,9 +529,43 @@ export function renderEsg() {
  * would otherwise ship into the published page.
  */
 function localiseBody(htmlStr) {
-  return htmlStr
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/href="(\/[^"]*)"/g, (_, path) => `href="${url(path)}"`);
+  return balanceDivs(
+    htmlStr
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/href="(\/[^"]*)"/g, (_, path) => `href="${url(path)}"`)
+  );
+}
+
+/**
+ * Drop unmatched closing </div>s from migrated HTML.
+ *
+ * One article arrived with a spare one at the end. It closed the section's
+ * own .wrap, so everything after the prose — the CTA buttons and the More
+ * insights list — escaped the content column and rendered full-bleed against
+ * the viewport edge. Nothing in the build caught it, because the markup is
+ * still perfectly valid; it just belongs to the wrong parent.
+ */
+function balanceDivs(htmlStr) {
+  let depth = 0;
+  let out = '';
+  let last = 0;
+  const re = /<(\/?)div\b/g;
+  let m;
+  while ((m = re.exec(htmlStr))) {
+    if (m[1]) {
+      if (depth === 0) {
+        // unmatched closer: copy everything before it and skip it
+        out += htmlStr.slice(last, m.index);
+        last = m.index + '</div>'.length;
+        continue;
+      }
+      depth -= 1;
+    } else {
+      depth += 1;
+    }
+  }
+  out += htmlStr.slice(last);
+  return out;
 }
 
 /**

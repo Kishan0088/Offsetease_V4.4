@@ -194,6 +194,27 @@ function checkBrand(file, html) {
   }
 }
 
+/**
+ * Container nesting. A single stray </div> inside migrated article HTML closed
+ * the section's .wrap early, and everything after the prose rendered
+ * full-bleed against the viewport edge. The markup stayed valid, so nothing
+ * else here noticed. Counting div depth across the body catches it.
+ */
+function checkNesting(file, html) {
+  const body = html.slice(html.indexOf('<body'), html.lastIndexOf('</body>'));
+  let depth = 0;
+  const re = /<(\/?)div\b/g;
+  let m;
+  while ((m = re.exec(body))) {
+    depth += m[1] ? -1 : 1;
+    if (depth < 0) {
+      fail(file, 'unbalanced </div> — a container is being closed early, which breaks the layout wrapper');
+      return;
+    }
+  }
+  if (depth !== 0) fail(file, `${depth} unclosed <div> — the layout wrapper will not close where it should`);
+}
+
 function checkPlaceholders(file, html) {
   const patterns = [/\bLorem ipsum\b/i, /\bTODO\b/, /\bFIXME\b/, /\[\s*(?:to add|placeholder|tbd)\s*\]/i, /XXXX/];
   for (const p of patterns) {
@@ -308,6 +329,7 @@ async function main() {
     checkA11y(f, html);
     checkBrand(f, html);
     checkPlaceholders(f, html);
+    checkNesting(f, html);
     checkLegalLinks(f, html);
     await checkLinks(f, html, idsByFile, files);
   }

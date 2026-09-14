@@ -2210,9 +2210,17 @@ a.card:hover .card__go svg {
   min-width: 0;
   max-width: 100%;
 }
+/* The separator is a ::before on the li, so making the label a block pushed
+   it onto its own line and left the slash stranded above. A flex row keeps
+   the slash and the (truncating) label on one line together. */
+.crumb li:last-child {
+  display: flex;
+  align-items: baseline;
+  flex: 1 1 auto;
+  min-width: 0;
+}
 .crumb li:last-child [aria-current] {
-  display: block;
-  max-width: 100%;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

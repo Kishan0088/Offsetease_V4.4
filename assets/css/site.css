@@ -2478,6 +2478,159 @@ a.card:hover .card__go svg {
   font-size: clamp(16px, 1.3vw, 19px);
 }
 
+/* ---- Direct answer, fact table, timeline -------------------------------- */
+
+.answer {
+  max-width: 68ch;
+  padding: clamp(20px, 2.6vw, 30px) clamp(20px, 2.6vw, 32px);
+  background: var(--panel);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 10px 10px 0;
+}
+.answer .label {
+  margin-bottom: 10px;
+}
+.answer__t {
+  margin: 0;
+  font-size: clamp(17px, 1.45vw, 20px);
+  line-height: 1.55;
+  color: var(--fg);
+}
+.on-ink .answer,
+.on-deep .answer {
+  background: rgb(245 243 238 / 0.06);
+  border-left-color: var(--mist);
+}
+
+/* Wide content scrolls inside its own container; the page never does. */
+.ftable__wrap {
+  overflow-x: auto;
+  margin: clamp(24px, 3vw, 36px) 0 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.ftable {
+  width: 100%;
+  min-width: 420px;
+  border-collapse: collapse;
+  font-size: 15.5px;
+}
+.ftable caption {
+  caption-side: top;
+  text-align: left;
+  padding: 16px 18px 0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.ftable th,
+.ftable td {
+  text-align: left;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.ftable thead th {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.ftable thead tr th:empty {
+  /* The row-header column needs no heading of its own. */
+  padding-block: 10px;
+}
+.ftable tbody th {
+  font-weight: 500;
+  color: var(--fg);
+  width: 38%;
+}
+.ftable tbody tr:last-child th,
+.ftable tbody tr:last-child td {
+  border-bottom: 0;
+}
+.ftable td {
+  font-variant-numeric: tabular-nums;
+}
+.ftable__src {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--fg-mute);
+}
+
+.tl {
+  margin-top: clamp(26px, 3.2vw, 40px);
+}
+.tl__l {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  counter-reset: tl;
+}
+.tl__i {
+  display: grid;
+  grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
+  gap: 6px 24px;
+  padding: 15px 0 15px 22px;
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+.tl__i:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+/* The marker encodes state, not decoration: filled means the date has passed. */
+.tl__i::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--teal);
+  background: transparent;
+}
+.tl__i.is-done::before {
+  background: var(--teal);
+}
+.on-ink .tl__i::before,
+.on-deep .tl__i::before {
+  border-color: var(--mist);
+}
+.on-ink .tl__i.is-done::before,
+.on-deep .tl__i.is-done::before {
+  background: var(--mist);
+}
+.tl__w {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+  font-variant-numeric: tabular-nums;
+}
+.on-ink .tl__w,
+.on-deep .tl__w {
+  color: var(--mist);
+}
+.tl__d {
+  color: var(--fg-soft);
+  font-size: 16px;
+}
+@media (max-width: 620px) {
+  .tl__i {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+}
+
 /* ---- Closing enquiry form ----------------------------------------------- */
 /* A service page ends with the form rather than a button to a generic contact
    page. Two columns on a desk, stacked on a phone, over the same photograph

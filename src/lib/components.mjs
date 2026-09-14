@@ -421,6 +421,80 @@ export function closeCta(
 }
 
 /**
+ * The one-paragraph answer to the question the page's title implies, set
+ * directly under the hero.
+ *
+ * Generative engines and featured snippets both lift a short, self-contained
+ * definition far more readily than they lift positioning copy, and a reader
+ * skimming five consultancy sites wants the same thing. Kept to roughly 50
+ * words so it stays quotable whole.
+ */
+export function answerBlock(text, { label = 'In short' } = {}) {
+  if (!text) return raw('');
+  return raw(
+    '<div class="answer reveal">' +
+      `<p class="label">${esc(label)}</p>` +
+      `<p class="answer__t">${str(md(text))}</p>` +
+      '</div>'
+  );
+}
+
+/**
+ * A real <table> of dated, sourced facts.
+ *
+ * There was not one table anywhere on the site, which is a gap worth closing
+ * on its own: a comparison or threshold table is among the structures answer
+ * engines extract most readily, and this subject matter is full of natural
+ * ones. Every row carries its source, because an unattributed number on a
+ * page about defensible disclosure undercuts the argument it is making.
+ */
+export function factTable({ caption, cols = ['', ''], rows = [] } = {}) {
+  if (!rows.length) return raw('');
+  const head = cols.map((c) => `<th scope="col">${esc(c)}</th>`).join('');
+  const body = rows
+    .map(
+      (r) =>
+        '<tr>' +
+        `<th scope="row">${esc(r.k)}</th>` +
+        `<td>${str(md(r.v))}` +
+        (r.src ? `<span class="ftable__src">${esc(r.src)}</span>` : '') +
+        '</td></tr>'
+    )
+    .join('');
+  return raw(
+    '<div class="ftable__wrap reveal">' +
+      '<table class="ftable">' +
+      (caption ? `<caption>${esc(caption)}</caption>` : '') +
+      `<thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`
+  );
+}
+
+/**
+ * Dated milestones, in order, as an ordered list.
+ *
+ * These regulations are a sequence of deadlines, so the numbering here is
+ * carrying real information rather than decorating the page. Past and future
+ * are marked, because "which of these has already happened" is the first
+ * thing a reader needs and the thing a bare list hides.
+ */
+export function timeline(items, { title = 'Key dates' } = {}) {
+  if (!items || !items.length) return raw('');
+  const body = items
+    .map(
+      (t) =>
+        `<li class="tl__i${t.done ? ' is-done' : ''}">` +
+        `<span class="tl__w">${esc(t.when)}</span>` +
+        `<span class="tl__d">${str(md(t.what))}</span></li>`
+    )
+    .join('');
+  return raw(
+    '<div class="tl reveal">' +
+      `<p class="label">${esc(title)}</p>` +
+      `<ol class="tl__l">${body}</ol></div>`
+  );
+}
+
+/**
  * The short enquiry form that closes a service page.
  *
  * The contact page keeps its full form; this one asks for four things and

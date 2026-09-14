@@ -1,6 +1,7 @@
 // Page renderers. Each returns { page, body } for the document shell.
 
 import { site } from './data/site.mjs';
+import { depth } from './data/service-depth.mjs';
 import { home, supply, eac, esg, about, insights as insightsPage, contact, sources, privacy, terms } from './data/pages.mjs';
 import {
   insights, insightCategories, insightsByDate, insightStats, relatedInsights,
@@ -14,6 +15,9 @@ import {
   faq, closeCta, proof, statStrip, marketStrip, inlineCta,
   stages, btn, rail, sunburst, ARROW, insightList,
   closeForm,
+  answerBlock,
+  factTable,
+  timeline,
 } from './lib/components.mjs';
 
 /* ---------------------------------------------------------------- HOME -- */
@@ -976,6 +980,10 @@ function breadcrumb_(items) {
 
 export function renderService(s) {
   const group = groups.find((g) => g.id === s.group);
+  // Sourced depth, where the research companion covers this service. Absent
+  // for the ten it does not, rather than invented — see service-depth.mjs.
+  const d = depth[s.id] || {};
+  const faqs = d.faqs || s.faqs;
   const related = (s.related || [])
     .map((id) => byId[id])
     .filter(Boolean)
@@ -996,7 +1004,7 @@ export function renderService(s) {
     description: s.description,
     parent: esg.path,
     preloadPhoto: s.photo,
-    faqs: s.faqs,
+    faqs,
     service: { name: s.title, type: group ? group.title : 'ESG & Sustainability' },
     breadcrumb: [{ name: 'ESG & Sustainability', href: esg.path }],
   };
@@ -1025,7 +1033,9 @@ export function renderService(s) {
     str(
       section(
         raw(
-          '<div class="cols cols--2" style="align-items:start;gap:clamp(30px,4.4vw,72px)">' +
+          (d.answer ? str(answerBlock(d.answer)) : '') +
+            '<div class="cols cols--2" style="align-items:start;gap:clamp(30px,4.4vw,72px)' +
+            (d.answer ? ';margin-top:clamp(28px,3.4vw,48px)' : '') + '">' +
             `<div><p class="label">What it is</p><p class="body-lg reveal">${str(md(s.whatItIs))}</p></div>` +
             `<div><p class="label">Why it matters</p><p class="body-lg reveal">${str(
               md(s.whyItMatters)
@@ -1068,9 +1078,27 @@ export function renderService(s) {
       )
     ),
 
-    s.faqs && s.faqs.length
+    d.facts || d.timeline
       ? str(
-          section(raw(str(faq(s.faqs))), {
+          section(
+            raw(
+              str(
+                head({
+                  eyebrow: 'The rules, as they stand',
+                  headline: 'What the regulation actually says.',
+                })
+              ) +
+                (d.facts ? str(factTable(d.facts)) : '') +
+                (d.timeline ? str(timeline(d.timeline)) : '')
+            ),
+            { id: 'rules', chapter: 'The rules', wrap: 'wrap wrap--mid' }
+          )
+        )
+      : '',
+
+    faqs && faqs.length
+      ? str(
+          section(raw(str(faq(faqs))), {
             id: 'faq',
             chapter: 'Questions',
             wrap: 'wrap wrap--mid',

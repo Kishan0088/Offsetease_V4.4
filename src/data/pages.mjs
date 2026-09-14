@@ -5,10 +5,10 @@ export const home = {
   id: 'home',
   path: '/',
   title: 'A Leading Developer of High-Integrity Carbon Projects',
-  metaTitle: 'OffsetEase — High-Integrity Carbon Supply, Projects & ESG',
+  metaTitle: 'Offsetease — High-Integrity Carbon Supply, Projects & ESG',
   ogTitle: 'A Leading Developer of High-Integrity Carbon Projects',
   description:
-    'OffsetEase sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. Every credit passes The Five Checks.',
+    'Offsetease sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. Every credit passes The Five Checks.',
   preloadPhoto: 'earth-night',
 
   hero: {
@@ -111,7 +111,7 @@ export const home = {
     headline: 'Three capabilities, one standard of integrity.',
     items: [
       {
-        title: 'Carbon supply',
+        title: 'Carbon Supply',
         body: 'We find, screen and supply high-quality carbon — to order, as a managed portfolio, or from our own projects.',
         href: '/carbon-supply.html',
         photo: 'sunlit-forest',
@@ -125,7 +125,7 @@ export const home = {
         photoAlt: 'Wind turbines silhouetted at sunset',
       },
       {
-        title: 'ESG & sustainability',
+        title: 'ESG & Sustainability',
         body: 'The measurement, reporting and target-setting that make your claims defensible.',
         href: '/esg-sustainability.html',
         photo: 'factory-interior',
@@ -136,9 +136,10 @@ export const home = {
 
   method: {
     chapter: 'Method',
-    eyebrow: 'Our model',
-    headline: 'Farmers are stakeholders, not suppliers.',
-    body: 'We earn only when the communities we work with earn.',
+    eyebrow: 'Our Model',
+    headline: 'Stakeholders are partners, not suppliers.',
+    body:
+      'When our projects create value, that value is shared with the people and communities who make them possible.',
     photo: 'farmland-sunrise',
     photoAlt: 'Farmland catching the first light of sunrise',
   },
@@ -182,15 +183,15 @@ export const supply = {
   id: 'supply',
   path: '/carbon-supply.html',
   title: 'The carbon you need — sourced, screened, delivered',
-  metaTitle: 'Carbon Supply — Spot, Portfolio & Offtake | OffsetEase',
-  shortTitle: 'Carbon supply',
+  metaTitle: 'Carbon Supply — Spot, Portfolio & Offtake | Offsetease',
+  shortTitle: 'Carbon Supply',
   description:
     'High-quality carbon matched to your goals and timeline — sourced at the project, screened against The Five Checks, delivered with full traceability.',
   preloadPhoto: 'sunlit-forest',
   service: { name: 'High-integrity carbon supply', type: 'Carbon credit sourcing and project development' },
 
   hero: {
-    eyebrow: 'Carbon supply',
+    eyebrow: 'Carbon Supply',
     headline: 'The carbon you need — sourced, screened, delivered.',
     accent: ['screened,'],
     standfirst:
@@ -334,7 +335,7 @@ export const eac = {
   id: 'eac',
   path: '/energy-attribute-certificates.html',
   title: 'Cut your Scope 2 — credibly',
-  metaTitle: 'Energy Attribute Certificates & I-RECs for Scope 2 | OffsetEase',
+  metaTitle: 'Energy Attribute Certificates & I-RECs for Scope 2 | Offsetease',
   shortTitle: 'Renewable Energy (EACs)',
   description:
     'I-RECs and other Energy Attribute Certificates — verified, correctly matched and defensible under the GHG Protocol. Cut market-based Scope 2, back RE100 and strengthen your CDP score.',
@@ -407,14 +408,14 @@ export const esg = {
   id: 'esg',
   path: '/esg-sustainability.html',
   title: 'ESG that creates value, not just reports',
-  metaTitle: 'ESG & Sustainability Consulting — 18 Services | OffsetEase',
-  shortTitle: 'ESG & sustainability',
+  metaTitle: 'ESG & Sustainability Consulting — 18 Services | Offsetease',
+  shortTitle: 'ESG & Sustainability',
   description:
     'GHG accounting, BRSR, CSRD, IFRS S1/S2, EcoVadis, CDP, CBAM, EUDR, ISCC, SBTi and net-zero pathways — eighteen in-depth services that turn ESG data into business insight.',
   preloadPhoto: 'industrial-plant',
 
   hero: {
-    eyebrow: 'ESG & sustainability',
+    eyebrow: 'ESG & Sustainability',
     headline: 'ESG that creates value, not just reports.',
     accent: ['value,'],
     standfirst:
@@ -444,10 +445,10 @@ export const about = {
   id: 'about',
   path: '/about.html',
   title: 'One trusted partner, across carbon and sustainability',
-  metaTitle: 'About OffsetEase — How We Work',
+  metaTitle: 'About Offsetease — How We Work',
   shortTitle: 'About',
   description:
-    'OffsetEase originates and supplies high-integrity carbon screened against The Five Checks, and turns ESG data into defensible disclosure. Senior specialists, rooted in India.',
+    'Offsetease originates and supplies high-integrity carbon screened against The Five Checks, and turns ESG data into defensible disclosure. Senior specialists, rooted in India.',
   preloadPhoto: 'river-delta',
 
   hero: {
@@ -464,7 +465,7 @@ export const about = {
     eyebrow: 'Our team & expertise',
     headline: 'Every mandate is run by experienced people, not junior teams.',
     body:
-      'OffsetEase is led by senior specialists across carbon project development, carbon markets, MRV, ESG and sustainability finance. Every mandate is run by experienced people, not junior teams — from originating a project on the ground to preparing a disclosure your auditors will accept.',
+      'Offsetease is led by senior specialists across carbon project development, carbon markets, MRV, ESG and sustainability finance. Every mandate is run by experienced people, not junior teams — from originating a project on the ground to preparing a disclosure your auditors will accept.',
     intro: 'Our expertise spans:',
     items: [
       { title: 'Carbon origination & development', body: 'Projects designed, validated and registered under global standards.' },
@@ -499,7 +500,7 @@ export const about = {
       'Rooted in India, developing projects on the ground, and serving companies across India and global markets.',
     proof:
       'India is emerging as a serious origination base — around 49 carbon-removal projects were active as of August 2025, with roughly 214,000 verified credits issued (AlliedOffsets, 2025) — while Asia-Pacific is increasingly described as the centre of gravity of the voluntary carbon market (carboncredits.com, 2025).',
-    // India-wide market context, not OffsetEase figures. Rendered in the market
+    // India-wide market context, not Offsetease figures. Rendered in the market
     // component with the source on the same line, at readable size.
     marketStats: [
       { value: '49', label: 'carbon-removal projects active in India', source: 'AlliedOffsets, August 2025' },
@@ -523,7 +524,7 @@ export const contact = {
   id: 'contact',
   path: '/contact.html',
   title: 'Let’s discuss your carbon & sustainability goals',
-  metaTitle: 'Contact OffsetEase',
+  metaTitle: 'Contact Offsetease',
   shortTitle: 'Contact',
   description:
     'Every engagement begins with a senior advisor and a confidential conversation. Email info@offsetease.com, call +91 88661 42748, or send an enquiry — we reply within one business day.',
@@ -544,10 +545,10 @@ export const contact = {
   },
 
   topics: [
-    'Carbon supply',
+    'Carbon Supply',
     'Carbon projects',
     'Energy Attribute Certificates',
-    'ESG & sustainability',
+    'ESG & Sustainability',
     'Not sure yet',
   ],
 
@@ -558,7 +559,7 @@ export const sources = {
   id: 'sources',
   path: '/sources.html',
   title: 'Sources & data',
-  metaTitle: 'Sources & Data (2024–2026) | OffsetEase',
+  metaTitle: 'Sources & Data (2024–2026) | Offsetease',
   shortTitle: 'Sources & data',
   description:
     'Every market figure on this site, with its named source and date. Compiled September 2026 and refreshed quarterly.',
@@ -599,110 +600,198 @@ export const privacy = {
   id: 'privacy',
   path: '/privacy.html',
   title: 'Privacy policy',
-  metaTitle: 'Privacy Policy | OffsetEase',
+  metaTitle: 'Privacy Policy | Offsetease',
   shortTitle: 'Privacy policy',
   description:
-    'What OffsetEase collects through this website, why, who processes it, how long it is kept, and how to have it deleted.',
+    'What Offsetease collects through this website, why, who processes it, how long it is kept, where it goes, and how to have it corrected or deleted.',
   updated: 'September 2026',
   intro:
-    'This policy covers this website only. It is written to be read, not to be survived. If anything here is unclear, email us and ask.',
+    'This policy covers this website. It is written to be read rather than survived: plain sentences, no defined terms you have to look up, and nothing claimed that the site does not actually do.',
   sections: [
     {
-      title: 'What this site collects',
+      title: 'The short version',
       body: [
-        'Nothing, unless you send us an enquiry. This site sets **no cookies**, runs **no analytics**, embeds **no tracking pixels** and loads **no third-party scripts**. Fonts and images are served from this domain, so no external service is told that you visited.',
-        'If you submit the enquiry form we receive the **name, work email address and company** you type, the **topic** you select, and your **message** if you write one. That is the whole of it.',
+        'This site sets **no cookies**, runs **no analytics**, loads **no third-party scripts or fonts**, and contains **no tracking pixels**. If you simply read it, we learn nothing about you at all.',
+        'The only personal data we receive is what you type into the enquiry form and send us. We use it to reply. We do not sell it, rent it, profile you with it, or add you to a mailing list.',
       ],
     },
     {
-      title: 'Why we hold it, and on what basis',
+      title: 'Who is responsible for your data',
       body: [
-        'Solely to reply to your enquiry and to carry on the conversation you started. We do not add you to a mailing list, we do not profile you, and we do not sell, rent or share your details with anyone for their own purposes.',
-        'The lawful basis is your consent, which you give by ticking the consent box and submitting the form. You can withdraw it at any time.',
+        'Offsetease decides why and how any personal data from this site is handled — in EU and UK terms, the *controller*; in Indian terms, the *Data Fiduciary*.',
+        'Questions, requests and complaints all go to **info@offsetease.com**, which reaches a person, not a queue.',
       ],
     },
     {
-      title: 'Who else touches it',
+      title: 'What we collect, and when',
       body: [
-        'The enquiry form is delivered by **Web3Forms**, a third-party form-delivery service acting as our processor. Your submission passes through their infrastructure on its way to our inbox. Their privacy terms are at [web3forms.com/privacy](https://web3forms.com/privacy).',
-        'Our email is hosted by our mail provider. Beyond that, enquiry data stays with us.',
+        '**If you send an enquiry:** your name, work email address, company, the topic you select, and your message if you write one. Nothing is pre-filled from anywhere else, and nothing is inferred.',
+        '**If you email or call us:** whatever you choose to put in that email or say on that call.',
+        '**Server logs.** This site is served by a static web host. Like every web server, it records the request — IP address, timestamp, the page requested, and your browser\'s user-agent string — for delivery and abuse prevention. We do not use those logs to identify visitors and we do not combine them with anything else.',
+      ],
+    },
+    {
+      title: 'Why we hold it, and on what legal basis',
+      body: [
+        'Solely to answer your enquiry and continue the conversation you started, and — if that becomes an engagement — to deliver it.',
+        'Under the UK and EU GDPR the basis is your **consent**, given by ticking the box and submitting the form, and thereafter our **legitimate interest** in responding to a business enquiry we were asked to respond to. Under India\'s Digital Personal Data Protection Act, 2023 the basis is your consent, given for the specific purpose described at the point of collection.',
+        'You can withdraw consent at any time. It is as easy to withdraw as it was to give: one email.',
+      ],
+    },
+    {
+      title: 'Who else handles it',
+      body: [
+        '**Web3Forms** delivers the enquiry form to our inbox and processes your submission on our behalf. Their privacy terms: [web3forms.com/privacy](https://web3forms.com/privacy).',
+        '**Our email provider** hosts the mailbox your enquiry lands in.',
+        '**Our web host** serves these pages and keeps the server logs described above.',
+        'Each acts on our instructions, for these purposes only. We do not disclose enquiry data to anyone else except where the law requires it.',
+      ],
+    },
+    {
+      title: 'Where it goes',
+      body: [
+        'We are based in India and our processors operate internationally, so your data may be handled outside your own country — including outside the EEA and the UK. Where that happens for EEA or UK data we rely on the appropriate safeguards in Chapter V of the GDPR, such as the European Commission\'s Standard Contractual Clauses.',
       ],
     },
     {
       title: 'How long we keep it',
       body: [
-        'Enquiries that do not become an engagement are deleted within **24 months**. Where an enquiry becomes a client engagement, the records are kept for as long as the engagement runs and then for the period our statutory and tax obligations require.',
+        'Enquiries that do not become an engagement are deleted within **24 months**.',
+        'Where an enquiry becomes a client engagement, the records are kept for the life of the engagement and then for as long as our statutory, tax and professional obligations require — after which they are deleted.',
+        'Server logs are retained only for the short period our host keeps them for operational and security purposes.',
+      ],
+    },
+    {
+      title: 'How it is protected',
+      body: [
+        'The site is served over HTTPS. Enquiries travel encrypted in transit, reach a small number of named people, and are held in access-controlled accounts. No system is perfect, and we will not pretend otherwise — but we collect little, keep it briefly, and share it with almost no one, which is the most effective protection available.',
       ],
     },
     {
       title: 'Your rights',
       body: [
-        'You can ask us for a copy of what we hold about you, ask us to correct it, ask us to delete it, or withdraw your consent — by emailing **info@offsetease.com**. We will act within 30 days.',
-        'If you are in the EU or the UK and you are not satisfied with how we have handled a request, you may complain to your national data protection authority.',
+        'You can ask us to show you what we hold, correct it, complete it, delete it, restrict or object to how we use it, send you a portable copy, or withdraw your consent. Email **info@offsetease.com** and we will act within **30 days**.',
+        'We will not charge you for this, and we will not ask why.',
+        'If you are in the EEA or the UK and you are unhappy with how we have handled a request, you may complain to your national supervisory authority. If you are in India, you may raise a grievance with us first and then escalate to the Data Protection Board of India.',
       ],
     },
     {
-      title: 'Changes',
+      title: 'Automated decisions, and children',
       body: [
-        'If this policy changes materially we will update the date at the top. This version is current as of the date shown.',
+        'We make no automated decisions about you and carry out no profiling.',
+        'This is a business-to-business site. It is not directed at children and we do not knowingly collect data about anyone under 18.',
+      ],
+    },
+    {
+      title: 'Changes to this policy',
+      body: [
+        'If this policy changes materially we will update the date shown at the top of this page and, where the change affects data we already hold, tell the people affected.',
       ],
     },
   ],
-  // Named so nobody mistakes a drafted policy for a reviewed one.
   notice:
-    'This policy describes how this website actually behaves, and was drafted alongside the build. It has not been reviewed by a lawyer, and it does not yet name the registered entity or its address — supply those and they will be added here and to the footer.',
+    'This policy describes how this website actually behaves and was written alongside the build. It has not yet been reviewed by a lawyer, and it does not yet name the registered entity, its registered address, or a named grievance officer — all of which India\'s DPDP Act and the GDPR expect. Supply those and they will be added here and to the footer.',
 };
 
 export const terms = {
   id: 'terms',
   path: '/terms.html',
   title: 'Terms of use',
-  metaTitle: 'Terms of Use | OffsetEase',
+  metaTitle: 'Terms of Use | Offsetease',
   shortTitle: 'Terms of use',
   description:
-    'The terms on which this website is provided: what the content is and is not, how figures are sourced, and the limits of what a website can promise.',
+    'The terms on which this website is provided: what the content is and is not, how market figures are sourced, and what a carbon claim on this site does not amount to.',
   updated: 'September 2026',
   intro:
-    'These terms govern your use of this website. They do not govern any engagement with OffsetEase — that is set out in a signed agreement.',
+    'These terms govern your use of this website. They do not govern any engagement with Offsetease — that is set out in a signed agreement, and where the two differ, the agreement wins.',
   sections: [
+    {
+      title: 'Using this site',
+      body: [
+        'By reading these pages you accept these terms. If you do not, please stop reading them — that is the whole of the remedy either of us needs.',
+      ],
+    },
     {
       title: 'What this site is',
       body: [
-        'A description of services. Nothing on this website is an offer, a quotation, a price, or a commitment to supply. Availability, volumes, vintages and prices are agreed in writing, engagement by engagement.',
+        'A description of services. Nothing here is an offer, an invitation to treat, a quotation, a price, or a commitment to supply anything.',
+        'Availability, volumes, vintages, standards, delivery windows and prices are agreed in writing, engagement by engagement, after we have understood what you actually need.',
       ],
     },
     {
       title: 'Not advice',
       body: [
-        'The material here is general information about carbon markets, disclosure regimes and sustainability regulation. It is **not legal, tax, accounting, investment or compliance advice**, and it is not a substitute for it. Regulatory positions turn on facts we do not know about you. Take advice before you act.',
+        'The material here is general information about carbon markets, disclosure regimes and sustainability regulation. It is **not legal, tax, accounting, audit, investment or compliance advice**, and it is not a substitute for any of them.',
+        'Regulatory positions turn on facts about your business that we do not know from a web page — your scope, your jurisdictions, your thresholds, your supply chain. Whether CBAM, CSRD, BRSR, EUDR or anything else applies to you is a question to be answered on your facts. Take advice before you act.',
       ],
     },
     {
-      title: 'Market figures',
+      title: 'Carbon credits and environmental attributes',
       body: [
-        'Every market statistic on this site is attributed to a named, dated third-party source on the [Sources & data](/sources.html) page and was accurate as published. These markets move quickly. We refresh the figures periodically and show the review date in the footer, but we do not warrant that any figure is current at the moment you read it. Verify against the primary source before you rely on one.',
-        'Figures identified as OffsetEase programme data are ours. Figures shown in the market component are third parties’ and are labelled with their source.',
+        'Carbon credits and Energy Attribute Certificates are **not financial instruments, securities or investments**, and nothing on this site is an inducement to acquire them as such. They are instruments for mitigation and for making a defensible claim.',
+        'Carbon markets carry real risk: methodologies are revised, standards tighten, ratings move, credits can be suspended or invalidated, and the regulatory treatment of a claim can change after the credit was bought. Prices quoted here are third-party market observations for the period stated, not our prices and not a forecast.',
+        'Our screening — The Five Checks — is our own diligence standard, applied honestly and described accurately on this site. It is not a warranty, a rating, an accreditation, or a guarantee of any outcome, and it does not replace your own due diligence or your auditor\'s judgement.',
+      ],
+    },
+    {
+      title: 'Market figures and sources',
+      body: [
+        'Every market statistic on this site is attributed to a named, dated third-party source on the [Sources & data](/sources.html) page, and was accurate as published by that source.',
+        'These markets move quickly. We refresh the figures periodically and show the review date, but we do not warrant that any figure is current at the moment you read it. Verify against the primary source before you rely on one.',
+        'Figures identified as Offsetease programme data are ours. Figures shown in the market component belong to the third party named beside them.',
+      ],
+    },
+    {
+      title: 'Forward-looking statements',
+      body: [
+        'Statements about future regulation, market direction, project pipelines or projected tonnage are expectations held at the time of writing, based on the sources cited. They are not promises, and they are not a basis on which to price a transaction.',
+      ],
+    },
+    {
+      title: 'Acceptable use',
+      body: [
+        'Please do not attempt to interfere with the site or the server it runs on, scrape it at a rate that degrades it for others, use the enquiry form to send unsolicited marketing, or present this material as your own.',
+        'You are welcome to read, print, quote with attribution, and link to any page here.',
       ],
     },
     {
       title: 'Third-party links',
       body: [
-        'We link to registries, regulators, standards bodies and research publishers so you can check our work. We do not control those sites and are not responsible for their content.',
+        'We link out to registries, regulators, standards bodies and research publishers so you can check our work rather than take it on trust. We do not control those sites, we are not responsible for their content, and a link is not an endorsement.',
       ],
     },
     {
       title: 'Intellectual property',
       body: [
-        'The text, design, diagrams and code of this website belong to OffsetEase, except the photography, which is licensed from Unsplash, and the typefaces, which are used under the SIL Open Font License. Credits are listed in the repository’s CREDITS file.',
+        'The text, design, diagrams, code and the Offsetease name and mark belong to Offsetease, except the photography and video, which are licensed from their sources, and the typefaces, which are used under the SIL Open Font License. Credits are listed in the repository\'s CREDITS file.',
+      ],
+    },
+    {
+      title: 'Availability',
+      body: [
+        'We publish this site as it is and make no promise that it will be uninterrupted, error-free, or permanently available at any particular address. We may change, move or withdraw any page without notice.',
       ],
     },
     {
       title: 'Liability',
       body: [
-        'We take care to keep this site accurate, but to the extent the law allows we exclude liability for loss arising from reliance on it. Nothing here limits liability that cannot lawfully be limited.',
+        'We take care to keep this site accurate and current. To the extent the law allows, we exclude liability for any loss arising from reliance on it, including indirect or consequential loss.',
+        'Nothing here limits liability that cannot lawfully be limited — including liability for death or personal injury caused by negligence, or for fraud or fraudulent misrepresentation.',
+      ],
+    },
+    {
+      title: 'Changes to these terms',
+      body: [
+        'We may revise these terms. The version in force is the one published here, with the date shown at the top of this page.',
+      ],
+    },
+    {
+      title: 'Getting in touch',
+      body: [
+        'Questions about these terms, or about anything on this site, go to **info@offsetease.com**.',
       ],
     },
   ],
   notice:
-    'These terms were drafted alongside the build and have not been reviewed by a lawyer. The governing-law clause and the registered entity name are deliberately absent until you supply them.',
+    'These terms were written alongside the build and have not been reviewed by a lawyer. The governing-law and jurisdiction clause and the registered entity name are deliberately absent rather than guessed — supply them and they will be added.',
 };

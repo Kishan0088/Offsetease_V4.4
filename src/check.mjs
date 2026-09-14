@@ -175,11 +175,14 @@ async function checkLinks(file, html, idsByFile, pages) {
 }
 
 function checkBrand(file, html) {
-  // The body copy spells it OffsetEase; the lockup/eyebrows use OFFSETEASE.
+  // The body copy spells it Offsetease; the lockup and eyebrows use OFFSETEASE.
+  // "OffsetEase" (inner capital E) is explicitly not the brand.
   const body = html.replace(/<script[\s\S]*?<\/script>/g, '');
   const bad = body.match(/\bOffset\s?[Ee]ase\b/g) || [];
-  for (const hit of bad) {
-    if (hit !== 'OffsetEase') fail(file, `brand spelled "${hit}" (must be OffsetEase or OFFSETEASE)`);
+  for (const hit of new Set(bad)) {
+    if (hit !== 'Offsetease') {
+      fail(file, `brand spelled "${hit}" (must be Offsetease or OFFSETEASE)`);
+    }
   }
   // Lower case is correct inside an address or a URL, so strip those first.
   const prose = body

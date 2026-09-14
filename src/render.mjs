@@ -169,7 +169,7 @@ export function renderHome() {
               )
             )
         ),
-        { tone: 'on-ink', id: 'impact', chapter: d.impact.chapter }
+        { tone: 'on-bone', id: 'impact', chapter: d.impact.chapter }
       )
     ),
 
@@ -190,7 +190,7 @@ export function renderSupply() {
   const d = supply;
   const body = [
     str(rail()),
-    str(hero(d.hero, { crumbs: [{ name: 'Carbon supply', href: d.path }] })),
+    str(hero(d.hero, { crumbs: [{ name: 'Carbon Supply', href: d.path }] })),
 
     str(
       section(
@@ -274,7 +274,7 @@ export function renderSupply() {
               )
             )
         ),
-        { tone: 'on-ink', id: 'pipeline', chapter: 'Pipeline' }
+        { tone: 'on-bone', id: 'pipeline', chapter: 'Pipeline' }
       )
     ),
 
@@ -318,7 +318,7 @@ export function renderSupply() {
     str(
       closeCta(d.close, {
         label: 'Get indicative pricing',
-        topic: 'Carbon supply',
+        topic: 'Carbon Supply',
         secondary: { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
       })
     ),
@@ -405,7 +405,7 @@ export function renderEac() {
       closeCta(d.close, {
         label: 'Match my consumption',
         topic: 'Energy Attribute Certificates',
-        secondary: { label: 'ESG & sustainability', href: '/esg-sustainability.html' },
+        secondary: { label: 'ESG & Sustainability', href: '/esg-sustainability.html' },
       })
     ),
   ].join('\n');
@@ -444,7 +444,7 @@ export function renderEsg() {
 
   const body = [
     str(rail()),
-    str(hero(d.hero, { crumbs: [{ name: 'ESG & sustainability', href: d.path }] })),
+    str(hero(d.hero, { crumbs: [{ name: 'ESG & Sustainability', href: d.path }] })),
 
     str(
       section(
@@ -458,7 +458,7 @@ export function renderEsg() {
             })
           ) + str(proof(d.overview.proof, d.overview.proofFigure))
         ),
-        { tone: 'on-ink', id: 'overview', chapter: 'Overview' }
+        { id: 'overview', chapter: 'Overview' }
       )
     ),
 
@@ -491,8 +491,8 @@ export function renderEsg() {
     str(
       closeCta(d.close, {
         label: 'Map my obligations',
-        topic: 'ESG & sustainability',
-        secondary: { label: 'Carbon supply', href: '/carbon-supply.html' },
+        topic: 'ESG & Sustainability',
+        secondary: { label: 'Carbon Supply', href: '/carbon-supply.html' },
       })
     ),
   ].join('\n');
@@ -711,7 +711,7 @@ export function renderSources() {
               site.lastReviewed
             )}. Figures are refreshed quarterly.</p>`
         ),
-        { id: 'sources-intro', className: 'section--tight', wrap: 'wrap wrap--mid' }
+        { id: 'sources-intro', className: 'section--tight section--top', wrap: 'wrap wrap--mid' }
       )
     ),
     str(
@@ -761,8 +761,8 @@ export function renderService(s) {
     parent: esg.path,
     preloadPhoto: s.photo,
     faqs: s.faqs,
-    service: { name: s.title, type: group ? group.title : 'ESG & sustainability' },
-    breadcrumb: [{ name: 'ESG & sustainability', href: esg.path }],
+    service: { name: s.title, type: group ? group.title : 'ESG & Sustainability' },
+    breadcrumb: [{ name: 'ESG & Sustainability', href: esg.path }],
   };
 
   const heroData = {
@@ -780,7 +780,7 @@ export function renderService(s) {
     str(
       hero(heroData, {
         crumbs: [
-          { name: 'ESG & sustainability', href: esg.path },
+          { name: 'ESG & Sustainability', href: esg.path },
           { name: s.shortTitle || s.title, href: s.path },
         ],
       })
@@ -866,7 +866,7 @@ export function renderService(s) {
         },
         {
           label: 'Talk to a specialist',
-          topic: 'ESG & sustainability',
+          topic: 'ESG & Sustainability',
           secondary: { label: 'All ESG services', href: esg.path },
         }
       )
@@ -885,13 +885,13 @@ export function renderNotFound() {
     id: 'notfound',
     path: '/404.html',
     title: 'Page not found',
-    metaTitle: 'Page not found | OffsetEase',
+    metaTitle: 'Page not found | Offsetease',
     description: 'That page does not exist. Find carbon supply, certificates, ESG services or contact us.',
   };
   const links = [
-    { title: 'Carbon supply', body: 'Spot, portfolio and offtake.', href: '/carbon-supply.html' },
+    { title: 'Carbon Supply', body: 'Spot, portfolio and offtake.', href: '/carbon-supply.html' },
     { title: 'Certificates', body: 'I-RECs and Energy Attribute Certificates.', href: '/energy-attribute-certificates.html' },
-    { title: 'ESG & sustainability', body: 'Eighteen in-depth services.', href: '/esg-sustainability.html' },
+    { title: 'ESG & Sustainability', body: 'Eighteen in-depth services.', href: '/esg-sustainability.html' },
     { title: 'Contact', body: 'A reply within one business day.', href: '/contact.html' },
   ];
   const body = str(
@@ -903,7 +903,7 @@ export function renderNotFound() {
           '<h2 class="label" style="margin-top:clamp(32px,4vw,56px)">Where to go next</h2>' +
           `<div>${str(cards(links, { stagger: 70 }))}</div>`
       ),
-      { id: 'notfound', className: 'section--tight', wrap: 'wrap wrap--mid' }
+      { id: 'notfound', className: 'section--tight section--top', wrap: 'wrap wrap--mid' }
     )
   );
   return { page, body };
@@ -932,7 +932,7 @@ function renderProse(d, crumbLabel) {
             `<p class="lede reveal" style="margin-top:22px">${esc(d.intro)}</p>` +
             `<p class="form__note reveal" style="margin-top:16px">Last updated ${esc(d.updated)}.</p>`
         ),
-        { id: 'intro', className: 'section--tight', wrap: 'wrap wrap--narrow' }
+        { id: 'intro', className: 'section--tight section--top', wrap: 'wrap wrap--narrow' }
       )
     ),
     str(

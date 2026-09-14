@@ -17,7 +17,7 @@ export const services = [
     number: '01',
     group: 'measure',
     title: 'GHG accounting',
-    metaTitle: 'GHG Accounting — Scope 1, 2 & 3 to the GHG Protocol | OffsetEase',
+    metaTitle: 'GHG Accounting — Scope 1, 2 & 3 to the GHG Protocol | Offsetease',
     kicker: 'The audited emissions baseline every target, disclosure and carbon claim is built on.',
     description:
       'Scope 1, 2 and 3 emissions inventories built to the GHG Protocol and ISO 14064-1 — assurance-ready, and aligned to IFRS S2, BRSR, CDP and SBTi.',
@@ -54,7 +54,7 @@ export const services = [
     number: '02',
     group: 'measure',
     title: 'Product carbon footprint',
-    metaTitle: 'Product Carbon Footprint (PCF) to ISO 14067 | OffsetEase',
+    metaTitle: 'Product Carbon Footprint (PCF) to ISO 14067 | Offsetease',
     kicker: 'The SKU-level carbon data your buyers now require.',
     description:
       'Cradle-to-gate and cradle-to-grave product carbon footprints to ISO 14067 and the GHG Protocol Product Standard — buyer-ready, tender-ready, and CBAM-ready.',
@@ -92,7 +92,7 @@ export const services = [
     number: '03',
     group: 'measure',
     title: 'Life cycle assessment',
-    metaTitle: 'Life Cycle Assessment (LCA) to ISO 14040/44 | OffsetEase',
+    metaTitle: 'Life Cycle Assessment (LCA) to ISO 14040/44 | Offsetease',
     kicker: 'The evidence base behind footprints, EPDs and credible claims.',
     description:
       'ISO 14040/44 life cycle assessment across carbon, water, energy and resource use — the rigorous foundation beneath product footprints, EPDs and defensible environmental claims.',
@@ -127,7 +127,7 @@ export const services = [
     group: 'measure',
     title: 'Environmental Product Declaration',
     shortTitle: 'EPD',
-    metaTitle: 'Environmental Product Declarations (EPD) | OffsetEase',
+    metaTitle: 'Environmental Product Declarations (EPD) | Offsetease',
     kicker: 'Verified declarations that qualify you to bid.',
     description:
       'Type III verified Environmental Product Declarations to ISO 14025 and EN 15804 — built on a compliant LCA, third-party verified and registered with a programme operator.',
@@ -161,7 +161,7 @@ export const services = [
     number: '05',
     group: 'report',
     title: 'BRSR & BRSR Core',
-    metaTitle: 'BRSR & BRSR Core Reporting for SEBI-Listed Companies | OffsetEase',
+    metaTitle: 'BRSR & BRSR Core Reporting for SEBI-Listed Companies | Offsetease',
     kicker: 'India’s assured sustainability disclosure.',
     description:
       'SEBI BRSR and BRSR Core reporting across the nine NGRBC principles — assurance-ready KPIs, value-chain data, and a filing-ready report interoperable with GRI and IFRS.',
@@ -198,7 +198,7 @@ export const services = [
     number: '06',
     group: 'report',
     title: 'CSRD & ESRS',
-    metaTitle: 'CSRD & ESRS Reporting After the Omnibus | OffsetEase',
+    metaTitle: 'CSRD & ESRS Reporting After the Omnibus | Offsetease',
     kicker: 'Europe’s sustainability disclosure — after the Omnibus.',
     description:
       'CSRD scope confirmation, double materiality, ESRS gap analysis and assurance readiness after Omnibus I — including for large non-EU groups above the turnover threshold.',
@@ -235,7 +235,7 @@ export const services = [
     number: '07',
     group: 'report',
     title: 'IFRS S1 & S2',
-    metaTitle: 'IFRS S1 & S2 (ISSB) Sustainability Disclosure | OffsetEase',
+    metaTitle: 'IFRS S1 & S2 (ISSB) Sustainability Disclosure | Offsetease',
     kicker: 'The global baseline for sustainability disclosure.',
     description:
       'ISSB IFRS S1 and S2 disclosure built on TCFD — governance, strategy, risk management, metrics and targets, with climate scenario analysis, mapped across BRSR, CSRD and CDP.',
@@ -272,7 +272,7 @@ export const services = [
     number: '08',
     group: 'report',
     title: 'Double materiality assessment',
-    metaTitle: 'Double Materiality Assessment for CSRD & ESRS | OffsetEase',
+    metaTitle: 'Double Materiality Assessment for CSRD & ESRS | Offsetease',
     kicker: 'What matters — to the business, and to the world.',
     description:
       'A defensible double materiality assessment — financial and impact materiality scored against recognised methodology, producing a matrix that survives assurance.',
@@ -306,7 +306,7 @@ export const services = [
     number: '09',
     group: 'certify',
     title: 'EcoVadis',
-    metaTitle: 'EcoVadis Rating Improvement — Gold & Platinum | OffsetEase',
+    metaTitle: 'EcoVadis Rating Improvement — Gold & Platinum | Offsetease',
     kicker: 'The medal your customers gate procurement on.',
     description:
       'EcoVadis scorecard diagnosis, gap analysis and evidence building across all four themes — prioritised by scoring weight and managed through to a better medal.',
@@ -343,7 +343,7 @@ export const services = [
     number: '10',
     group: 'certify',
     title: 'CDP',
-    metaTitle: 'CDP Disclosure & Score Improvement | OffsetEase',
+    metaTitle: 'CDP Disclosure & Score Improvement | Offsetease',
     kicker: 'Environmental disclosure, scored in public.',
     description:
       'CDP climate, water and forests questionnaires prepared to the scoring criteria and aligned to IFRS S2 and TCFD — with the governance and data evidence that scoring rewards.',
@@ -378,7 +378,7 @@ export const services = [
     number: '11',
     group: 'certify',
     title: 'CBAM',
-    metaTitle: 'CBAM Compliance — Verified Embedded Emissions Data | OffsetEase',
+    metaTitle: 'CBAM Compliance — Verified Embedded Emissions Data | Offsetease',
     kicker: 'Verified data beats default values.',
     description:
       'Product-level embedded emissions calculated and verified for the EU Carbon Border Adjustment Mechanism — replacing punitive defaults, supporting declarants and modelling margin impact.',
@@ -415,7 +415,7 @@ export const services = [
     number: '12',
     group: 'certify',
     title: 'EUDR',
-    metaTitle: 'EUDR Compliance — Plot-Level Traceability | OffsetEase',
+    metaTitle: 'EUDR Compliance — Plot-Level Traceability | Offsetease',
     kicker: 'Deforestation-free, proven to the plot.',
     description:
       'Plot-level geolocation, risk assessment and due-diligence statements for the EU Deforestation Regulation across all seven covered commodities and derived products.',
@@ -450,7 +450,7 @@ export const services = [
     number: '13',
     group: 'certify',
     title: 'ISCC certification',
-    metaTitle: 'ISCC EU, PLUS & CORSIA Certification | OffsetEase',
+    metaTitle: 'ISCC EU, PLUS & CORSIA Certification | Offsetease',
     kicker: 'Certified sustainability, traceable end to end.',
     description:
       'ISCC EU, ISCC PLUS and CORSIA certification — scheme selection, gap assessment, chain-of-custody and mass-balance set-up, and audit preparation.',
@@ -483,7 +483,7 @@ export const services = [
     number: '14',
     group: 'target',
     title: 'SBTi target setting',
-    metaTitle: 'SBTi Target Setting & Validation | OffsetEase',
+    metaTitle: 'SBTi Target Setting & Validation | Offsetease',
     kicker: 'Targets validated to science.',
     description:
       'Near-term and net-zero targets across Scope 1, 2 and 3 designed under the SBTi Corporate Net-Zero Standard, managed through validation and built V2-ready.',
@@ -519,7 +519,7 @@ export const services = [
     number: '15',
     group: 'target',
     title: 'Net zero & decarbonization',
-    metaTitle: 'Net Zero Pathways & Decarbonization Planning | OffsetEase',
+    metaTitle: 'Net Zero Pathways & Decarbonization Planning | Offsetease',
     kicker: 'A pathway your CFO will finance.',
     description:
       'Marginal abatement cost curves, sequenced pathway scenarios and a CFO-ready capital model — with a residual-emissions strategy drawn from our own high-integrity removals.',
@@ -555,7 +555,7 @@ export const services = [
     number: '16',
     group: 'strategise',
     title: 'ESG & CSR strategy',
-    metaTitle: 'ESG & CSR Strategy Tied to the Business | OffsetEase',
+    metaTitle: 'ESG & CSR Strategy Tied to the Business | Offsetease',
     kicker: 'Purpose tied to the business, not bolted on.',
     description:
       'A focused, measurable, governed CSR and ESG strategy connected to where your business creates and depends on value — and, in India, aligned with statutory CSR obligations.',
@@ -588,7 +588,7 @@ export const services = [
     number: '17',
     group: 'strategise',
     title: 'Climate risk & TCFD',
-    metaTitle: 'Climate Risk Assessment & TCFD / IFRS S2 Disclosure | OffsetEase',
+    metaTitle: 'Climate Risk Assessment & TCFD / IFRS S2 Disclosure | Offsetease',
     kicker: 'Physical and transition risk, quantified.',
     description:
       'Physical and transition climate risk identified, scenario-tested and quantified in financial terms — structured to TCFD and ready for IFRS S2.',
@@ -626,7 +626,7 @@ export const services = [
     group: 'strategise',
     title: 'Supplier & value-chain ESG assessment',
     shortTitle: 'Supplier & value-chain ESG',
-    metaTitle: 'Supplier & Value-Chain ESG Assessment | OffsetEase',
+    metaTitle: 'Supplier & Value-Chain ESG Assessment | Offsetease',
     kicker: 'Your ESG is only as strong as your value chain.',
     description:
       'Supplier segmentation, risk screening, primary Scope 3 data collection and improvement plans — building the traceable value-chain record buyers, regulators and rating agencies require.',

@@ -55,9 +55,9 @@
   --abyss: #020f11;
   --deep: #0a3d44;
   --teal: #0f5b64;
-  --bone: #f7f5f0;
-  --bone-2: #eceae2;
-  --bone-3: #e3e6e2;
+  --bone: #faf9f5;
+  --bone-2: #f2f0e9;
+  --bone-3: #e9ece8;
   --gold: #c8a16a;
   --gold-ink: #8a6524;
   --gold-lift: #e0c79b;
@@ -412,6 +412,14 @@ code {
 .section--flush {
   padding-block: 0;
 }
+/* First section on a page with no hero: clear the fixed header. The tight
+   padding alone is smaller than the nav on a phone, so the breadcrumb was
+   sliding under the logo. */
+.section--top {
+  /* The rendered nav is taller than --nav-h on small screens because of the
+     lockup, so this leans generous rather than exact. */
+  padding-top: calc(var(--nav-h) + clamp(56px, 9vw, 88px));
+}
 .section + .section {
   border-top: 1px solid var(--rule-soft);
 }
@@ -612,64 +620,16 @@ code {
 .lockup--footer {
   width: clamp(160px, 19vw, 216px);
 }
-/* Each ray sits inside a <g> that carries the rotation, so these CSS
-   transforms compose with it instead of replacing it. */
-.lockup__ray {
-  transform-box: fill-box;
-  transform-origin: left center;
-}
-.js .lockup__ray {
-  opacity: 0;
-  animation: ray-in 0.72s var(--ease) forwards;
-  animation-delay: calc(140ms + var(--i) * 75ms);
-}
+/* Each ray sits inside a <g> that carries the rotation, so a CSS transform
+   here would compose with it rather than replace it. Nothing animates: the
+   logo is present at first paint and stays still. Gating its visibility on an
+   animation meant it vanished entirely whenever that animation did not run. */
+.lockup__ray,
 .lockup__ring {
   transform-box: fill-box;
   transform-origin: center;
 }
-.js .lockup__ring {
-  opacity: 0;
-  animation: ring-in 0.8s var(--ease) 0.46s forwards;
-}
-.js .lockup__word {
-  opacity: 0;
-  animation: word-in 0.9s var(--ease) 0.4s forwards;
-}
-@keyframes ray-in {
-  from {
-    opacity: 0;
-    transform: scaleX(0.1);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes ring-in {
-  from {
-    opacity: 0;
-    transform: scale(0.35);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes word-in {
-  from {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 
-.nav__brand:hover .lockup__ray {
-  animation: none;
-  opacity: 1;
-}
 /* The mark does not rotate. A logo that spins when you reach for it reads as a
    toy, and it is the one element on the page that must sit still. */
 
@@ -712,7 +672,7 @@ code {
   inset: 2px 0 auto;
   z-index: 200;
   color: var(--deep);
-  background: rgb(247 245 240 / 0.86);
+  background: rgb(250 249 245 / 0.88);
   backdrop-filter: blur(18px) saturate(1.25);
   -webkit-backdrop-filter: blur(18px) saturate(1.25);
   border-bottom: 1px solid rgb(10 61 68 / 0.12);
@@ -3132,7 +3092,7 @@ a.card:hover .card__go svg {
   overscroll-behavior: contain;
   padding: clamp(22px, 2.4vw, 32px);
   color: var(--deep);
-  background: rgb(250 249 245 / 0.99);
+  background: rgb(252 251 248 / 0.99);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgb(10 61 68 / 0.14);
@@ -3302,7 +3262,7 @@ a.card:hover .card__go svg {
   inset: auto 0 0;
   height: 64px;
   pointer-events: none;
-  background: linear-gradient(180deg, rgb(247 245 240 / 0), var(--bone));
+  background: linear-gradient(180deg, rgb(250 249 245 / 0), var(--bone));
 }
 .menu.is-open::after {
   opacity: 1;
@@ -3501,7 +3461,7 @@ a.card:hover .card__go svg {
   justify-content: center;
   gap: 18px;
   padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  background: rgb(247 245 240 / 0.95);
+  background: rgb(250 249 245 / 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid rgb(10 61 68 / 0.14);
@@ -3772,7 +3732,7 @@ a.card:hover .card__go svg {
     bottom: 0;
     margin-top: 4px;
     padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
-    background: linear-gradient(180deg, rgb(247 245 240 / 0), var(--bone) 26%);
+    background: linear-gradient(180deg, rgb(250 249 245 / 0), var(--bone) 26%);
   }
 }
 

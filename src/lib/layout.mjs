@@ -203,13 +203,12 @@ function header(page) {
     <div class="menu" id="site-menu" data-menu hidden>
       <div class="menu__inner">
         <nav class="menu__primary" aria-label="Primary, mobile">
-          <a class="menu__big" href="${raw(url('/'))}">Home</a>
           ${join(
-            nav
-              .filter((i) => !i.mega)
-              .map((i) => `<a class="menu__big" href="${url(i.href)}">${esc(i.label)}</a>`)
+            // Every primary destination, including the two that carry a
+            // desktop disclosure — filtering on `mega` silently dropped
+            // Carbon Supply from this menu. No "Home": the logo is the way back.
+            nav.map((i) => `<a class="menu__big" href="${url(i.href)}">${esc(i.label)}</a>`)
           )}
-          <a class="menu__big" href="${raw(url('/esg-sustainability.html'))}">ESG &amp; sustainability</a>
         </nav>
         <div class="menu__groups">${raw(mobileGroups)}</div>
         <div class="menu__foot">

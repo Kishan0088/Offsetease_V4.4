@@ -60,7 +60,7 @@ export function proof(text, fig) {
 
 /**
  * OUR figures. Gold numerals, dark cell, and a provenance note underneath, so a
- * skimming visitor can never read a third party's number as OffsetEase's.
+ * skimming visitor can never read a third party's number as Offsetease's.
  * Market statistics use `marketStrip` and never share a row with these.
  */
 export function statStrip(stats, { className = '', note = '' } = {}) {

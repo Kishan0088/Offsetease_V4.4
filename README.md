@@ -1,6 +1,6 @@
-# OffsetEase — v4.4
+# Offsetease — v4.4
 
-A 28-page, zero-dependency static site for OffsetEase: high-integrity carbon
+A 28-page, zero-dependency static site for Offsetease: high-integrity carbon
 supply and project development, Renewable Energy (EACs), and eighteen in-depth
 ESG & sustainability services.
 

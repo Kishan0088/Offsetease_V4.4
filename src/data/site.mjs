@@ -3,12 +3,12 @@
 
 export const site = {
   // ── Identity ──────────────────────────────────────────────────────────────
-  name: 'OffsetEase',            // prose spelling, used in sentences
+  name: 'Offsetease',            // prose spelling, used in sentences
   wordmark: 'OFFSETEASE',        // display spelling, used in the lockup / eyebrows
-  legalName: 'OffsetEase',
+  legalName: 'Offsetease',
   tagline: 'A Leading Developer of High-Integrity Carbon Projects',
   description:
-    'OffsetEase sources, screens and supplies high-integrity carbon, develops projects ' +
+    'Offsetease sources, screens and supplies high-integrity carbon, develops projects ' +
     'at the source, and turns ESG data into defensible disclosure. One partner, one ' +
     'standard of integrity, across carbon and sustainability.',
 
@@ -101,11 +101,11 @@ export const megaMenus = {
 };
 
 export const nav = [
-  { label: 'Carbon supply', href: '/carbon-supply.html', mega: 'supply' },
+  { label: 'Carbon Supply', href: '/carbon-supply.html', mega: 'supply' },
   { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
   // `mega` opens the five ESG discipline groups on desktop, so a visitor
   // looking for CBAM does not have to guess which label hides it.
-  { label: 'ESG & sustainability', href: '/esg-sustainability.html', mega: 'esg' },
+  { label: 'ESG & Sustainability', href: '/esg-sustainability.html', mega: 'esg' },
 ];
 
 // The one button in the header. Named here so it is never spelled two ways.
@@ -115,7 +115,7 @@ export const footerNav = [
   {
     title: 'Carbon',
     links: [
-      { label: 'Carbon supply', href: '/carbon-supply.html' },
+      { label: 'Carbon Supply', href: '/carbon-supply.html' },
       { label: 'The Five Checks', href: '/carbon-supply.html#five-checks' },
       { label: 'Carbon project development', href: '/carbon-supply.html#pipeline' },
       { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },

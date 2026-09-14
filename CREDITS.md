@@ -62,7 +62,7 @@ dependency and renders offline.
 
 ## Brand
 
-The OffsetEase wordmark is the property of OffsetEase. The vectors in
+The Offsetease wordmark is the property of Offsetease. The vectors in
 `assets/brand/` were derived from the supplied raster artwork
 (`offsetease_logo_white.png`): the sunburst was **measured** and re-emitted as
 exact geometry, and the wordmark was contour-traced. The reconstructed

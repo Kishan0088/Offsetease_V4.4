@@ -44,7 +44,7 @@ export const site = {
     // Web3Forms access keys are public by design — they are read by the
     // browser, so they ship in the page source. Restrict this key to your
     // domain in the Web3Forms dashboard; that, not secrecy, is the control.
-    accessKey: '37e52a70-2ebb-4222-9f3d-e78a9799cc79',
+    accessKey: '54f3342e-86a1-406e-80ed-42a5b57d8d98',
     subject: 'New enquiry from offsetease.com',
   },
 

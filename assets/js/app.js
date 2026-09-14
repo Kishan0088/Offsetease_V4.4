@@ -289,25 +289,57 @@
     const listEl = $('[data-insight-items]');
     if (!bar || !listEl) return;
     const empty = $('[data-insight-empty]');
+    const status = $('[data-insight-status]');
     const items = $$('[data-topic]', listEl);
+    const chips = $$('.chip', bar);
 
-    bar.addEventListener('click', (e) => {
-      const btn = e.target.closest('.chip');
-      if (!btn) return;
-      const topic = btn.dataset.topic;
-      $$('.chip', bar).forEach((c) => {
-        const on = c === btn;
+    function apply(topic, { push = true } = {}) {
+      const known = chips.some((c) => c.dataset.topic === topic);
+      const t = known ? topic : 'all';
+      let shown = 0;
+      let label = 'All';
+      chips.forEach((c) => {
+        const on = c.dataset.topic === t;
         c.classList.toggle('is-on', on);
         c.setAttribute('aria-pressed', String(on));
+        if (on) label = (c.firstChild && c.firstChild.textContent) || c.textContent;
       });
-      let shown = 0;
       items.forEach((li) => {
-        const match = topic === 'all' || li.dataset.topic === topic;
+        const match = t === 'all' || li.dataset.topic === t;
         li.hidden = !match;
+        // A card further down the page may not have been revealed yet. Once
+        // filtering promotes it to the top, show it outright rather than
+        // waiting on an observer that has already passed it by.
+        if (match) li.classList.add('is-in');
         if (match) shown += 1;
       });
       if (empty) empty.hidden = shown !== 0;
+      if (status) {
+        status.textContent =
+          t === 'all'
+            ? `Showing all ${shown} articles.`
+            : `Showing ${shown} ${shown === 1 ? 'article' : 'articles'} in ${label.trim()}.`;
+      }
+      // Keep the choice in the URL so a topic can be linked, bookmarked and
+      // restored by the back button.
+      if (push) {
+        const u = new URL(location.href);
+        if (t === 'all') u.searchParams.delete('topic');
+        else u.searchParams.set('topic', t);
+        history.replaceState({ topic: t }, '', u);
+      }
+    }
+
+    bar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chip');
+      if (btn) apply(btn.dataset.topic);
     });
+    addEventListener('popstate', () => {
+      apply(new URLSearchParams(location.search).get('topic') || 'all', { push: false });
+    });
+
+    const initial = new URLSearchParams(location.search).get('topic');
+    if (initial) apply(initial, { push: false });
   }
 
   /* ---- Persistent mobile CTA ------------------------------------------- */

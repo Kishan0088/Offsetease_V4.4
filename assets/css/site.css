@@ -3789,6 +3789,14 @@ a.card:hover .card__go svg {
   color: rgb(10 61 68 / 0.7);
 }
 
+.ilist__status {
+  margin: 0 0 18px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
 .ilist__items {
   list-style: none;
   margin: 0;
@@ -4006,6 +4014,47 @@ a.card:hover .card__go svg {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--fg-mute);
+}
+
+.toc {
+  margin: clamp(22px, 3vw, 32px) 0 clamp(28px, 3.6vw, 40px);
+  padding: 18px 20px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+}
+.toc .label {
+  margin: 0 0 10px;
+}
+.toc ol {
+  margin: 0;
+  padding-left: 1.15em;
+  display: grid;
+  gap: 6px;
+}
+.toc li {
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+.toc a {
+  display: inline-flex;
+  align-items: center;
+  /* 19px tall as plain inline text, under the 24px WCAG 2.2 floor. */
+  min-height: 30px;
+  color: var(--fg-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.toc a:hover,
+.toc a:focus-visible {
+  color: var(--accent-text);
+  border-bottom-color: currentColor;
+}
+/* A jump link must not land the heading under the fixed header, which
+   measures 97px — 96 put the heading exactly 1px beneath it. */
+.art__body h2 {
+  scroll-margin-top: 124px;
 }
 
 /* ---- Figures carried over with the articles ------------------------------ */

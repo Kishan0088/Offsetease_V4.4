@@ -484,6 +484,10 @@ export function insightList(articles, categories) {
       .join('') +
     '</div>';
 
+  const status =
+    '<p class="ilist__status" data-insight-status role="status" aria-live="polite">' +
+    `Showing all ${articles.length} articles.</p>`;
+
   const items = articles
     .map((a) => {
       const id = a.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -510,8 +514,8 @@ export function insightList(articles, categories) {
     .join('');
 
   return raw(
-    `<div class="ilist">${chips}` +
-      `<ol class="ilist__items" data-insight-items>${items}</ol>` +
+    `<div class="ilist">${chips}${status}` +
+      `<ol class="ilist__items" data-insight-items aria-label="Articles">${items}</ol>` +
       '<p class="ilist__none" data-insight-empty hidden>No articles in that topic.</p>' +
       '</div>'
   );

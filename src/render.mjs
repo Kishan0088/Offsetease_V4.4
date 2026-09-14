@@ -6,7 +6,7 @@ import {
   insights, insightCategories, insightsByDate, insightStats, relatedInsights,
 } from './data/insights.mjs';
 import { services, groups, byId, servicesInGroup } from './data/services.mjs';
-import { esc, raw, str, md, kinetic } from './lib/html.mjs';
+import { esc, raw, str, md, kinetic, slug } from './lib/html.mjs';
 import { url } from './lib/paths.mjs';
 import { picture } from './lib/media.mjs';
 import {
@@ -534,6 +534,25 @@ function localiseBody(htmlStr) {
     .replace(/href="(\/[^"]*)"/g, (_, path) => `href="${url(path)}"`);
 }
 
+/**
+ * Give every h2 a stable id and return the contents list.
+ *
+ * Two reasons. A 1,500-word piece with seven sections needs a way in, and a
+ * section that can be linked directly is a section an answer engine can cite
+ * — `#the-one-decision-that-drives-your-cost` is a far better citation target
+ * than the page as a whole.
+ */
+function withHeadingAnchors(htmlStr) {
+  const toc = [];
+  const out = htmlStr.replace(/<h2>([\s\S]*?)<\/h2>/g, (_, inner) => {
+    const text = inner.replace(/<[^>]+>/g, '').trim();
+    const id = slug(text);
+    toc.push({ id, text });
+    return `<h2 id="${id}">${inner}</h2>`;
+  });
+  return { html: out, toc };
+}
+
 
 
 export function renderInsightArticle(a) {
@@ -552,6 +571,16 @@ export function renderInsightArticle(a) {
     year: 'numeric',
     timeZone: 'UTC',
   });
+
+  const { html: bodyHtml, toc } = withHeadingAnchors(localiseBody(a.body));
+  // Four or more sections is the point at which a reader wants a way in.
+  const contents =
+    toc.length >= 4
+      ? '<nav class="toc" aria-labelledby="toc-h">' +
+        '<p class="label" id="toc-h">In this article</p><ol>' +
+        toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('') +
+        '</ol></nav>'
+      : '';
 
   const meta =
     '<div class="art__meta">' +
@@ -600,7 +629,7 @@ export function renderInsightArticle(a) {
     str(
       section(
         raw(
-          `<div class="prose art__body">${localiseBody(a.body)}</div>` +
+          contents + `<div class="prose art__body">${bodyHtml}</div>` +
             refs +
             (a.disclaimer ? `<p class="prose__notice">${esc(a.disclaimer)}</p>` : '') +
             '<div class="art__foot">' +
@@ -667,10 +696,13 @@ export function renderInsights() {
     ),
 
     str(
-      section(raw(str(insightList(list, cats))), {
-        id: 'library',
-        chapter: 'Library',
-      })
+      section(
+        raw(
+          str(head({ eyebrow: 'The library', headline: `All ${insightStats.articles} articles` })) +
+            str(insightList(list, cats))
+        ),
+        { id: 'library', chapter: 'Library' }
+      )
     ),
 
     str(

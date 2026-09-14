@@ -195,7 +195,14 @@ JavaScript disabled, and every entrance animation is skipped under
   - Index: newest first, with a progressive-enhancement topic filter. Every
     article is in the DOM and visible before any script runs, so a crawler,
     reader mode and a no-JS visitor all get the full list; the script only
-    hides. Chip counts are rendered server-side.
+    hides. Chip counts are rendered server-side. The filter writes the topic
+    to `?topic=`, so a topic can be linked and the back button restores it,
+    and it announces the result through a `role="status"` region.
+    Thirteen articles share a publication date, so the sort falls back to the
+    client's own running order rather than to title — a title tiebreak
+    rendered the library alphabetically.
+  - Articles carry heading anchors and, at four sections or more, a contents
+    list. A linkable section is also a citable one.
   - Articles: `/<slug>.html`, with meta, prose, a sources list, the
     disclaimer, the related service and three further reads.
   - Interlinking: article prose links to 16 distinct service pages on this

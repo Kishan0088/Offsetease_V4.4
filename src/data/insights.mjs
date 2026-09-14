@@ -399,10 +399,14 @@ export function insightCategories() {
     .map(([name, count]) => ({ name, count, id: name.toLowerCase().replace(/[^a-z0-9]+/g, '-') }));
 }
 
-/** Newest first. Ties break on title so the order is stable between builds. */
+/** Newest first. Thirteen of the fourteen share a publication date, so a
+ *  title tiebreak would render the library alphabetically and bury the pieces
+ *  the client put first. Ties fall back to the order they arrive in above,
+ *  which is their own editorial running order. */
 export function insightsByDate() {
+  const rank = new Map(insights.map((a, i) => [a.slug, i]));
   return [...insights].sort(
-    (a, b) => b.published.localeCompare(a.published) || a.title.localeCompare(b.title)
+    (a, b) => b.published.localeCompare(a.published) || rank.get(a.slug) - rank.get(b.slug)
   );
 }
 

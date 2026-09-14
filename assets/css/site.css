@@ -960,15 +960,44 @@ a:hover > .ph--zoom img,
     ),
     radial-gradient(90% 70% at 12% 96%, rgb(15 91 100 / 0.62) 0%, rgb(4 26 30 / 0) 62%);
 }
+
+/* ...and lift it only on the home hero, which is the one carrying a clip worth
+   seeing and the only one whose media is reliably dark. Measured: at these
+   values the gold accent word still clears 3:1 over the brightest frame of
+   canopy-fog, where the inner heroes — shorter, on bright skies — do not. */
+.hero:not(.hero--inner):not(.hero--compact) .scrim--hero {
+  background:
+    linear-gradient(
+      100deg,
+      rgb(4 26 30 / 0.78) 0%,
+      rgb(4 26 30 / 0.42) 34%,
+      rgb(4 26 30 / 0.04) 62%,
+      rgb(4 26 30 / 0) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(4 26 30 / 0.52) 0%,
+      rgb(4 26 30 / 0.18) 44%,
+      rgb(10 61 68 / 0.68) 78%,
+      var(--ink) 100%
+    ),
+    radial-gradient(90% 70% at 12% 96%, rgb(15 91 100 / 0.5) 0%, rgb(4 26 30 / 0) 62%);
+}
 @media (max-width: 860px) {
-  /* No room for a side wash on a phone — go back to a straight vertical one. */
+  /* No room for a side wash on a phone, so the vertical one does all the work.
+     It is shaped to the content rather than applied flat: the top third holds
+     no text and stays light enough to read as a photograph, then the scrim
+     steps up hard at the eyebrow and holds. Measured — the flat version left
+     the 11.5px eyebrow at 3.28:1 on sixteen pages, because `cover` on a 375px
+     box crops to a bright centre strip that the desktop framing never shows. */
   .scrim--hero {
     background:
       linear-gradient(
         180deg,
-        rgb(4 26 30 / 0.86) 0%,
-        rgb(4 26 30 / 0.62) 34%,
-        rgb(10 61 68 / 0.8) 74%,
+        rgb(4 26 30 / 0.72) 0%,
+        rgb(4 26 30 / 0.6) 22%,
+        rgb(4 26 30 / 0.88) 36%,
+        rgb(10 61 68 / 0.9) 76%,
         var(--ink) 100%
       );
   }
@@ -1039,11 +1068,20 @@ a:hover > .ph--zoom img,
 .hero__eyebrow {
   margin-bottom: clamp(18px, 3vw, 32px);
 }
-/* Belt and braces where a glyph lands on a city light. */
+/* Belt and braces where a glyph lands on a bright patch of sky or fog. */
 .hero .label,
 .hero h1,
 .hero .lede {
   text-shadow: 0 1px 20px rgb(4 26 30 / 0.75);
+}
+/* Over photography the 11.5px mono eyebrow does not clear 4.5:1 in its default
+   teal — measured worst case 3.19:1 on the EAC hero and 3.81:1 on the service
+   heroes at 375px. A text-shadow does not count toward contrast, so this is a
+   colour change. It applies to every hero because the eyebrow always sits in
+   the top-left, where the scrim is at its strongest and the ground is reliably
+   dark; a brighter teal there only ever helps. */
+.hero .label {
+  color: #9ac8cd;
 }
 .hero__lede {
   display: flex;
@@ -3516,6 +3554,25 @@ a.card:hover .card__go svg {
   .mcard .ph {
     aspect-ratio: 2 / 1;
   }
+}
+
+/* ---- Cinematic hero ----------------------------------------------------- */
+
+/* Sits above the poster inside .hero__bg, so it inherits the same parallax
+   transform and the same scrim. It never becomes the LCP element: the poster
+   <picture> paints first and the clip dissolves over it once it can play. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease);
+  pointer-events: none;
+}
+.hero__video.is-playing {
+  opacity: 1;
 }
 
 /* ---- Cinematic band ----------------------------------------------------- */

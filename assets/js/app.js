@@ -250,7 +250,7 @@
   function initVideo() {
     const vids = $$('[data-video]');
     if (!vids.length) return;
-    // A 6.6 MB clip is a desktop luxury, not a mobile tax.
+    // A multi-megabyte clip is a desktop luxury, not a mobile tax.
     if (reduced() || saveData || innerWidth < 1024 || !mqFine.matches) return;
     if (!('IntersectionObserver' in window)) return;
 

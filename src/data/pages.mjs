@@ -9,7 +9,7 @@ export const home = {
   ogTitle: 'A Leading Developer of High-Integrity Carbon Projects',
   description:
     'Offsetease sources, screens and supplies high-integrity carbon, develops projects at the source, and turns ESG data into defensible disclosure. Every credit passes The Five Checks.',
-  preloadPhoto: 'earth-night',
+  preloadPhoto: 'canopy-fog',
 
   hero: {
     eyebrow: 'Science-led carbon & climate intelligence',
@@ -17,8 +17,8 @@ export const home = {
     accent: ['High-Integrity'],
     standfirst:
       'We do the hard part — finding and screening carbon that genuinely delivers — so your goals rest on credits that hold.',
-    photo: 'earth-night',
-    photoAlt: 'The Earth at night, city lights tracing the continents',
+    photo: 'canopy-fog',
+    photoAlt: 'Low cloud drifting through the crowns of a dense tropical forest',
     primary: { label: 'Contact us', href: '/contact.html' },
     secondary: { label: 'How we source', href: '/carbon-supply.html' },
     scrollCue: 'Scroll — the integrity story, in six chapters',
@@ -140,8 +140,8 @@ export const home = {
     headline: 'Stakeholders are partners, not suppliers.',
     body:
       'When our projects create value, that value is shared with the people and communities who make them possible.',
-    photo: 'farmland-sunrise',
-    photoAlt: 'Farmland catching the first light of sunrise',
+    photo: 'planting-hands',
+    photoAlt: 'Two people setting seedlings into a planted bed by hand',
   },
 
   impact: {
@@ -299,8 +299,8 @@ export const supply = {
     ],
     proof:
       'India is fast becoming a serious origination base for exactly this work: as of August 2025 there were around 49 carbon-removal projects in India (34 technical, 15 nature-based), with roughly 214,000 verified credits issued and ~114,000 under offtake (AlliedOffsets, 2025). Indian developers collectively transacted about 360,000 tonnes of durable removals in 2024, mostly bought by international buyers (CEEW / S&P Global Commodity Insights, 2025).',
-    photo: 'river-delta',
-    photoAlt: 'A braided river delta fanning out across a floodplain',
+    photo: 'fields-aerial',
+    photoAlt: 'Cultivated plots seen from the air, with farmers working between them',
   },
 
   standards: {
@@ -348,8 +348,8 @@ export const eac = {
     accent: ['credibly.'],
     standfirst:
       'We source and supply Energy Attribute Certificates — I-RECs and beyond — verified, correctly matched, and defensible under the GHG Protocol. The credible way to cut your market-based Scope 2, back an RE100 commitment, and strengthen your CDP score.',
-    photo: 'wind-turbines',
-    photoAlt: 'Wind turbines silhouetted at sunset',
+    photo: 'wind-fogbank',
+    photoAlt: 'A row of wind turbines standing in a low bank of fog',
   },
 
   deliver: {

@@ -9,3 +9,4 @@ node_modules/
 AUDIT-FIXES.md
 UX-AUDIT-FINDINGS.md
 *-AUDIT*.md
+.claude/

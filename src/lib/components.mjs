@@ -141,7 +141,7 @@ export function breadcrumb(items) {
 /**
  * Full-bleed hero. `variant: 'home'` adds the orbital field and scroll cue.
  */
-export function hero(h, { variant = 'inner', crumbs = null, stats = null, statsNote = '', scrollCue = null } = {}) {
+export function hero(h, { variant = 'inner', crumbs = null, stats = null, statsNote = '', scrollCue = null, video = '' } = {}) {
   const bg = str(
     picture(h.photo, { alt: h.photoAlt, priority: true, sizes: '100vw', className: 'ph--free' })
   );
@@ -153,11 +153,19 @@ export function hero(h, { variant = 'inner', crumbs = null, stats = null, statsN
       })
     ) + (h.secondary ? str(btn(h.secondary.label, h.secondary.href)) : '');
 
+  // The poster is the clip's own first frame, so the fade-in is a dissolve into
+  // motion rather than a cut between two different pictures. The <picture> above
+  // stays the LCP candidate; the clip is fetched only once the page is idle.
+  const videoEl = video
+    ? `<video class="hero__video" data-video="${url(video)}" muted loop playsinline ` +
+      'preload="none" aria-hidden="true" tabindex="-1"></video>'
+    : '';
+
   return raw(
     `<section class="hero${variant === 'inner' ? ' hero--inner' : ''}${
       variant === 'compact' ? ' hero--compact' : ''
     }">` +
-      `<div class="hero__bg" data-parallax="0.1">${bg}</div>` +
+      `<div class="hero__bg" data-parallax="0.1">${bg}${videoEl}</div>` +
       '<div class="scrim scrim--hero" aria-hidden="true"></div>' +
       '<div class="grid-overlay" aria-hidden="true"></div>' +
       '<span class="hero__scan" aria-hidden="true"></span>' +

@@ -178,10 +178,15 @@ JavaScript disabled, and every entrance animation is skipped under
   past a quarter of the page, because the header CTA retracts on scroll-down.
 - The origination-to-supply pipeline is a scroll-drawn instrument: a rail fills
   across the four stages and each badge ignites as the rail reaches it.
-- One cinematic clip (`assets/video/aerial-river-1080.mp4`, 6.6 MB) backs two
-  bands. It is lazy, `preload="none"`, and only ever requested on a wide,
-  fine-pointer, non-data-saver screen — phones and metered connections get the
-  photograph and pay nothing. It pauses when scrolled out of view.
+- Four cinematic clips (6.5 MB total, `assets/video/`) back two heroes and two
+  bands — one clip per placement, chosen for what the copy beside it actually
+  says: hands planting under *Stakeholders are partners*, worked plots seen
+  from the air under *Traceable to the ground*. Each is lazy, `preload="none"`,
+  and only ever requested on a wide, fine-pointer, non-data-saver screen —
+  phones and metered connections get the poster and pay nothing. They pause
+  when scrolled out of view, and no page loads more than two.
+- Each clip's poster is its own first frame, so the band dissolves into motion
+  instead of cross-fading between two different pictures.
 - Scroll progress uses a CSS `scroll()` timeline where supported, with a rAF
   fallback. All scroll-linked work shares a single rAF loop.
 - The brand mark does not rotate or animate on hover. It is the one element on

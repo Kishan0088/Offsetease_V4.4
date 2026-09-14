@@ -24,6 +24,7 @@ export function renderHome() {
         stats: d.hero.stats,
         statsNote: d.hero.statsNote,
         scrollCue: d.hero.scrollCue,
+        video: '/assets/video/canopy-fog-1080.mp4',
       })
     ),
 
@@ -128,7 +129,7 @@ export function renderHome() {
         eyebrow: d.method.eyebrow,
         headline: d.method.headline,
         body: d.method.body,
-        video: '/assets/video/aerial-river-1080.mp4',
+        video: '/assets/video/planting-hands-900.mp4',
       })
     ),
 
@@ -284,7 +285,7 @@ export function renderSupply() {
         photoAlt: d.pipeline.photoAlt,
         eyebrow: 'Traceable to the ground',
         headline: 'The credits you buy trace back to the land and the people who made them.',
-        video: '/assets/video/aerial-river-1080.mp4',
+        video: '/assets/video/fields-aerial-900.mp4',
       })
     ),
 
@@ -344,7 +345,12 @@ export function renderEac() {
   const d = eac;
   const body = [
     str(rail()),
-    str(hero(d.hero, { crumbs: [{ name: 'Certificates', href: d.path }] })),
+    str(
+      hero(d.hero, {
+        crumbs: [{ name: 'Certificates', href: d.path }],
+        video: '/assets/video/wind-fogbank-900.mp4',
+      })
+    ),
 
     str(
       section(

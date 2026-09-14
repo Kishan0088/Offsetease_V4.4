@@ -21,8 +21,8 @@ export const services = [
     kicker: 'The audited emissions baseline every target, disclosure and carbon claim is built on.',
     description:
       'Scope 1, 2 and 3 emissions inventories built to the GHG Protocol and ISO 14064-1 — assurance-ready, and aligned to IFRS S2, BRSR, CDP and SBTi.',
-    photo: 'eroded-terrain',
-    photoAlt: 'Eroded terrain traced by sediment channels, seen from above',
+    photo: 'stacks-dusk',
+    photoAlt: 'Industrial smokestacks silhouetted against a heavy sky',
     whatItIs:
       'GHG accounting measures every greenhouse gas your organisation is responsible for, in tonnes of CO₂-equivalent, organised under the GHG Protocol into three scopes: **Scope 1** (direct emissions), **Scope 2** (purchased energy), and **Scope 3** (all other value-chain emissions across 15 categories). It is the foundational inventory everything else refers back to.',
     whyItMatters:
@@ -96,8 +96,8 @@ export const services = [
     kicker: 'The evidence base behind footprints, EPDs and credible claims.',
     description:
       'ISO 14040/44 life cycle assessment across carbon, water, energy and resource use — the rigorous foundation beneath product footprints, EPDs and defensible environmental claims.',
-    photo: 'carbon-texture',
-    photoAlt: 'Close texture of dark carbon-rich material',
+    photo: 'scrap-crane',
+    photoAlt: 'An overhead crane sorting scrap metal at a recycling plant',
     whatItIs:
       'An LCA quantifies the full environmental impact of a product or process across its life cycle — carbon and, where needed, water, energy, acidification and resource use — to ISO 14040/44, through four phases: goal and scope, inventory, impact assessment, and interpretation.',
     whyItMatters:
@@ -131,8 +131,8 @@ export const services = [
     kicker: 'Verified declarations that qualify you to bid.',
     description:
       'Type III verified Environmental Product Declarations to ISO 14025 and EN 15804 — built on a compliant LCA, third-party verified and registered with a programme operator.',
-    photo: 'factory-interior',
-    photoAlt: 'Interior of an industrial production hall',
+    photo: 'building-frame',
+    photoAlt: 'A building under construction, scaffolding against the frame',
     whatItIs:
       'An EPD is a Type III, independently verified report of a product’s life-cycle environmental performance (ISO 14025), built on an LCA and the relevant Product Category Rules. In construction it follows EN 15804 and is registered with a programme operator.',
     whyItMatters:
@@ -165,8 +165,8 @@ export const services = [
     kicker: 'India’s assured sustainability disclosure.',
     description:
       'SEBI BRSR and BRSR Core reporting across the nine NGRBC principles — assurance-ready KPIs, value-chain data, and a filing-ready report interoperable with GRI and IFRS.',
-    photo: 'valley-dawn',
-    photoAlt: 'A wide valley at dawn under low cloud',
+    photo: 'textile-floor',
+    photoAlt: 'Workers at the machines on the floor of an Indian textile factory',
     whatItIs:
       'The Business Responsibility and Sustainability Report is SEBI’s mandatory ESG disclosure for India’s largest listed companies, structured around the nine NGRBC principles. A defined subset — **BRSR Core** — carries key KPIs that require reasonable assurance.',
     whyItMatters:
@@ -202,8 +202,8 @@ export const services = [
     kicker: 'Europe’s sustainability disclosure — after the Omnibus.',
     description:
       'CSRD scope confirmation, double materiality, ESRS gap analysis and assurance readiness after Omnibus I — including for large non-EU groups above the turnover threshold.',
-    photo: 'forest-fog',
-    photoAlt: 'Dense conifer forest disappearing into fog',
+    photo: 'works-dusk',
+    photoAlt: 'A large industrial works seen from the air at dusk',
     whatItIs:
       'The Corporate Sustainability Reporting Directive is the EU’s mandatory sustainability reporting regime, reported under the European Sustainability Reporting Standards (ESRS), built on **double materiality** and subject to assurance.',
     whyItMatters:
@@ -276,8 +276,8 @@ export const services = [
     kicker: 'What matters — to the business, and to the world.',
     description:
       'A defensible double materiality assessment — financial and impact materiality scored against recognised methodology, producing a matrix that survives assurance.',
-    photo: 'lone-tree',
-    photoAlt: 'A single mature tree standing in open land',
+    photo: 'paddy-works',
+    photoAlt: 'A farmer working a flooded paddy field, an industrial works on the horizon',
     whatItIs:
       'A double materiality assessment answers two questions at once: which sustainability issues affect your business (**financial materiality**), and which impacts your business has on people and the planet (**impact materiality**). It’s the foundation CSRD, IFRS disclosure and a serious ESG strategy all stand on.',
     whyItMatters:
@@ -310,8 +310,8 @@ export const services = [
     kicker: 'The medal your customers gate procurement on.',
     description:
       'EcoVadis scorecard diagnosis, gap analysis and evidence building across all four themes — prioritised by scoring weight and managed through to a better medal.',
-    photo: 'solar-farm',
-    photoAlt: 'Aerial view of a solar farm laid out in rows',
+    photo: 'pallets-dock',
+    photoAlt: 'A forklift moving stacked pallets in a distribution warehouse',
     whatItIs:
       'EcoVadis is a business sustainability rating across four themes — environment, labour and human rights, ethics, and sustainable procurement — resulting in a percentile score and a medal that large buyers use to assess and gate suppliers.',
     whyItMatters:
@@ -419,8 +419,8 @@ export const services = [
     kicker: 'Deforestation-free, proven to the plot.',
     description:
       'Plot-level geolocation, risk assessment and due-diligence statements for the EU Deforestation Regulation across all seven covered commodities and derived products.',
-    photo: 'mangrove-river',
-    photoAlt: 'A river winding through dense mangrove forest',
+    photo: 'coffee-cherries',
+    photoAlt: 'Hands picking ripe coffee cherries from the plant',
     whatItIs:
       'The EU Deforestation Regulation requires that covered commodities placed on the EU market are deforestation-free and traceable to the plot of land where they were produced, backed by a due-diligence statement.',
     whyItMatters:
@@ -454,8 +454,8 @@ export const services = [
     kicker: 'Certified sustainability, traceable end to end.',
     description:
       'ISCC EU, ISCC PLUS and CORSIA certification — scheme selection, gap assessment, chain-of-custody and mass-balance set-up, and audit preparation.',
-    photo: 'industrial-plant',
-    photoAlt: 'An industrial plant seen against a pale sky',
+    photo: 'tank-farm',
+    photoAlt: 'Fuel storage tanks seen from the air',
     whatItIs:
       'ISCC certifies that materials and fuels are produced sustainably and traceable along the chain, through the scheme that fits your market — **ISCC EU** (regulated markets and biofuels), **ISCC PLUS** (circular and bio-based materials), and **CORSIA** (sustainable aviation fuels) — using chain-of-custody and mass-balance accounting.',
     whyItMatters:
@@ -487,8 +487,8 @@ export const services = [
     kicker: 'Targets validated to science.',
     description:
       'Near-term and net-zero targets across Scope 1, 2 and 3 designed under the SBTi Corporate Net-Zero Standard, managed through validation and built V2-ready.',
-    photo: 'hero-canopy',
-    photoAlt: 'Sunlight breaking through a high forest canopy',
+    photo: 'blade-yard',
+    photoAlt: 'Wind turbine blades racked in a yard',
     whatItIs:
       'The Science Based Targets initiative validates corporate emissions targets against climate science. We set near-term and net-zero targets across Scope 1, 2 and 3 under the SBTi Corporate Net-Zero Standard, and manage them through validation.',
     whyItMatters:
@@ -559,8 +559,8 @@ export const services = [
     kicker: 'Purpose tied to the business, not bolted on.',
     description:
       'A focused, measurable, governed CSR and ESG strategy connected to where your business creates and depends on value — and, in India, aligned with statutory CSR obligations.',
-    photo: 'tree-nursery',
-    photoAlt: 'Rows of young trees in a nursery',
+    photo: 'paddy-drying',
+    photoAlt: 'Women spreading paddy out to dry in a rural Indian village',
     whatItIs:
       'A CSR and ESG strategy that connects social and environmental investment to where your business creates and depends on value — focused, measurable and governed. In India, aligned with statutory CSR obligations.',
     whyItMatters:
@@ -630,8 +630,8 @@ export const services = [
     kicker: 'Your ESG is only as strong as your value chain.',
     description:
       'Supplier segmentation, risk screening, primary Scope 3 data collection and improvement plans — building the traceable value-chain record buyers, regulators and rating agencies require.',
-    photo: 'farmland-sunrise',
-    photoAlt: 'Farmland catching the first light of sunrise',
+    photo: 'warehouse-aisle',
+    photoAlt: 'Workers and a forklift along a warehouse aisle',
     whatItIs:
       'Assessment and engagement of your suppliers on environmental, social and governance criteria — building the Scope 3, due-diligence and disclosure evidence that buyers, regulators and rating agencies increasingly require.',
     whyItMatters:

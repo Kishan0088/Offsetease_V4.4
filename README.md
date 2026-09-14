@@ -178,15 +178,25 @@ JavaScript disabled, and every entrance animation is skipped under
   past a quarter of the page, because the header CTA retracts on scroll-down.
 - The origination-to-supply pipeline is a scroll-drawn instrument: a rail fills
   across the four stages and each badge ignites as the rail reaches it.
-- Four cinematic clips (6.5 MB total, `assets/video/`) back two heroes and two
+- Seven cinematic clips (11 MB total, `assets/video/`) back five heroes and two
   bands — one clip per placement, chosen for what the copy beside it actually
-  says: hands planting under *Stakeholders are partners*, worked plots seen
-  from the air under *Traceable to the ground*. Each is lazy, `preload="none"`,
-  and only ever requested on a wide, fine-pointer, non-data-saver screen —
-  phones and metered connections get the poster and pay nothing. They pause
-  when scrolled out of view, and no page loads more than two.
+  says: hands planting under *Stakeholders are partners*, worked plots from the
+  air under *Traceable to the ground*, a cotton mill under *ESG that creates
+  value*. Each is lazy, `preload="none"`, and only ever requested on a wide,
+  fine-pointer, non-data-saver screen — phones and metered connections get the
+  poster and pay nothing. They pause when scrolled out of view, and no page
+  loads more than two.
 - Each clip's poster is its own first frame, so the band dissolves into motion
   instead of cross-fading between two different pictures.
+- Photography is matched to what the copy says, not to its keywords. The
+  *Durable removals* card cites "86% of durable CDR deliveries were biochar",
+  so it shows a pyrolysis kiln, not the basalt it names second; *Avoidance &
+  reduction* says "clean cookstoves", so it shows the open fire one replaces;
+  EUDR shows coffee, one of its seven covered commodities. Where the copy names
+  a country the photograph is of that country; where it names an EU regulation
+  that binds exporters, the photograph is of the industry regulated, not of
+  Europe. 45 image slots draw on 42 distinct photographs — only four are used
+  twice, and none three times.
 - Scroll progress uses a CSS `scroll()` timeline where supported, with a rAF
   fallback. All scroll-linked work shares a single rAF loop.
 - The brand mark does not rotate or animate on hover. It is the one element on

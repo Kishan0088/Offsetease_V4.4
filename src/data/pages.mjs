@@ -70,8 +70,8 @@ export const home = {
         body: '43% of 2024 retirements still came from low-rated projects. Price is the reason; exposure is the cost.',
       },
       {
-        photo: 'lone-tree',
-        photoAlt: 'A single mature tree standing in open land',
+        photo: 'light-through-fog',
+        photoAlt: 'Sunlight breaking through fog in a stand of trees',
         eyebrow: 'The correction',
         title: 'Quality is now visibly rewarded',
         body: 'Credits rated A or higher made up 36% of 2025’s retirement value. The market is repricing integrity in real time.',
@@ -196,8 +196,8 @@ export const supply = {
     accent: ['screened,'],
     standfirst:
       'We match you to high-quality carbon that fits your goals and timeline — sourced at the project, screened against The Five Checks, and delivered with full traceability.',
-    photo: 'sunlit-forest',
-    photoAlt: 'Sunlight falling through a stand of tall trees',
+    photo: 'tea-terraces',
+    photoAlt: 'Tea terraces following the contours of a hillside',
   },
 
   ways: {
@@ -220,20 +220,20 @@ export const supply = {
       {
         title: 'Nature-based',
         body: 'Afforestation, reforestation, agroforestry, REDD+ and soil carbon — carbon that restores land and supports communities.',
-        photo: 'hero-canopy',
-        photoAlt: 'Sunlight breaking through a high forest canopy',
+        photo: 'sapling-rows',
+        photoAlt: 'Young trees planted in rows across open farmland',
       },
       {
         title: 'Durable removals',
         body: 'Biochar and enhanced weathering — permanent removal for the emissions you can’t yet cut.',
-        photo: 'basalt-columns',
-        photoAlt: 'Columnar basalt formations in raking light',
+        photo: 'kiln-embers',
+        photoAlt: 'Embers glowing through the openings of a kiln',
       },
       {
         title: 'Avoidance & reduction',
         body: 'Clean cookstoves, clean water and methane capture, where the integrity and impact are strong.',
-        photo: 'industrial-plant',
-        photoAlt: 'An industrial plant seen against a pale sky',
+        photo: 'cook-fire',
+        photoAlt: 'A pot cooking over an open wood fire',
       },
     ],
     proof:
@@ -420,8 +420,8 @@ export const esg = {
     accent: ['value,'],
     standfirst:
       'ESG is more than a report, a score or a compliance exercise. We turn your ESG data into business insight — built into strategy, operations, customer conversations and investor communications, so it creates value from every direction.',
-    photo: 'industrial-plant',
-    photoAlt: 'An industrial plant seen against a pale sky',
+    photo: 'cotton-mill',
+    photoAlt: 'A worker operating cotton spinning machines in a mill',
   },
 
   overview: {
@@ -436,8 +436,8 @@ export const esg = {
     headline: 'Start with the data, not the report.',
     body:
       'Tell us which framework is bearing down on you and we’ll map the shortest defensible route through it. A senior specialist replies within one business day.',
-    photo: 'eroded-terrain',
-    photoAlt: 'Eroded terrain traced by sediment channels, seen from above',
+    photo: 'dial-gauges',
+    photoAlt: 'Large analogue measuring dials mounted in an industrial hall',
   },
 };
 
@@ -457,8 +457,8 @@ export const about = {
     accent: ['partner,'],
     standfirst:
       'We help companies act on climate with confidence. On one side, we originate and supply high-quality carbon, screened against The Five Checks. On the other, we turn ESG data into business insight and defensible disclosure. One partner, one standard of integrity, across both.',
-    photo: 'river-delta',
-    photoAlt: 'A braided river delta fanning out across a floodplain',
+    photo: 'valley-dawn',
+    photoAlt: 'A wide valley at dawn under low cloud',
   },
 
   team: {
@@ -507,16 +507,16 @@ export const about = {
       { value: '214,000', label: 'verified credits issued across India', source: 'AlliedOffsets, August 2025' },
       { value: '114,000', label: 'Indian credits under offtake', source: 'AlliedOffsets, August 2025' },
     ],
-    photo: 'farmland-sunrise',
-    photoAlt: 'Farmland catching the first light of sunrise',
+    photo: 'rice-transplant',
+    photoAlt: 'Farmers transplanting rice seedlings by hand in a flooded field',
   },
 
   close: {
     headline: 'Let’s build something that lasts.',
     body:
       'Carbon or sustainability, a first project or a long-term partnership — start with a conversation. A senior specialist replies within one business day.',
-    photo: 'lone-tree',
-    photoAlt: 'A single mature tree standing in open land',
+    photo: 'marigold-aerial',
+    photoAlt: 'A woman working in a marigold field, seen from above',
   },
 };
 

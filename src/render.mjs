@@ -191,7 +191,12 @@ export function renderSupply() {
   const d = supply;
   const body = [
     str(rail()),
-    str(hero(d.hero, { crumbs: [{ name: 'Carbon Supply', href: d.path }] })),
+    str(
+      hero(d.hero, {
+        crumbs: [{ name: 'Carbon Supply', href: d.path }],
+        video: '/assets/video/tea-terraces-900.mp4',
+      })
+    ),
 
     str(
       section(
@@ -450,7 +455,12 @@ export function renderEsg() {
 
   const body = [
     str(rail()),
-    str(hero(d.hero, { crumbs: [{ name: 'ESG & Sustainability', href: d.path }] })),
+    str(
+      hero(d.hero, {
+        crumbs: [{ name: 'ESG & Sustainability', href: d.path }],
+        video: '/assets/video/cotton-mill-900.mp4',
+      })
+    ),
 
     str(
       section(
@@ -553,6 +563,7 @@ export function renderAbout() {
         photoAlt: d.where.photoAlt,
         eyebrow: 'On the ground',
         headline: 'Rooted in India. Developing projects where the impact happens.',
+        video: '/assets/video/rice-transplant-900.mp4',
       })
     ),
 

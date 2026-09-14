@@ -2,12 +2,20 @@
 
 ## Photography
 
-Most photographs are from [Unsplash](https://unsplash.com), used under the
-[Unsplash Licence](https://unsplash.com/license), which permits free commercial
-use without attribution. Four are single frames pulled from the Pexels clips
-listed under **Video** below, so that each cinematic band and hero dissolves
-from its own first frame into motion rather than cutting between two different
-pictures. Attribution is given anyway where it is known.
+Photography comes from [Unsplash](https://unsplash.com) and
+[Pexels](https://www.pexels.com), under the
+[Unsplash Licence](https://unsplash.com/license) and the
+[Pexels Licence](https://www.pexels.com/license/) respectively — both permit
+free commercial use without attribution. Attribution is given anyway where it
+is known. Seven images are single frames pulled from the clips listed under
+**Video**, so that each cinematic hero and band dissolves from its own first
+frame into motion rather than cutting between two different pictures.
+
+Images are matched to what the copy on the page actually says, not to its
+keywords. Where the copy names a place, the photograph is of that place: BRSR
+and CSR strategy name India, so they look Indian. Where the copy names an EU
+regulation that binds exporters — CBAM, CSRD, EUDR, ISCC — the photograph is of
+the industry or commodity being regulated, not of Europe or its institutions.
 
 ### Named photographers
 
@@ -51,6 +59,29 @@ allows) with a WebP fallback capped at 1440, and carries an inline base64 LQIP
 for blur-up loading. Source dimensions, byte sizes and placeholders are in
 `assets/img/photos/manifest.json`.
 
+### Pexels stills
+
+| File | Used on | Pexels ID | Photographer |
+|---|---|---|---|
+| `stacks-dusk` | GHG accounting | 7080767 | Ala J Graczyk |
+| `scrap-crane` | Life cycle assessment | 36397860 | Willians Huerta |
+| `building-frame` | Environmental Product Declaration | 13795569 | Kenneth Leguizamon |
+| `textile-floor` | BRSR & BRSR Core | 31199588 | EqualStock IN |
+| `works-dusk` | CSRD & ESRS | 19750125 | Batuhan Kocabaş |
+| `paddy-works` | Double materiality assessment | 29871971 | VŨ NGỌC CƯỜNG |
+| `pallets-dock` | EcoVadis | 17229385 | Léster Lau |
+| `coffee-cherries` | EUDR | 36040333 | Irvin David |
+| `tank-farm` | ISCC certification | 6060191 | Tom Fisk |
+| `blade-yard` | SBTi target setting | 33708756 | Martijn Stoof |
+| `paddy-drying` | ESG & CSR strategy | 20407292 | Dibakar Roy |
+| `warehouse-aisle` | Supplier & value-chain ESG | 30824313 | GB The Green Brand |
+| `light-through-fog` | Home — story, *The correction* | 1287086 | eberhard grossgasteiger |
+| `sapling-rows` | Carbon Supply — *Nature-based* | 5335838 | Markus Winkler |
+| `kiln-embers` | Carbon Supply — *Durable removals* | 34584522 | Yetkin Ağaç |
+| `cook-fire` | Carbon Supply — *Avoidance & reduction* | 17711232 | Matheus Alves |
+| `dial-gauges` | ESG — *Start with the data* | 12093440 | Jakob Schlothane |
+| `marigold-aerial` | About — closing | 20305884 | Dibakar Roy |
+
 ### Frames used as stills
 
 | File | Source clip |
@@ -59,10 +90,13 @@ for blur-up loading. Source dimensions, byte sizes and placeholders are in
 | `planting-hands` | Pexels 9737856 — K |
 | `fields-aerial` | Pexels 34999648 — Atikur Rahman |
 | `wind-fogbank` | Pexels 30013228 — Tom Schönmann |
+| `tea-terraces` | Pexels 36151768 — RAHULKUMAR R |
+| `cotton-mill` | Pexels 31005821 — EqualStock IN |
+| `rice-transplant` | Pexels 8732183 — Abdul Ali Siddique |
 
 ## Video
 
-Four clips from [Pexels](https://www.pexels.com), used under the
+Seven clips from [Pexels](https://www.pexels.com), used under the
 [Pexels Licence](https://www.pexels.com/license/), which permits free commercial
 use without attribution. Attribution is given anyway.
 
@@ -72,14 +106,17 @@ use without attribution. Attribution is given anyway.
 | `planting-hands-900.mp4` | Home — *Our Model* band | [9737856](https://www.pexels.com/video/two-women-planting-seedlings-at-farm-9737856/) | K |
 | `fields-aerial-900.mp4` | Carbon Supply — *Traceable to the ground* band | [34999648](https://www.pexels.com/video/aerial-view-of-farmers-in-a-rice-field-34999648/) | Atikur Rahman |
 | `wind-fogbank-900.mp4` | Renewable Energy (EACs) hero | [30013228](https://www.pexels.com/video/wind-turbines-in-foggy-landscape-30013228/) | Tom Schönmann |
+| `tea-terraces-900.mp4` | Carbon Supply hero | [36151768](https://www.pexels.com/video/aerial-view-of-lush-green-tea-plantations-36151768/) | RAHULKUMAR R |
+| `cotton-mill-900.mp4` | ESG & Sustainability hero | [31005821](https://www.pexels.com/video/textile-worker-operating-cotton-spinning-machines-31005821/) | EqualStock IN |
+| `rice-transplant-900.mp4` | About — *Rooted in India* band | [8732183](https://www.pexels.com/video/farmers-harvesting-using-their-hands-8732183/) | Abdul Ali Siddique |
 
 Each clip is re-encoded from the 1080p master: audio stripped, trimmed to a
 single beat, scaled to 1600px wide (1440 for the aerial, whose crop texture is
 expensive), H.264 high profile with `+faststart`. The three drone moves are cut
 as palindromes — forward then reversed — so they loop without a visible jump;
 the hand-planting clip runs forward only, because reversed planting reads as
-unplanting. Together they weigh 6.5 MB, against 6.6 MB for the single generic
-river clip they replace, and no page loads more than two.
+unplanting. Together they weigh 11 MB across seven placements, and no page loads more
+than two.
 
 They are lazy: `preload="none"`, fetched by IntersectionObserver, and only on
 a viewport ≥1024px with a fine pointer and no Save-Data header. Everyone else

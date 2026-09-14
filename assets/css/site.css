@@ -2478,6 +2478,121 @@ a.card:hover .card__go svg {
   font-size: clamp(16px, 1.3vw, 19px);
 }
 
+/* ---- Closing enquiry form ----------------------------------------------- */
+/* A service page ends with the form rather than a button to a generic contact
+   page. Two columns on a desk, stacked on a phone, over the same photograph
+   and scrim the plain closing section uses. */
+.close--form .close__inner--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+  justify-items: stretch;
+}
+@media (max-width: 900px) {
+  .close--form .close__inner--split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.close--form .close__h {
+  font-size: clamp(28px, 3.6vw, 50px);
+  max-width: 15ch;
+}
+.close__say {
+  display: grid;
+  gap: clamp(18px, 2.4vw, 26px);
+  align-content: start;
+}
+.close__facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  border-top: 1px solid rgb(245 243 238 / 0.16);
+}
+.close__facts li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgb(245 243 238 / 0.16);
+  font-size: 15px;
+}
+.close__facts li > span:first-child {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mist);
+  min-width: 68px;
+}
+.close__facts a {
+  color: var(--bone);
+  text-decoration: none;
+  border-bottom: 1px solid rgb(245 243 238 / 0.3);
+}
+.close__facts a:hover {
+  border-bottom-color: var(--gold);
+}
+
+/* The form sits on a panel of its own so the fields keep a reliable ground
+   whatever the photograph behind the section is doing. */
+.close__form {
+  background: rgb(4 26 30 / 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgb(245 243 238 / 0.14);
+  border-radius: 14px;
+  padding: clamp(22px, 3vw, 34px);
+}
+.form--compact {
+  gap: clamp(14px, 1.6vw, 18px);
+}
+.form--compact .field__lab {
+  color: rgb(245 243 238 / 0.92);
+}
+.form--compact .field input,
+.form--compact .field textarea {
+  background: rgb(4 26 30 / 0.55);
+  border-color: rgb(245 243 238 / 0.34);
+  color: var(--bone);
+}
+.form--compact .field input::placeholder,
+.form--compact .field textarea::placeholder {
+  color: rgb(245 243 238 / 0.45);
+}
+.form--compact .field input:focus,
+.form--compact .field textarea:focus {
+  border-color: var(--gold);
+  background: rgb(200 161 106 / 0.1);
+}
+.form--compact .field textarea {
+  min-height: 84px;
+}
+.form--compact .field__err {
+  /* #a8402a is tuned for the bone ground and disappears against ink. */
+  color: #f0a08e;
+}
+.form--compact .consent label,
+.form--compact .form__note {
+  color: rgb(245 243 238 / 0.78);
+}
+.form--compact .consent a {
+  color: var(--bone);
+}
+.form--compact .form__status[data-tone='ok'] {
+  color: var(--mist);
+}
+.form--compact .form__status[data-tone='err'] {
+  color: #f0a08e;
+}
+@media (max-width: 560px) {
+  .close__form {
+    padding: 20px 16px;
+  }
+}
+
 /* ---- Footer ------------------------------------------------------------- */
 
 .footer {

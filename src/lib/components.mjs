@@ -1,5 +1,5 @@
 import { esc, html, raw, join, md, kinetic, slug, str } from './html.mjs';
-import { primaryCta } from '../data/site.mjs';
+import { primaryCta, site } from '../data/site.mjs';
 import { url } from './paths.mjs';
 import { picture } from './media.mjs';
 
@@ -417,6 +417,97 @@ export function closeCta(
       str(btn(label, href, { variant: 'gold', magnetic: true })) +
       (secondary ? str(btn(secondary.label, secondary.href)) : '') +
       '</div></div></section>'
+  );
+}
+
+/**
+ * The short enquiry form that closes a service page.
+ *
+ * The contact page keeps its full form; this one asks for four things and
+ * carries the service in a hidden field, because a visitor who has just read
+ * 2,000 words about CBAM should not then have to tell us they are here about
+ * CBAM. `subject` names the page too, so the enquiry arrives in the inbox
+ * already sorted.
+ *
+ * Field ids are prefixed `q-` so a page can carry this and the contact form's
+ * `f-` fields without colliding. app.js binds it through `data-form`, exactly
+ * as it binds the contact page, so validation, the honeypot, the error
+ * messaging and the status region all come for free.
+ */
+export function compactForm({ topic, heading = 'Start here', note = '' } = {}) {
+  const f = (id, label, control, { optional = false } = {}) =>
+    `<div class="field"><label class="field__lab" for="${id}">${esc(label)}` +
+    (optional ? ' <em>(optional)</em>' : ' <i class="req" aria-hidden="true">*</i>') +
+    `</label>${control}` +
+    `<span class="field__err" id="${id}-err" aria-live="polite"></span></div>`;
+
+  return raw(
+    '<form class="form form--compact" data-form method="POST" ' +
+      `action="${esc(site.form.endpoint)}" aria-label="${esc(heading)}">` +
+      `<input type="hidden" name="access_key" value="${esc(site.form.accessKey)}">` +
+      `<input type="hidden" name="subject" value="${esc(`${topic} enquiry — ${site.name} website`)}">` +
+      `<input type="hidden" name="from_name" value="${esc(site.name)} website">` +
+      // Not a select. The visitor already chose the topic by reading the page.
+      `<input type="hidden" name="topic" value="${esc(topic)}">` +
+      '<div class="hp" aria-hidden="true"><label for="q-botcheck">Leave this empty</label>' +
+      '<input id="q-botcheck" type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true"></div>' +
+      '<div class="field--pair">' +
+      f('q-name', 'Name',
+        '<input id="q-name" type="text" name="name" required autocomplete="name" ' +
+        'maxlength="120" aria-describedby="q-name-err">') +
+      f('q-email', 'Work email',
+        '<input id="q-email" type="email" name="email" required autocomplete="email" ' +
+        'maxlength="160" aria-describedby="q-email-err">') +
+      '</div>' +
+      f('q-company', 'Company',
+        '<input id="q-company" type="text" name="company" required autocomplete="organization" ' +
+        'maxlength="160" aria-describedby="q-company-err">') +
+      // Verbatim, not lower-cased: half these topics are acronyms, and
+    // "Where are you with cbam?" reads like a typo. Unescaped here too —
+    // f() escapes the whole label, and esc() twice gives "&amp;amp;".
+    f('q-message', `Where are you with ${topic}?`,
+        '<textarea id="q-message" name="message" rows="3" maxlength="4000" ' +
+        'aria-describedby="q-message-err"></textarea>', { optional: true }) +
+      '<div class="consent">' +
+      '<input id="q-consent" type="checkbox" name="consent" value="yes" required ' +
+      'aria-describedby="q-consent-err">' +
+      `<div><label for="q-consent">I agree to ${esc(site.name)} storing these details in ` +
+      `order to respond to my enquiry. See the <a href="${url('/privacy.html')}">privacy policy</a>.</label>` +
+      '<span class="field__err" id="q-consent-err" aria-live="polite"></span></div></div>' +
+      (note ? `<p class="form__note">${esc(note)}</p>` : '') +
+      '<div class="btns"><button class="btn btn--gold" type="submit" data-magnetic>' +
+      `<span class="btn__label">Send enquiry</span><span class="btn__arrow">${ARROW}</span>` +
+      '</button></div>' +
+      '<p class="form__status" data-form-status role="status" tabindex="-1" hidden></p>' +
+      '</form>'
+  );
+}
+
+/**
+ * closeCta with the buttons replaced by the form itself.
+ *
+ * A service page used to end by asking the reader to click through to a
+ * generic contact page and restate what they had just spent ten minutes
+ * reading about. The page it closes is the context; the form belongs on it.
+ */
+export function closeForm(data, { topic, note = '' } = {}) {
+  return raw(
+    '<section class="close close--form" id="enquire">' +
+      `<div class="close__bg" data-parallax="0.07">${str(
+        picture(data.photo, { alt: '', decorative: true, sizes: '100vw', className: 'ph--free' })
+      )}</div>` +
+      '<div class="scrim scrim--hero" aria-hidden="true"></div>' +
+      '<div class="close__inner close__inner--split">' +
+      '<div class="close__say">' +
+      `<h2 class="close__h kinetic">${str(kinetic(data.headline))}</h2>` +
+      `<p class="close__b reveal">${esc(data.body)}</p>` +
+      '<ul class="close__facts reveal">' +
+      `<li><span>Email</span><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></li>` +
+      `<li><span>Phone</span><a href="tel:${esc(site.phoneHref)}">${esc(site.phone)}</a></li>` +
+      '<li><span>Reply</span><span>Within one business day</span></li>' +
+      '</ul></div>' +
+      `<div class="close__form reveal">${str(compactForm({ topic, note }))}</div>` +
+      '</div></section>'
   );
 }
 

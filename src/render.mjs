@@ -13,6 +13,7 @@ import {
   hero, section, head, cards, ladder, fiveChecks, story, band, pills, steps,
   faq, closeCta, proof, statStrip, marketStrip, inlineCta,
   stages, btn, rail, sunburst, ARROW, insightList,
+  closeForm,
 } from './lib/components.mjs';
 
 /* ---------------------------------------------------------------- HOME -- */
@@ -325,11 +326,7 @@ export function renderSupply() {
     ),
 
     str(
-      closeCta(d.close, {
-        label: 'Get indicative pricing',
-        topic: 'Carbon Supply',
-        secondary: { label: 'Renewable Energy (EACs)', href: '/energy-attribute-certificates.html' },
-      })
+      closeForm(d.close, { topic: 'Carbon Supply', note: site.responsePromise })
     ),
   ].join('\n');
 
@@ -416,10 +413,9 @@ export function renderEac() {
     ),
 
     str(
-      closeCta(d.close, {
-        label: 'Match my consumption',
+      closeForm(d.close, {
         topic: 'Energy Attribute Certificates',
-        secondary: { label: 'ESG & Sustainability', href: '/esg-sustainability.html' },
+        note: site.responsePromise,
       })
     ),
   ].join('\n');
@@ -508,11 +504,7 @@ export function renderEsg() {
     ),
 
     str(
-      closeCta(d.close, {
-        label: 'Map my obligations',
-        topic: 'ESG & Sustainability',
-        secondary: { label: 'Carbon Supply', href: '/carbon-supply.html' },
-      })
+      closeForm(d.close, { topic: 'ESG & Sustainability', note: site.responsePromise })
     ),
   ].join('\n');
 
@@ -1100,7 +1092,9 @@ export function renderService(s) {
       : '',
 
     str(
-      closeCta(
+      // The page is the context, so the form closes it rather than a button
+      // that throws that context away on the way to a generic contact page.
+      closeForm(
         {
           headline: s.cta,
           // A closing line specific to this service, not the same promise on
@@ -1109,9 +1103,8 @@ export function renderService(s) {
           photo: s.photo,
         },
         {
-          label: 'Talk to a specialist',
-          topic: 'ESG & Sustainability',
-          secondary: { label: 'All ESG services', href: esg.path },
+          topic: s.shortTitle || s.title,
+          note: site.responsePromise,
         }
       )
     ),

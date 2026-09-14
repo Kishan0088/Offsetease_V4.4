@@ -670,11 +670,14 @@
     // Intent-matched CTAs pass ?topic=… so the visitor does not re-state what
     // the link they just clicked already said.
     const wanted = new URLSearchParams(location.search).get('topic');
-    if (wanted && form.elements.topic) {
-      const match = [...form.elements.topic.options].find(
+    const topicEl = form.elements.topic;
+    // The contact page offers a <select>; a service page's compact form carries
+    // the topic in a hidden input, which has no `.options` to spread.
+    if (wanted && topicEl && topicEl.options) {
+      const match = [...topicEl.options].find(
         (o) => o.value.toLowerCase() === wanted.toLowerCase()
       );
-      if (match) form.elements.topic.value = match.value;
+      if (match) topicEl.value = match.value;
     }
 
     const say = (tone, msg) => {

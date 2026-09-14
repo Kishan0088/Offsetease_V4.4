@@ -4,3 +4,8 @@ node_modules/
 .cache/
 .vscode/
 .idea/
+
+# Working documents — never publish these to a public repo
+AUDIT-FIXES.md
+UX-AUDIT-FINDINGS.md
+*-AUDIT*.md

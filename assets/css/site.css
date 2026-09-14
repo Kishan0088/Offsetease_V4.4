@@ -2939,7 +2939,7 @@ a.card:hover .card__go svg {
 }
 
 /* Third-party data: a ruled list, never a card row, so it cannot be mistaken
-   for OffsetEase's own numbers. */
+   for Offsetease's own numbers. */
 .mkt {
   border-top: 1px solid var(--rule);
 }

@@ -176,12 +176,12 @@ async function checkLinks(file, html, idsByFile, pages) {
 
 function checkBrand(file, html) {
   // The body copy spells it Offsetease; the lockup and eyebrows use OFFSETEASE.
-  // "OffsetEase" (inner capital E) is explicitly not the brand.
+  // A medial capital E is explicitly not the brand.
   const body = html.replace(/<script[\s\S]*?<\/script>/g, '');
   const bad = body.match(/\bOffset\s?[Ee]ase\b/g) || [];
   for (const hit of new Set(bad)) {
     if (hit !== 'Offsetease') {
-      fail(file, `brand spelled "${hit}" (must be Offsetease or OFFSETEASE)`);
+      fail(file, `brand spelled "${hit}" — it is Offsetease in prose, OFFSETEASE in the lockup`);
     }
   }
   // Lower case is correct inside an address or a URL, so strip those first.
@@ -256,6 +256,24 @@ function checkFormKey() {
   else warnings.push(`form: ${msg}`);
 }
 
+// The old spelling must not creep back through metadata, comments or docs
+// either — the built pages are only half the surface of a public repo.
+async function checkSourceBrand() {
+  const files = [
+    'package.json', 'README.md', 'CREDITS.md',
+    'assets/css/site.css', 'assets/js/app.js',
+    'src/data/site.mjs', 'src/data/pages.mjs', 'src/data/services.mjs',
+    'src/render.mjs', 'src/lib/layout.mjs', 'src/lib/components.mjs',
+  ];
+  for (const f of files) {
+    const full = join(ROOT, f);
+    if (!existsSync(full)) continue;
+    if (/Offset\s?Ease/.test(await readFile(full, 'utf8'))) {
+      errors.push(`${f}: contains the retired spelling — it is Offsetease / OFFSETEASE`);
+    }
+  }
+}
+
 // Pages a visitor is entitled to find, whatever else changes.
 function checkRequiredPages(files) {
   for (const f of ['privacy.html', 'terms.html', '404.html', 'sources.html']) {
@@ -296,6 +314,7 @@ async function main() {
   await checkAssets();
   checkFormKey();
   checkRequiredPages(files);
+  await checkSourceBrand();
 
   // Every page must be reachable from the home page or the footer.
   const home = bodies.get('index.html') || '';

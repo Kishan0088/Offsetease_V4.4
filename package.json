@@ -2,7 +2,7 @@
   "name": "offsetease-v4-4",
   "private": true,
   "version": "4.4.0",
-  "description": "OffsetEase — cinematic, zero-dependency static site (26 pages).",
+  "description": "Offsetease — cinematic, zero-dependency static site (28 pages).",
   "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {

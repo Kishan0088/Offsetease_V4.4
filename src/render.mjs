@@ -810,8 +810,13 @@ export function renderContact() {
     `<span class="field__err" id="${id}-err" aria-live="polite"></span></div>`;
 
   const form =
-    `<form class="form" data-form method="POST" action="${esc(site.form.endpoint)}" ` +
-    `data-access-key="${esc(site.form.accessKey)}" novalidate>` +
+    // No `novalidate` in the markup: without JS the browser must still enforce
+    // required fields. initForm() sets form.noValidate at runtime so the
+    // scripted path can show its own messages instead.
+    `<form class="form" data-form method="POST" action="${esc(site.form.endpoint)}">` +
+    // The key has to travel with a native POST too, or a visitor without JS
+    // fills the form, submits, and Web3Forms rejects it.
+    `<input type="hidden" name="access_key" value="${esc(site.form.accessKey)}">` +
     `<input type="hidden" name="subject" value="${esc(site.form.subject)}">` +
     `<input type="hidden" name="from_name" value="${esc(site.name)} website">` +
     '<div class="hp" aria-hidden="true"><label for="botcheck">Leave this empty</label>' +

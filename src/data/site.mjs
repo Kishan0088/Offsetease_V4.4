@@ -41,7 +41,10 @@ export const site = {
   form: {
     provider: 'web3forms',
     endpoint: 'https://api.web3forms.com/submit',
-    accessKey: '', // ← paste your Web3Forms access key
+    // Web3Forms access keys are public by design — they are read by the
+    // browser, so they ship in the page source. Restrict this key to your
+    // domain in the Web3Forms dashboard; that, not secrecy, is the control.
+    accessKey: '37e52a70-2ebb-4222-9f3d-e78a9799cc79',
     subject: 'New enquiry from offsetease.com',
   },
 

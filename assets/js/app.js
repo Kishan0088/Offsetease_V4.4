@@ -658,7 +658,11 @@
     if (!form) return;
     const status = $('[data-form-status]', form);
     const submit = $('[type="submit"]', form);
-    const key = form.dataset.accessKey || '';
+    const key = (form.elements.access_key && form.elements.access_key.value) || '';
+    // The markup ships without `novalidate` so a no-JS submit still gets the
+    // browser's own required-field enforcement. Now that we are here, take it
+    // over so the messages can be ours.
+    form.noValidate = true;
 
     // Intent-matched CTAs pass ?topic=… so the visitor does not re-state what
     // the link they just clicked already said.
@@ -727,8 +731,8 @@
       labelEl.textContent = 'Sending…';
 
       try {
+        // access_key is already a field in the form, so FormData has it.
         const body = new FormData(form);
-        body.append('access_key', key);
         const res = await fetch(form.action, {
           method: 'POST',
           headers: { Accept: 'application/json' },

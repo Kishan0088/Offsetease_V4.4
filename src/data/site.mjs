@@ -23,9 +23,12 @@ export const site = {
 
   // PREVIEW MODE. The live site at offsetease.com is untouched and must keep its
   // search ranking, so this preview ships `noindex` + a disallow-all robots.txt.
-  // Flip `indexable` to true (and point origin/basePath at the production domain)
-  // the day this build replaces the live site.
-  indexable: false,
+  //
+  // Launch is a flag flip, not a code edit — it can be thrown from the Netlify
+  // environment without a commit, and nobody has to remember which file it
+  // lived in. Default stays false, so forgetting the flag fails safe:
+  //   SITE_INDEXABLE=true SITE_ORIGIN=https://offsetease.com SITE_BASE= node src/build.mjs
+  indexable: process.env.SITE_INDEXABLE === 'true',
   productionOrigin: 'https://offsetease.com',
 
   // ── Contact ───────────────────────────────────────────────────────────────

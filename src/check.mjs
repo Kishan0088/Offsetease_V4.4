@@ -162,9 +162,13 @@ async function checkLinks(file, html, idsByFile, pages) {
     }
     const [pathAndQuery, frag] = href.slice(BASE.length).split('#');
     const pathPart = pathAndQuery.split('?')[0];
-    const target = pathPart === '/' || pathPart === '' ? 'index.html' : pathPart.replace(/^\//, '');
+    const bare = pathPart === '/' || pathPart === '' ? 'index.html' : pathPart.replace(/^\//, '');
+    // Pages are published extensionless (`/about`) but written to disk as
+    // `about.html`, so a page link resolves to the file only after the suffix
+    // is put back. Assets already carry their own extension and resolve as-is.
+    const target = existsSync(join(ROOT, bare)) ? bare : `${bare}.html`;
     if (!existsSync(join(ROOT, target))) {
-      fail(file, `dead link "${href}" → ${target} does not exist`);
+      fail(file, `dead link "${href}" → ${bare} does not exist`);
       continue;
     }
     if (frag && target.endsWith('.html')) {
@@ -304,7 +308,7 @@ function checkRequiredPages(files) {
 
 // Every page must link to the privacy policy, or the consent wording is a lie.
 function checkLegalLinks(file, html) {
-  if (!html.includes(`href="${BASE}/privacy.html"`)) {
+  if (!html.includes(`href="${BASE}/privacy"`)) {
     fail(file, 'no link to the privacy policy');
   }
 }
@@ -342,7 +346,12 @@ async function main() {
   const home = bodies.get('index.html') || '';
   for (const f of files) {
     if (f === 'index.html' || f === '404.html') continue;
-    const reachable = [...bodies.values()].some((h) => h.includes(`href="${BASE}/${f}"`));
+    // Links are published extensionless, so look for `/about`, not `/about.html`.
+    // The boundary check keeps `/cbam` from matching `/cbam-compliance`.
+    const clean = `${BASE}/${f.replace(/\.html$/, '')}`;
+    const reachable = [...bodies.values()].some((h) =>
+      new RegExp(`href="${clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[#?"])`).test(h)
+    );
     if (!reachable) errors.push(`orphan: nothing links to ${f}`);
   }
 

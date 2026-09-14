@@ -100,7 +100,6 @@ export const megaMenus = {
       title: 'How we screen',
       links: [
         { label: 'The Five Checks', href: '/carbon-supply.html#five-checks' },
-        { label: 'Standards & frameworks', href: '/carbon-supply.html#standards' },
       ],
     },
   ],
